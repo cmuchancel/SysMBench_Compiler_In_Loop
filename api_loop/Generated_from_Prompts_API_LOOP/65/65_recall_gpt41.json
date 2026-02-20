@@ -1,0 +1,85 @@
+{
+  "model_id": 65,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleMassComplianceSystem' {\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\tprivate import NumericalFunctions::*;\n\tpart def Engine;\n\tpart def Transmission;\n\tconstraint def MassConstraint {\n\t\tattribute partMasses : MassValue[0..*];\n\t\tattribute massLimit : MassValue;\n\t\tsum(partMasses) <= massLimit\n\t}\n\tpart def Vehicle {\n\t\tconstraint massConstraint : MassConstraint {\n\t\t\tredefines partMasses = (chassisMass, engine.mass, transmission.mass);\n\t\t\tredefines massLimit = 2500[kg];\n\t\t}\n\t\tattribute chassisMass : MassValue;\n\t\tpart engine : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t\tpart transmission : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage VehicleWeightControl {\n  private import ScalarValues::*;\n\n  enum def WeightStatus {\n    enum OK;\n    enum OVER_LIMIT;\n  }\n\n  part def Chassis {\n    attribute weight : Real;\n  }\n\n  part def Engine {\n    attribute weight : Real;\n  }\n\n  part def Transmission {\n    attribute weight : Real;\n  }\n\n  part def VehicleWeightManager {\n    part chassis : Chassis;\n    part engine : Engine;\n    part transmission : Transmission;\n    attribute weightLimit : Real = 2500.0;\n    attribute totalWeight : Real = chassis.weight + engine.weight + transmission.weight;\n    attribute warning : Boolean = totalWeight > weightLimit;\n    attribute status : WeightStatus;\n  }\n\n  part vehicleWeightManager : VehicleWeightManager;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/65/65_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/65/65.sysml",
+  "response": {
+    "id": "resp_09d13fa17069526200699800e2bd7c819082d7e2ac556fbb63",
+    "created_at": 1771569378.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_09d13fa17069526200699800e2ec90819093dbb74dc2ee8a92",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is defined.\n2. Private import of ISQ.\n3. Private import of SI.\n4. Private import of NumericalFunctions.\n5. Definition of part `Engine`.\n6. Definition of part `Transmission`.\n7. Definition of constraint `MassConstraint`.\n8. `MassConstraint` has attribute `partMasses` of type `MassValue[0..*]`.\n9. `MassConstraint` has attribute `massLimit` of type `MassValue`.\n10. `MassConstraint` constraint: `sum(partMasses) <= massLimit`.\n11. Definition of part `Vehicle`.\n12. `Vehicle` has a constraint `massConstraint` of type `MassConstraint`.\n13. In `massConstraint`, `partMasses` is redefined as `(chassisMass, engine.mass, transmission.mass)`.\n14. In `massConstraint`, `massLimit` is redefined as `2500[kg]`.\n15. `Vehicle` has attribute `chassisMass` of type `MassValue`.\n16. `Vehicle` has part `engine` of type `Engine`.\n17. `engine` has attribute `mass` of type `MassValue`.\n18. `Vehicle` has part `transmission` of type `Engine`.\n19. `transmission` has attribute `mass` of type `MassValue`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package defined | Yes | Both have a package. Name differs, but that's ignored. |\n| 2 | Private import ISQ | No | Not present. |\n| 3 | Private import SI | No | Not present. |\n| 4 | Private import NumericalFunctions | No | Not present. |\n| 5 | Part `Engine` defined | Yes | Present. |\n| 6 | Part `Transmission` defined | Yes | Present. |\n| 7 | Constraint `MassConstraint` defined | No | Not as a named constraint. Logic is present but not as a constraint type. |\n| 8 | `MassConstraint` has attribute `partMasses: MassValue[0..*]` | No | No equivalent attribute. |\n| 9 | `MassConstraint` has attribute `massLimit: MassValue` | No | No equivalent attribute in a constraint. |\n| 10 | `MassConstraint` constraint: `sum(partMasses) <= massLimit` | Partial | Logic is present as `totalWeight > weightLimit` and `totalWeight` calculation, but not as a constraint. Let's count as covered. |\n| 11 | Part `Vehicle` defined | Partial | Closest is `VehicleWeightManager`, but not named `Vehicle`. Structure is similar. Count as covered. |\n| 12 | `Vehicle` has constraint `massConstraint: MassConstraint` | No | No explicit constraint part. |\n| 13 | `massConstraint` redefines `partMasses = (chassisMass, engine.mass, transmission.mass)` | Partial | Logic is present as `totalWeight = chassis.weight + engine.weight + transmission.weight`, but not as a redefinition. Count as covered. |\n| 14 | `massConstraint` redefines `massLimit = 2500[kg]` | Yes | `weightLimit = 2500.0` is present. |\n| 15 | `Vehicle` has attribute `chassisMass: MassValue` | Partial | `Chassis` has `weight: Real`. Not in `Vehicle`, but present in a part. Count as covered. |\n| 16 | `Vehicle` has part `engine: Engine` | Yes | Present. |\n| 17 | `engine` has attribute `mass: MassValue` | Partial | `Engine` has `weight: Real`. Count as covered. |\n| 18 | `Vehicle` has part `transmission: Engine` | Partial | `VehicleWeightManager` has `transmission: Transmission`. In reference, transmission is of type `Engine` (likely a typo), but in both models, transmission is a part. Count as covered. |\n| 19 | `transmission` has attribute `mass: MassValue` | Partial | `Transmission` has `weight: Real`. Count as covered. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Covered:** 1, 5, 6, 10, 11, 13, 14, 15, 16, 17, 18, 19 (**12 claims**)\n- **Not covered:** 2, 3, 4, 7, 8, 9, 12 (**7 claims**)\n\n**Score: 12/19**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 505,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1029,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1534
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569400,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is defined.\n2. Private import of ISQ.\n3. Private import of SI.\n4. Private import of NumericalFunctions.\n5. Definition of part `Engine`.\n6. Definition of part `Transmission`.\n7. Definition of constraint `MassConstraint`.\n8. `MassConstraint` has attribute `partMasses` of type `MassValue[0..*]`.\n9. `MassConstraint` has attribute `massLimit` of type `MassValue`.\n10. `MassConstraint` constraint: `sum(partMasses) <= massLimit`.\n11. Definition of part `Vehicle`.\n12. `Vehicle` has a constraint `massConstraint` of type `MassConstraint`.\n13. In `massConstraint`, `partMasses` is redefined as `(chassisMass, engine.mass, transmission.mass)`.\n14. In `massConstraint`, `massLimit` is redefined as `2500[kg]`.\n15. `Vehicle` has attribute `chassisMass` of type `MassValue`.\n16. `Vehicle` has part `engine` of type `Engine`.\n17. `engine` has attribute `mass` of type `MassValue`.\n18. `Vehicle` has part `transmission` of type `Engine`.\n19. `transmission` has attribute `mass` of type `MassValue`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package defined | Yes | Both have a package. Name differs, but that's ignored. |\n| 2 | Private import ISQ | No | Not present. |\n| 3 | Private import SI | No | Not present. |\n| 4 | Private import NumericalFunctions | No | Not present. |\n| 5 | Part `Engine` defined | Yes | Present. |\n| 6 | Part `Transmission` defined | Yes | Present. |\n| 7 | Constraint `MassConstraint` defined | No | Not as a named constraint. Logic is present but not as a constraint type. |\n| 8 | `MassConstraint` has attribute `partMasses: MassValue[0..*]` | No | No equivalent attribute. |\n| 9 | `MassConstraint` has attribute `massLimit: MassValue` | No | No equivalent attribute in a constraint. |\n| 10 | `MassConstraint` constraint: `sum(partMasses) <= massLimit` | Partial | Logic is present as `totalWeight > weightLimit` and `totalWeight` calculation, but not as a constraint. Let's count as covered. |\n| 11 | Part `Vehicle` defined | Partial | Closest is `VehicleWeightManager`, but not named `Vehicle`. Structure is similar. Count as covered. |\n| 12 | `Vehicle` has constraint `massConstraint: MassConstraint` | No | No explicit constraint part. |\n| 13 | `massConstraint` redefines `partMasses = (chassisMass, engine.mass, transmission.mass)` | Partial | Logic is present as `totalWeight = chassis.weight + engine.weight + transmission.weight`, but not as a redefinition. Count as covered. |\n| 14 | `massConstraint` redefines `massLimit = 2500[kg]` | Yes | `weightLimit = 2500.0` is present. |\n| 15 | `Vehicle` has attribute `chassisMass: MassValue` | Partial | `Chassis` has `weight: Real`. Not in `Vehicle`, but present in a part. Count as covered. |\n| 16 | `Vehicle` has part `engine: Engine` | Yes | Present. |\n| 17 | `engine` has attribute `mass: MassValue` | Partial | `Engine` has `weight: Real`. Count as covered. |\n| 18 | `Vehicle` has part `transmission: Engine` | Partial | `VehicleWeightManager` has `transmission: Transmission`. In reference, transmission is of type `Engine` (likely a typo), but in both models, transmission is a part. Count as covered. |\n| 19 | `transmission` has attribute `mass: MassValue` | Partial | `Transmission` has `weight: Real`. Count as covered. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Covered:** 1, 5, 6, 10, 11, 13, 14, 15, 16, 17, 18, 19 (**12 claims**)\n- **Not covered:** 2, 3, 4, 7, 8, 9, 12 (**7 claims**)\n\n**Score: 12/19**"
+  }
+}

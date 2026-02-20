@@ -1,0 +1,85 @@
+{
+  "model_id": 36,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleStateManagement' {\n\tattribute def VehicleStartSignal;\n\tattribute def VehicleOnSignal;\n\tattribute def VehicleOffSignal;\n\tstate def VehicleStates {\n\t\tentry; then off;\n\t\tstate off;\n\t\taccept VehicleStartSignal \n\t\t\tthen starting;\n\t\tstate starting;\n\t\taccept VehicleOnSignal\n\t\t\tthen on;\n\t\tstate on;\n\t\taccept VehicleOffSignal\n\t\t\tthen off;\n\t}\n}\n\nGenerated Model:\npackage VehicleStateManagement {\n    private import ScalarValues::*;\n    enum def VehicleState {\n        enum off;\n        enum starting;\n        enum on;\n    }\n    enum def VehicleControlSignal {\n        enum VehicleStartSignal;\n        enum VehicleOnSignal;\n        enum VehicleOffSignal;\n    }\n    port def ControlSignalPort {\n        attribute signal : VehicleControlSignal;\n    }\n    part def VehicleStatusManager {\n        attribute currentState : VehicleState = VehicleState::off;\n        attribute lastSignal : VehicleControlSignal;\n        port controlIn : ControlSignalPort;\n    }\n    part vehicleSystem : VehicleStatusManager;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/36/36_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/36/36.sysml",
+  "response": {
+    "id": "resp_0bf6fdf3fb5137ae006998018edfb88197acb44e95b078d05e",
+    "created_at": 1771569550.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0bf6fdf3fb5137ae006998018f37c08197886fd1fd76a414e4",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's follow the steps as requested:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehicleStateManagement'.\n2. There is an attribute definition for 'VehicleStartSignal'.\n3. There is an attribute definition for 'VehicleOnSignal'.\n4. There is an attribute definition for 'VehicleOffSignal'.\n5. There is a state machine definition named 'VehicleStates'.\n6. The state machine has an entry action that transitions to 'off'.\n7. The state machine has a state named 'off'.\n8. In state 'off', the state machine accepts 'VehicleStartSignal' and transitions to 'starting'.\n9. The state machine has a state named 'starting'.\n10. In state 'starting', the state machine accepts 'VehicleOnSignal' and transitions to 'on'.\n11. The state machine has a state named 'on'.\n12. In state 'on', the state machine accepts 'VehicleOffSignal' and transitions to 'off'.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n1. **Package 'VehicleStateManagement'**  \n   - **Covered**: The generated model has `package VehicleStateManagement { ... }`.\n\n2. **Attribute definition for 'VehicleStartSignal'**  \n   - **Partially Covered**: The generated model defines `VehicleStartSignal` as an enum value within `VehicleControlSignal`, not as a standalone attribute. The intent (modeling the signal) is present, but not as an attribute.\n\n3. **Attribute definition for 'VehicleOnSignal'**  \n   - **Partially Covered**: Same as above, present as an enum value.\n\n4. **Attribute definition for 'VehicleOffSignal'**  \n   - **Partially Covered**: Same as above, present as an enum value.\n\n5. **State machine definition named 'VehicleStates'**  \n   - **Not Covered**: The generated model does not define a state machine; it defines an enum `VehicleState` and a part `VehicleStatusManager` with a `currentState` attribute, but no state machine or transitions.\n\n6. **State machine has an entry action that transitions to 'off'**  \n   - **Partially Covered**: The `currentState` attribute is initialized to `VehicleState::off`, which is similar to an initial state, but there is no explicit entry action or transition.\n\n7. **State machine has a state named 'off'**  \n   - **Covered**: `VehicleState` enum includes `off`.\n\n8. **In state 'off', accepts 'VehicleStartSignal' and transitions to 'starting'**  \n   - **Not Covered**: No transitions or acceptance of signals are modeled.\n\n9. **State machine has a state named 'starting'**  \n   - **Covered**: `VehicleState` enum includes `starting`.\n\n10. **In state 'starting', accepts 'VehicleOnSignal' and transitions to 'on'**  \n    - **Not Covered**: No transitions or acceptance of signals are modeled.\n\n11. **State machine has a state named 'on'**  \n    - **Covered**: `VehicleState` enum includes `on`.\n\n12. **In state 'on', accepts 'VehicleOffSignal' and transitions to 'off'**  \n    - **Not Covered**: No transitions or acceptance of signals are modeled.\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- Fully Covered: 1 (package), 7 (state 'off'), 9 (state 'starting'), 11 (state 'on') → **4**\n- Partially Covered: 2, 3, 4 (signals as enum values, not attributes), 6 (initial state as attribute initialization) → **4**\n- Not Covered: 5, 8, 10, 12 (state machine, transitions, acceptance of signals) → **4**\n\n**According to the instructions, only fully covered claims count.**\n\n**Score: 4/12**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 399,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 849,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1248
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569561,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's follow the steps as requested:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehicleStateManagement'.\n2. There is an attribute definition for 'VehicleStartSignal'.\n3. There is an attribute definition for 'VehicleOnSignal'.\n4. There is an attribute definition for 'VehicleOffSignal'.\n5. There is a state machine definition named 'VehicleStates'.\n6. The state machine has an entry action that transitions to 'off'.\n7. The state machine has a state named 'off'.\n8. In state 'off', the state machine accepts 'VehicleStartSignal' and transitions to 'starting'.\n9. The state machine has a state named 'starting'.\n10. In state 'starting', the state machine accepts 'VehicleOnSignal' and transitions to 'on'.\n11. The state machine has a state named 'on'.\n12. In state 'on', the state machine accepts 'VehicleOffSignal' and transitions to 'off'.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n1. **Package 'VehicleStateManagement'**  \n   - **Covered**: The generated model has `package VehicleStateManagement { ... }`.\n\n2. **Attribute definition for 'VehicleStartSignal'**  \n   - **Partially Covered**: The generated model defines `VehicleStartSignal` as an enum value within `VehicleControlSignal`, not as a standalone attribute. The intent (modeling the signal) is present, but not as an attribute.\n\n3. **Attribute definition for 'VehicleOnSignal'**  \n   - **Partially Covered**: Same as above, present as an enum value.\n\n4. **Attribute definition for 'VehicleOffSignal'**  \n   - **Partially Covered**: Same as above, present as an enum value.\n\n5. **State machine definition named 'VehicleStates'**  \n   - **Not Covered**: The generated model does not define a state machine; it defines an enum `VehicleState` and a part `VehicleStatusManager` with a `currentState` attribute, but no state machine or transitions.\n\n6. **State machine has an entry action that transitions to 'off'**  \n   - **Partially Covered**: The `currentState` attribute is initialized to `VehicleState::off`, which is similar to an initial state, but there is no explicit entry action or transition.\n\n7. **State machine has a state named 'off'**  \n   - **Covered**: `VehicleState` enum includes `off`.\n\n8. **In state 'off', accepts 'VehicleStartSignal' and transitions to 'starting'**  \n   - **Not Covered**: No transitions or acceptance of signals are modeled.\n\n9. **State machine has a state named 'starting'**  \n   - **Covered**: `VehicleState` enum includes `starting`.\n\n10. **In state 'starting', accepts 'VehicleOnSignal' and transitions to 'on'**  \n    - **Not Covered**: No transitions or acceptance of signals are modeled.\n\n11. **State machine has a state named 'on'**  \n    - **Covered**: `VehicleState` enum includes `on`.\n\n12. **In state 'on', accepts 'VehicleOffSignal' and transitions to 'off'**  \n    - **Not Covered**: No transitions or acceptance of signals are modeled.\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- Fully Covered: 1 (package), 7 (state 'off'), 9 (state 'starting'), 11 (state 'on') → **4**\n- Partially Covered: 2, 3, 4 (signals as enum values, not attributes), 6 (initial state as attribute initialization) → **4**\n- Not Covered: 5, 8, 10, 12 (state machine, transitions, acceptance of signals) → **4**\n\n**According to the instructions, only fully covered claims count.**\n\n**Score: 4/12**"
+  }
+}

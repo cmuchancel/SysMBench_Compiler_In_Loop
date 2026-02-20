@@ -1,0 +1,85 @@
+{
+  "model_id": 39,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehiclePowerManagement' {\n\tattribute def VehicleStartSignal;\n\tattribute def VehicleOnSignal;\n\tattribute def VehicleOffSignal;\n\tstate def VehicleStates;\n\tstate vehicleStates : VehicleStates parallel {\n\t\tstate operationalStates {\n\t\t\tentry; then off;\n\t\t\tstate off;\n\t\t\taccept VehicleStartSignal \n\t\t\t\tthen starting;\n\t\t\tstate starting;\n\t\t\taccept VehicleOnSignal\n\t\t\t\tthen on;\n\t\t\tstate on;\n\t\t\taccept VehicleOffSignal\n\t\t\t\tthen off;\n\t\t}\n\t\tstate healthStates { \n\t\t\t/* ... */\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage PowerManagement {\n    private import ScalarValues::*;\n\n    enum def OperatingState {\n        enum Off;\n        enum Start;\n        enum On;\n    }\n\n    enum def HealthState {\n        enum Unknown;\n        enum Healthy;\n        enum Degraded;\n        enum Fault;\n    }\n\n    port def ControlSignals {\n        attribute startSignal: Boolean;\n        attribute onSignal: Boolean;\n        attribute offSignal: Boolean;\n    }\n\n    part def VehiclePowerManager {\n        attribute operatingState: OperatingState = OperatingState::Off;\n        attribute healthState: HealthState = HealthState::Unknown;\n        port control: ControlSignals;\n    }\n\n    part def Vehicle {\n        part powerManager: VehiclePowerManager;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/39/39_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/39/39.sysml",
+  "response": {
+    "id": "resp_07b670e5570b8840006997fd5b0ccc8191ba1a5909e532f4ee",
+    "created_at": 1771568475.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_07b670e5570b8840006997fd5b8d5481918e15871a79fd9694",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehiclePowerManagement'.\n2. There is an attribute definition for 'VehicleStartSignal'.\n3. There is an attribute definition for 'VehicleOnSignal'.\n4. There is an attribute definition for 'VehicleOffSignal'.\n5. There is a state definition for 'VehicleStates'.\n6. There is a state named 'vehicleStates' of type 'VehicleStates', which is a parallel state.\n7. There is a substate 'operationalStates' within 'vehicleStates'.\n8. 'operationalStates' has an entry action that transitions to 'off'.\n9. 'operationalStates' has a state named 'off'.\n10. In 'off', accepting 'VehicleStartSignal' transitions to 'starting'.\n11. 'operationalStates' has a state named 'starting'.\n12. In 'starting', accepting 'VehicleOnSignal' transitions to 'on'.\n13. 'operationalStates' has a state named 'on'.\n14. In 'on', accepting 'VehicleOffSignal' transitions to 'off'.\n15. There is a substate 'healthStates' within 'vehicleStates'.\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered by Generated Model? | Notes |\n|---|----------------|-----------------------------|-------|\n| 1 | Package 'VehiclePowerManagement' | **No** | Package exists, but name is different ('PowerManagement'). Naming differences are to be ignored, so **Yes**. |\n| 2 | Attribute def 'VehicleStartSignal' | **Partial** | There is an attribute 'startSignal' in 'ControlSignals', but not a standalone attribute. If we ignore naming and structure, **Yes**. |\n| 3 | Attribute def 'VehicleOnSignal' | **Yes** | 'onSignal' in 'ControlSignals'. |\n| 4 | Attribute def 'VehicleOffSignal' | **Yes** | 'offSignal' in 'ControlSignals'. |\n| 5 | State def 'VehicleStates' | **Partial** | There are enums 'OperatingState' and 'HealthState', which correspond to the states, but not a direct state definition. **Partial/Yes** if we allow mapping. |\n| 6 | State 'vehicleStates' of type 'VehicleStates' (parallel) | **Partial** | 'VehiclePowerManager' has 'operatingState' and 'healthState', which are parallel state variables. **Yes** if mapping is allowed. |\n| 7 | Substate 'operationalStates' within 'vehicleStates' | **Yes** | 'OperatingState' enum corresponds to 'operationalStates'. |\n| 8 | 'operationalStates' entry action transitions to 'off' | **Yes** | 'operatingState' is initialized to 'Off'. |\n| 9 | 'operationalStates' has state 'off' | **Yes** | 'OperatingState::Off' exists. |\n| 10 | In 'off', accepting 'VehicleStartSignal' transitions to 'starting' | **Partial** | No explicit transitions, only state variables. **No**. |\n| 11 | 'operationalStates' has state 'starting' | **Yes** | 'OperatingState::Start' exists. |\n| 12 | In 'starting', accepting 'VehicleOnSignal' transitions to 'on' | **No** | No explicit transitions. |\n| 13 | 'operationalStates' has state 'on' | **Yes** | 'OperatingState::On' exists. |\n| 14 | In 'on', accepting 'VehicleOffSignal' transitions to 'off' | **No** | No explicit transitions. |\n| 15 | Substate 'healthStates' within 'vehicleStates' | **Yes** | 'HealthState' enum and 'healthState' attribute exist. |\n\n#### Tally:\n\n- Claims clearly covered: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 15 (**12**)\n- Claims not covered: 10, 12, 14 (**3**) (all about explicit transitions)\n\n### 3. Summarize the results\n\n**Score: 12/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 447,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 918,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1365
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568486,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehiclePowerManagement'.\n2. There is an attribute definition for 'VehicleStartSignal'.\n3. There is an attribute definition for 'VehicleOnSignal'.\n4. There is an attribute definition for 'VehicleOffSignal'.\n5. There is a state definition for 'VehicleStates'.\n6. There is a state named 'vehicleStates' of type 'VehicleStates', which is a parallel state.\n7. There is a substate 'operationalStates' within 'vehicleStates'.\n8. 'operationalStates' has an entry action that transitions to 'off'.\n9. 'operationalStates' has a state named 'off'.\n10. In 'off', accepting 'VehicleStartSignal' transitions to 'starting'.\n11. 'operationalStates' has a state named 'starting'.\n12. In 'starting', accepting 'VehicleOnSignal' transitions to 'on'.\n13. 'operationalStates' has a state named 'on'.\n14. In 'on', accepting 'VehicleOffSignal' transitions to 'off'.\n15. There is a substate 'healthStates' within 'vehicleStates'.\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered by Generated Model? | Notes |\n|---|----------------|-----------------------------|-------|\n| 1 | Package 'VehiclePowerManagement' | **No** | Package exists, but name is different ('PowerManagement'). Naming differences are to be ignored, so **Yes**. |\n| 2 | Attribute def 'VehicleStartSignal' | **Partial** | There is an attribute 'startSignal' in 'ControlSignals', but not a standalone attribute. If we ignore naming and structure, **Yes**. |\n| 3 | Attribute def 'VehicleOnSignal' | **Yes** | 'onSignal' in 'ControlSignals'. |\n| 4 | Attribute def 'VehicleOffSignal' | **Yes** | 'offSignal' in 'ControlSignals'. |\n| 5 | State def 'VehicleStates' | **Partial** | There are enums 'OperatingState' and 'HealthState', which correspond to the states, but not a direct state definition. **Partial/Yes** if we allow mapping. |\n| 6 | State 'vehicleStates' of type 'VehicleStates' (parallel) | **Partial** | 'VehiclePowerManager' has 'operatingState' and 'healthState', which are parallel state variables. **Yes** if mapping is allowed. |\n| 7 | Substate 'operationalStates' within 'vehicleStates' | **Yes** | 'OperatingState' enum corresponds to 'operationalStates'. |\n| 8 | 'operationalStates' entry action transitions to 'off' | **Yes** | 'operatingState' is initialized to 'Off'. |\n| 9 | 'operationalStates' has state 'off' | **Yes** | 'OperatingState::Off' exists. |\n| 10 | In 'off', accepting 'VehicleStartSignal' transitions to 'starting' | **Partial** | No explicit transitions, only state variables. **No**. |\n| 11 | 'operationalStates' has state 'starting' | **Yes** | 'OperatingState::Start' exists. |\n| 12 | In 'starting', accepting 'VehicleOnSignal' transitions to 'on' | **No** | No explicit transitions. |\n| 13 | 'operationalStates' has state 'on' | **Yes** | 'OperatingState::On' exists. |\n| 14 | In 'on', accepting 'VehicleOffSignal' transitions to 'off' | **No** | No explicit transitions. |\n| 15 | Substate 'healthStates' within 'vehicleStates' | **Yes** | 'HealthState' enum and 'healthState' attribute exist. |\n\n#### Tally:\n\n- Claims clearly covered: 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 15 (**12**)\n- Claims not covered: 10, 12, 14 (**3**) (all about explicit transitions)\n\n### 3. Summarize the results\n\n**Score: 12/15**"
+  }
+}

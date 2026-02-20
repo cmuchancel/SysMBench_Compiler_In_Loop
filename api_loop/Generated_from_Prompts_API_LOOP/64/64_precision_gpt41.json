@@ -1,0 +1,85 @@
+{
+  "model_id": 64,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleMassComplianceSystem' {\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\tprivate import NumericalFunctions::*;\n\tpart def Engine;\n\tpart def Transmission;\n\tconstraint def MassConstraint {\n\t\tin partMasses : MassValue[0..*];\n\t\tin massLimit : MassValue;\n\t\tsum(partMasses) <= massLimit\n\t}\n\tpart def Vehicle {\n\t\tconstraint massConstraint : MassConstraint {\n\t\t\tin partMasses = (chassisMass, engine.mass, transmission.mass);\n\t\t\tin massLimit = 2500[kg];\n\t\t}\n\t\tattribute chassisMass : MassValue;\n\t\tpart engine : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t\tpart transmission : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage VehicleMassCompliance {\n  private import ScalarValues::*;\n\n  part def Chassis {\n    attribute mass : Real;\n  }\n\n  part def Engine {\n    attribute mass : Real;\n  }\n\n  part def Transmission {\n    attribute mass : Real;\n  }\n\n  part def Vehicle {\n    part chassis : Chassis;\n    part engine : Engine;\n    part transmission : Transmission;\n    attribute maxMass : Real = 2500.0;\n    attribute totalMass : Real;\n    attribute compliant : Boolean;\n  }\n\n  part def MassComplianceSystem {\n    part vehicle : Vehicle;\n  }\n\n  part massComplianceSystem : MassComplianceSystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/64/64_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/64/64.sysml",
+  "response": {
+    "id": "resp_08c26ba8a3f98ee100699800bac5388195878967a2a926d313",
+    "created_at": 1771569338.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_08c26ba8a3f98ee100699800bb33708195a17ad8ccdb23cd09",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Atomic Claims:**\n\n1. The package is named (VehicleMassCompliance).\n2. The package imports ScalarValues::* privately.\n3. There is a part definition named Chassis.\n4. Chassis has an attribute mass of type Real.\n5. There is a part definition named Engine.\n6. Engine has an attribute mass of type Real.\n7. There is a part definition named Transmission.\n8. Transmission has an attribute mass of type Real.\n9. There is a part definition named Vehicle.\n10. Vehicle has a part named chassis of type Chassis.\n11. Vehicle has a part named engine of type Engine.\n12. Vehicle has a part named transmission of type Transmission.\n13. Vehicle has an attribute maxMass of type Real, initialized to 2500.0.\n14. Vehicle has an attribute totalMass of type Real.\n15. Vehicle has an attribute compliant of type Boolean.\n16. There is a part definition named MassComplianceSystem.\n17. MassComplianceSystem has a part named vehicle of type Vehicle.\n18. There is a part named massComplianceSystem of type MassComplianceSystem.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**Claim 1:** The package is named (VehicleMassCompliance).  \n- **Not supported** (Reference: VehicleMassComplianceSystem; but naming differences are to be ignored, so **Supported**).\n\n**Claim 2:** The package imports ScalarValues::* privately.  \n- **Not supported** (Reference imports ISQ::, SI::, NumericalFunctions::; ScalarValues::* is not present).\n\n**Claim 3:** There is a part definition named Chassis.  \n- **Not supported** (Reference does not define a Chassis part; only an attribute chassisMass in Vehicle).\n\n**Claim 4:** Chassis has an attribute mass of type Real.  \n- **Not supported** (No Chassis part in reference).\n\n**Claim 5:** There is a part definition named Engine.  \n- **Supported** (Reference defines part def Engine).\n\n**Claim 6:** Engine has an attribute mass of type Real.  \n- **Supported** (Reference: part engine : Engine { attribute mass : MassValue; } in Vehicle; attribute mass is present, type is MassValue vs Real, but types are analogous).\n\n**Claim 7:** There is a part definition named Transmission.  \n- **Supported** (Reference defines part def Transmission).\n\n**Claim 8:** Transmission has an attribute mass of type Real.  \n- **Supported** (Reference: part transmission : Engine { attribute mass : MassValue; } in Vehicle; attribute mass is present, type is MassValue vs Real, but types are analogous).\n\n**Claim 9:** There is a part definition named Vehicle.  \n- **Supported** (Reference defines part def Vehicle).\n\n**Claim 10:** Vehicle has a part named chassis of type Chassis.  \n- **Not supported** (Reference: Vehicle has attribute chassisMass : MassValue, not a part chassis : Chassis).\n\n**Claim 11:** Vehicle has a part named engine of type Engine.  \n- **Supported** (Reference: Vehicle has part engine : Engine).\n\n**Claim 12:** Vehicle has a part named transmission of type Transmission.  \n- **Supported** (Reference: Vehicle has part transmission : Engine; but Transmission is a separate part def, so this is ambiguous, but since Transmission is defined, **Supported**).\n\n**Claim 13:** Vehicle has an attribute maxMass of type Real, initialized to 2500.0.  \n- **Supported** (Reference: massLimit = 2500[kg]; in massConstraint; analogous).\n\n**Claim 14:** Vehicle has an attribute totalMass of type Real.  \n- **Not supported** (Reference does not define totalMass attribute).\n\n**Claim 15:** Vehicle has an attribute compliant of type Boolean.  \n- **Not supported** (Reference does not define compliant attribute).\n\n**Claim 16:** There is a part definition named MassComplianceSystem.  \n- **Not supported** (Reference does not define such a part).\n\n**Claim 17:** MassComplianceSystem has a part named vehicle of type Vehicle.  \n- **Not supported** (Reference does not define such a part).\n\n**Claim 18:** There is a part named massComplianceSystem of type MassComplianceSystem.  \n- **Not supported** (Reference does not define such a part).\n\n---\n\n### 3. Summarize the results\n\n**Supported Claims:** 1, 5, 6, 7, 8, 9, 11, 12, 13  \n**Total Supported:** 9\n\n**Total Claims:** 18\n\n---\n\n**Score: 9/18**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 472,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 988,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1460
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569350,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Atomic Claims:**\n\n1. The package is named (VehicleMassCompliance).\n2. The package imports ScalarValues::* privately.\n3. There is a part definition named Chassis.\n4. Chassis has an attribute mass of type Real.\n5. There is a part definition named Engine.\n6. Engine has an attribute mass of type Real.\n7. There is a part definition named Transmission.\n8. Transmission has an attribute mass of type Real.\n9. There is a part definition named Vehicle.\n10. Vehicle has a part named chassis of type Chassis.\n11. Vehicle has a part named engine of type Engine.\n12. Vehicle has a part named transmission of type Transmission.\n13. Vehicle has an attribute maxMass of type Real, initialized to 2500.0.\n14. Vehicle has an attribute totalMass of type Real.\n15. Vehicle has an attribute compliant of type Boolean.\n16. There is a part definition named MassComplianceSystem.\n17. MassComplianceSystem has a part named vehicle of type Vehicle.\n18. There is a part named massComplianceSystem of type MassComplianceSystem.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**Claim 1:** The package is named (VehicleMassCompliance).  \n- **Not supported** (Reference: VehicleMassComplianceSystem; but naming differences are to be ignored, so **Supported**).\n\n**Claim 2:** The package imports ScalarValues::* privately.  \n- **Not supported** (Reference imports ISQ::, SI::, NumericalFunctions::; ScalarValues::* is not present).\n\n**Claim 3:** There is a part definition named Chassis.  \n- **Not supported** (Reference does not define a Chassis part; only an attribute chassisMass in Vehicle).\n\n**Claim 4:** Chassis has an attribute mass of type Real.  \n- **Not supported** (No Chassis part in reference).\n\n**Claim 5:** There is a part definition named Engine.  \n- **Supported** (Reference defines part def Engine).\n\n**Claim 6:** Engine has an attribute mass of type Real.  \n- **Supported** (Reference: part engine : Engine { attribute mass : MassValue; } in Vehicle; attribute mass is present, type is MassValue vs Real, but types are analogous).\n\n**Claim 7:** There is a part definition named Transmission.  \n- **Supported** (Reference defines part def Transmission).\n\n**Claim 8:** Transmission has an attribute mass of type Real.  \n- **Supported** (Reference: part transmission : Engine { attribute mass : MassValue; } in Vehicle; attribute mass is present, type is MassValue vs Real, but types are analogous).\n\n**Claim 9:** There is a part definition named Vehicle.  \n- **Supported** (Reference defines part def Vehicle).\n\n**Claim 10:** Vehicle has a part named chassis of type Chassis.  \n- **Not supported** (Reference: Vehicle has attribute chassisMass : MassValue, not a part chassis : Chassis).\n\n**Claim 11:** Vehicle has a part named engine of type Engine.  \n- **Supported** (Reference: Vehicle has part engine : Engine).\n\n**Claim 12:** Vehicle has a part named transmission of type Transmission.  \n- **Supported** (Reference: Vehicle has part transmission : Engine; but Transmission is a separate part def, so this is ambiguous, but since Transmission is defined, **Supported**).\n\n**Claim 13:** Vehicle has an attribute maxMass of type Real, initialized to 2500.0.  \n- **Supported** (Reference: massLimit = 2500[kg]; in massConstraint; analogous).\n\n**Claim 14:** Vehicle has an attribute totalMass of type Real.  \n- **Not supported** (Reference does not define totalMass attribute).\n\n**Claim 15:** Vehicle has an attribute compliant of type Boolean.  \n- **Not supported** (Reference does not define compliant attribute).\n\n**Claim 16:** There is a part definition named MassComplianceSystem.  \n- **Not supported** (Reference does not define such a part).\n\n**Claim 17:** MassComplianceSystem has a part named vehicle of type Vehicle.  \n- **Not supported** (Reference does not define such a part).\n\n**Claim 18:** There is a part named massComplianceSystem of type MassComplianceSystem.  \n- **Not supported** (Reference does not define such a part).\n\n---\n\n### 3. Summarize the results\n\n**Supported Claims:** 1, 5, 6, 7, 8, 9, 11, 12, 13  \n**Total Supported:** 9\n\n**Total Claims:** 18\n\n---\n\n**Score: 9/18**"
+  }
+}

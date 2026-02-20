@@ -1,0 +1,85 @@
+{
+  "model_id": 50,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleLifecycleTemporalModel' {\n\tattribute def Date;\n\titem def Person;\n\tpart def Vehicle {\n\t\ttimeslice assembly;\n\t\tfirst assembly then delivery;\n\t\tsnapshot delivery {\n\t\t\tattribute deliveryDate : Date;\n\t\t}\n\t\tthen timeslice ownership[0..*] ordered {\n\t\t\tsnapshot sale = start;\n\t\t\tref item owner : Person[1];\n\t\t\ttimeslice driven[0..*] {\n\t\t\t\tref item driver : Person[1];\n\t\t\t}\n\t\t}\n\t\tsnapshot junked = done;\n\t}\n}\n\nGenerated Model:\npackage VehicleLifecyclePkg {\n  private import ScalarValues::*;\n\n  part def VehicleLifecycleSystem {\n    part vehicle : Vehicle;\n  }\n\n  part def Vehicle {\n    attribute vin : String;\n    part assembly : AssemblyStage;\n    part delivery : DeliveryStage;\n    part ownerships : OwnershipRecord[0..*];\n    part drivingOperations : DrivingOperation[0..*];\n    part scrapping : ScrappingInfo;\n  }\n\n  part def AssemblyStage {\n    attribute assemblyDate : String;\n    attribute assemblyPlant : String;\n  }\n\n  part def DeliveryStage {\n    attribute deliveryDate : String;\n    attribute deliveryLocation : String;\n    part deliveredToOwner : Owner;\n  }\n\n  part def OwnershipRecord {\n    attribute ownershipId : String;\n    part owner : Owner;\n    attribute startDate : String;\n    attribute endDate : String;\n  }\n\n  part def Owner {\n    attribute ownerId : String;\n    attribute ownerName : String;\n    attribute ownerContact : String;\n  }\n\n  part def Driver {\n    attribute driverId : String;\n    attribute driverName : String;\n    attribute licenseNumber : String;\n  }\n\n  part def DrivingOperation {\n    attribute operationId : String;\n    attribute operationDate : String;\n    attribute distance : Real;\n    part driver : Driver;\n  }\n\n  part def ScrappingInfo {\n    attribute scrappingDate : String;\n    attribute deregistrationId : String;\n    attribute scrappingLocation : String;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/50/50_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/50/50.sysml",
+  "response": {
+    "id": "resp_047d96eb0d4668a3006997fef0d040819f84e8d27d1ce85928",
+    "created_at": 1771568880.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_047d96eb0d4668a3006997fef139b4819f945a795409bd75f5",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Claims:**\n\n1. There is an attribute type `Date`.\n2. There is an item type `Person`.\n3. There is a part type `Vehicle`.\n4. `Vehicle` is a timeslice assembly.\n5. The first phase of `Vehicle` is `assembly`, then `delivery`.\n6. There is a snapshot phase `delivery` in `Vehicle`.\n7. The `delivery` snapshot has an attribute `deliveryDate` of type `Date`.\n8. After `delivery`, there is a timeslice `ownership` in `Vehicle`, with multiplicity `[0..*]` and ordered.\n9. The `ownership` timeslice has a snapshot `sale` which is the start.\n10. The `ownership` timeslice has a reference to an item `owner` of type `Person` with multiplicity `[1]`.\n11. The `ownership` timeslice contains a timeslice `driven` with multiplicity `[0..*]`.\n12. The `driven` timeslice has a reference to an item `driver` of type `Person` with multiplicity `[1]`.\n13. There is a snapshot `junked` in `Vehicle` which is the done state.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**1. There is an attribute type `Date`.**  \n- **Not covered.** The generated model uses `String` for dates, and does not define a `Date` type.\n\n**2. There is an item type `Person`.**  \n- **Partially covered.** The generated model defines `Owner` and `Driver` parts, each with attributes that could correspond to a person, but there is no explicit `Person` type.  \n- **Not covered** (since no explicit or equivalent generalization).\n\n**3. There is a part type `Vehicle`.**  \n- **Covered.** `part def Vehicle` exists.\n\n**4. `Vehicle` is a timeslice assembly.**  \n- **Not covered.** The generated model does not model timeslices or temporal aspects.\n\n**5. The first phase of `Vehicle` is `assembly`, then `delivery`.**  \n- **Partially covered.** There are `assembly` and `delivery` parts, but no explicit ordering or phase semantics.  \n- **Not covered** (since no explicit phase/ordering semantics).\n\n**6. There is a snapshot phase `delivery` in `Vehicle`.**  \n- **Partially covered.** There is a `delivery` part, but not as a snapshot/phase.  \n- **Not covered** (since no explicit phase semantics).\n\n**7. The `delivery` snapshot has an attribute `deliveryDate` of type `Date`.**  \n- **Partially covered.** `DeliveryStage` has `deliveryDate : String`.  \n- **Covered** (ignoring type difference as per instructions).\n\n**8. After `delivery`, there is a timeslice `ownership` in `Vehicle`, with multiplicity `[0..*]` and ordered.**  \n- **Partially covered.** There is `ownerships : OwnershipRecord[0..*]`, but no ordering or temporal semantics.  \n- **Not covered** (since no temporal/ordering semantics).\n\n**9. The `ownership` timeslice has a snapshot `sale` which is the start.**  \n- **Not covered.** No such snapshot or phase.\n\n**10. The `ownership` timeslice has a reference to an item `owner` of type `Person` with multiplicity `[1]`.**  \n- **Covered.** `OwnershipRecord` has `part owner : Owner`.\n\n**11. The `ownership` timeslice contains a timeslice `driven` with multiplicity `[0..*]`.**  \n- **Partially covered.** There is `drivingOperations : DrivingOperation[0..*]` in `Vehicle`, not nested under `OwnershipRecord`.  \n- **Not covered** (since not nested as in reference).\n\n**12. The `driven` timeslice has a reference to an item `driver` of type `Person` with multiplicity `[1]`.**  \n- **Covered.** `DrivingOperation` has `part driver : Driver`.\n\n**13. There is a snapshot `junked` in `Vehicle` which is the done state.**  \n- **Partially covered.** There is `scrapping : ScrappingInfo`, but not as a snapshot/done state.  \n- **Not covered** (since no phase semantics).\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 3. There is a part type `Vehicle`.\n- 7. The `delivery` snapshot has an attribute `deliveryDate` (type difference ignored).\n- 10. The `ownership` timeslice has a reference to an item `owner` of type `Person` with multiplicity `[1]`.\n- 12. The `driven` timeslice has a reference to an item `driver` of type `Person` with multiplicity `[1]`.\n\n**Total claims:** 13  \n**Covered claims:** 4\n\n---\n\n**Score: 4/13**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 598,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1100,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1698
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568893,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Claims:**\n\n1. There is an attribute type `Date`.\n2. There is an item type `Person`.\n3. There is a part type `Vehicle`.\n4. `Vehicle` is a timeslice assembly.\n5. The first phase of `Vehicle` is `assembly`, then `delivery`.\n6. There is a snapshot phase `delivery` in `Vehicle`.\n7. The `delivery` snapshot has an attribute `deliveryDate` of type `Date`.\n8. After `delivery`, there is a timeslice `ownership` in `Vehicle`, with multiplicity `[0..*]` and ordered.\n9. The `ownership` timeslice has a snapshot `sale` which is the start.\n10. The `ownership` timeslice has a reference to an item `owner` of type `Person` with multiplicity `[1]`.\n11. The `ownership` timeslice contains a timeslice `driven` with multiplicity `[0..*]`.\n12. The `driven` timeslice has a reference to an item `driver` of type `Person` with multiplicity `[1]`.\n13. There is a snapshot `junked` in `Vehicle` which is the done state.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**1. There is an attribute type `Date`.**  \n- **Not covered.** The generated model uses `String` for dates, and does not define a `Date` type.\n\n**2. There is an item type `Person`.**  \n- **Partially covered.** The generated model defines `Owner` and `Driver` parts, each with attributes that could correspond to a person, but there is no explicit `Person` type.  \n- **Not covered** (since no explicit or equivalent generalization).\n\n**3. There is a part type `Vehicle`.**  \n- **Covered.** `part def Vehicle` exists.\n\n**4. `Vehicle` is a timeslice assembly.**  \n- **Not covered.** The generated model does not model timeslices or temporal aspects.\n\n**5. The first phase of `Vehicle` is `assembly`, then `delivery`.**  \n- **Partially covered.** There are `assembly` and `delivery` parts, but no explicit ordering or phase semantics.  \n- **Not covered** (since no explicit phase/ordering semantics).\n\n**6. There is a snapshot phase `delivery` in `Vehicle`.**  \n- **Partially covered.** There is a `delivery` part, but not as a snapshot/phase.  \n- **Not covered** (since no explicit phase semantics).\n\n**7. The `delivery` snapshot has an attribute `deliveryDate` of type `Date`.**  \n- **Partially covered.** `DeliveryStage` has `deliveryDate : String`.  \n- **Covered** (ignoring type difference as per instructions).\n\n**8. After `delivery`, there is a timeslice `ownership` in `Vehicle`, with multiplicity `[0..*]` and ordered.**  \n- **Partially covered.** There is `ownerships : OwnershipRecord[0..*]`, but no ordering or temporal semantics.  \n- **Not covered** (since no temporal/ordering semantics).\n\n**9. The `ownership` timeslice has a snapshot `sale` which is the start.**  \n- **Not covered.** No such snapshot or phase.\n\n**10. The `ownership` timeslice has a reference to an item `owner` of type `Person` with multiplicity `[1]`.**  \n- **Covered.** `OwnershipRecord` has `part owner : Owner`.\n\n**11. The `ownership` timeslice contains a timeslice `driven` with multiplicity `[0..*]`.**  \n- **Partially covered.** There is `drivingOperations : DrivingOperation[0..*]` in `Vehicle`, not nested under `OwnershipRecord`.  \n- **Not covered** (since not nested as in reference).\n\n**12. The `driven` timeslice has a reference to an item `driver` of type `Person` with multiplicity `[1]`.**  \n- **Covered.** `DrivingOperation` has `part driver : Driver`.\n\n**13. There is a snapshot `junked` in `Vehicle` which is the done state.**  \n- **Partially covered.** There is `scrapping : ScrappingInfo`, but not as a snapshot/done state.  \n- **Not covered** (since no phase semantics).\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 3. There is a part type `Vehicle`.\n- 7. The `delivery` snapshot has an attribute `deliveryDate` (type difference ignored).\n- 10. The `ownership` timeslice has a reference to an item `owner` of type `Person` with multiplicity `[1]`.\n- 12. The `driven` timeslice has a reference to an item `driver` of type `Person` with multiplicity `[1]`.\n\n**Total claims:** 13  \n**Covered claims:** 4\n\n---\n\n**Score: 4/13**"
+  }
+}

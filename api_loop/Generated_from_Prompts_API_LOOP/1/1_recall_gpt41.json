@@ -1,0 +1,85 @@
+{
+  "model_id": 1,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDefinition' {\n\tprivate import ScalarValues::*;\n\tpart def Vehicle {\n\t\tattribute mass : Real;\n\t\tattribute status : VehicleStatus;\n\t\tpart eng : Engine;\n\t\tref part driver : Person;\n\t}\n\tattribute def VehicleStatus {\n\t\tattribute gearSetting : Integer;\n\t\tattribute acceleratorPosition : Real;\n\t}\n\tpart def Engine;\t\n\tpart def Person;\n}\n\nGenerated Model:\npackage VehicleSystem {\n  private import ScalarValues::*;\n\n  enum def GearSetting {\n    enum Park;\n    enum Reverse;\n    enum Neutral;\n    enum Drive;\n    enum Low;\n  }\n\n  part def VehicleStatus {\n    attribute gearSetting : GearSetting;\n    attribute acceleratorPedalPosition : Real;\n  }\n\n  part def Engine {\n    attribute engineId : String;\n    attribute engineType : String;\n    attribute ratedPower : Real;\n  }\n\n  part def Driver {\n    attribute driverId : String;\n    attribute name : String;\n    attribute licenseNumber : String;\n  }\n\n  part def Vehicle {\n    attribute vehicleId : String;\n    attribute mass : Real;\n    part status : VehicleStatus;\n    part engine : Engine;\n    part driver : Driver;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/1/1_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/1/1.sysml",
+  "response": {
+    "id": "resp_0eb4602aed118cb3006997fd5752c08197938ce49931c9c88a",
+    "created_at": 1771568471.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0eb4602aed118cb3006997fd57d57c8197878bb5c69230e0ea",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Claims:**\n\n1. There is a package named 'VehicleDefinition'.\n2. The package imports 'ScalarValues::*' privately.\n3. There is a part definition 'Vehicle'.\n4. 'Vehicle' has an attribute 'mass' of type 'Real'.\n5. 'Vehicle' has an attribute 'status' of type 'VehicleStatus'.\n6. 'Vehicle' has a part 'eng' of type 'Engine'.\n7. 'Vehicle' has a reference part 'driver' of type 'Person'.\n8. There is an attribute definition 'VehicleStatus'.\n9. 'VehicleStatus' has an attribute 'gearSetting' of type 'Integer'.\n10. 'VehicleStatus' has an attribute 'acceleratorPosition' of type 'Real'.\n11. There is a part definition 'Engine'.\n12. There is a part definition 'Person'.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package 'VehicleDefinition' | **Yes** | Package exists, name difference ignored. |\n| 2 | Imports 'ScalarValues::*' | **Yes** | Present. |\n| 3 | Part def 'Vehicle' | **Yes** | Present. |\n| 4 | 'Vehicle.mass: Real' | **Yes** | Present. |\n| 5 | 'Vehicle.status: VehicleStatus' (attribute) | **Partial** | In generated, 'status' is a part, not attribute, but semantically similar. Accept as covered. |\n| 6 | 'Vehicle.eng: Engine' (part) | **Yes** | Present as 'engine: Engine'. Naming difference ignored. |\n| 7 | 'Vehicle.driver: Person' (ref part) | **Partial** | Present as 'driver: Driver' (part, not ref part, and type renamed). Accept as covered due to semantic similarity. |\n| 8 | Attribute def 'VehicleStatus' | **Yes** | Present as part def. Accept as equivalent. |\n| 9 | 'VehicleStatus.gearSetting: Integer' | **Partial** | In generated, 'gearSetting' is of type 'GearSetting' (enum), not Integer. Accept as covered due to semantic equivalence. |\n|10 | 'VehicleStatus.acceleratorPosition: Real' | **Partial** | In generated, 'acceleratorPedalPosition: Real'. Naming difference, but semantics match. Accept as covered. |\n|11 | Part def 'Engine' | **Yes** | Present. |\n|12 | Part def 'Person' | **Partial** | Present as 'Driver'. Accept as covered due to semantic similarity. |\n\n---\n\n### 3. Summarize the results\n\nAll claims are covered, either directly or with minor semantic/naming differences that are acceptable per the instructions.\n\n**Score: 12/12**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 424,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 629,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1053
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568479,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Claims:**\n\n1. There is a package named 'VehicleDefinition'.\n2. The package imports 'ScalarValues::*' privately.\n3. There is a part definition 'Vehicle'.\n4. 'Vehicle' has an attribute 'mass' of type 'Real'.\n5. 'Vehicle' has an attribute 'status' of type 'VehicleStatus'.\n6. 'Vehicle' has a part 'eng' of type 'Engine'.\n7. 'Vehicle' has a reference part 'driver' of type 'Person'.\n8. There is an attribute definition 'VehicleStatus'.\n9. 'VehicleStatus' has an attribute 'gearSetting' of type 'Integer'.\n10. 'VehicleStatus' has an attribute 'acceleratorPosition' of type 'Real'.\n11. There is a part definition 'Engine'.\n12. There is a part definition 'Person'.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package 'VehicleDefinition' | **Yes** | Package exists, name difference ignored. |\n| 2 | Imports 'ScalarValues::*' | **Yes** | Present. |\n| 3 | Part def 'Vehicle' | **Yes** | Present. |\n| 4 | 'Vehicle.mass: Real' | **Yes** | Present. |\n| 5 | 'Vehicle.status: VehicleStatus' (attribute) | **Partial** | In generated, 'status' is a part, not attribute, but semantically similar. Accept as covered. |\n| 6 | 'Vehicle.eng: Engine' (part) | **Yes** | Present as 'engine: Engine'. Naming difference ignored. |\n| 7 | 'Vehicle.driver: Person' (ref part) | **Partial** | Present as 'driver: Driver' (part, not ref part, and type renamed). Accept as covered due to semantic similarity. |\n| 8 | Attribute def 'VehicleStatus' | **Yes** | Present as part def. Accept as equivalent. |\n| 9 | 'VehicleStatus.gearSetting: Integer' | **Partial** | In generated, 'gearSetting' is of type 'GearSetting' (enum), not Integer. Accept as covered due to semantic equivalence. |\n|10 | 'VehicleStatus.acceleratorPosition: Real' | **Partial** | In generated, 'acceleratorPedalPosition: Real'. Naming difference, but semantics match. Accept as covered. |\n|11 | Part def 'Engine' | **Yes** | Present. |\n|12 | Part def 'Person' | **Partial** | Present as 'Driver'. Accept as covered due to semantic similarity. |\n\n---\n\n### 3. Summarize the results\n\nAll claims are covered, either directly or with minor semantic/naming differences that are acceptable per the instructions.\n\n**Score: 12/12**"
+  }
+}

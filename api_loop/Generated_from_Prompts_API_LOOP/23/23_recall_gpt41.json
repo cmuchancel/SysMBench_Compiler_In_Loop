@@ -1,0 +1,85 @@
+{
+  "model_id": 23,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PhotographyWorkflow' {\n\tpart def Scene;\n\tpart def Image {\n\t\tisWellFocused: ScalarValues::Boolean;\n\t}\n\tpart def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\n\taction def TakePicture { in scene : Scene; out picture : Picture; }\n\taction takePicture : TakePicture {\n\t\tin item scene;\n\t\tout item picture;\n\t\taction focus : Focus {\n\t\t\tin item scene = takePicture::scene; \n\t\t\tout item image;\n\t\t}\t\n\t\tfirst focus \n\t\t\tif focus.image.isWellFocused then shoot;\n\t\tflow from focus.image to shoot.image;\n\t\taction shoot : Shoot {\n\t\t\tin item; \n\t\t\tout item picture = takePicture::picture;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage PhotographyWorkflow {\n  private import ScalarValues::*;\n\n  enum def FocusState {\n    enum clear;\n    enum unclear;\n  }\n\n  item def Scene;\n  item def Photo;\n\n  port def ScenePort {\n    attribute scene : Scene;\n  }\n\n  port def FocusStatusPort {\n    attribute status : FocusState;\n  }\n\n  port def PhotoPort {\n    attribute photo : Photo;\n  }\n\n  part def SceneSelector {\n    port sceneOut : ScenePort;\n  }\n\n  part def FocusUnit {\n    attribute autoFocus : Boolean = true;\n    port sceneIn : ScenePort;\n    port focusStatusOut : FocusStatusPort;\n  }\n\n  part def PhotoShooter {\n    attribute oneClick : Boolean = true;\n    port sceneIn : ScenePort;\n    port focusIn : FocusStatusPort;\n    port photoOut : PhotoPort;\n  }\n\n  part def PhotographySystem {\n    part selector : SceneSelector;\n    part focus : FocusUnit;\n    part shooter : PhotoShooter;\n\n    port photoOut : PhotoPort;\n\n    connect selector.sceneOut to focus.sceneIn;\n    connect selector.sceneOut to shooter.sceneIn;\n    connect focus.focusStatusOut to shooter.focusIn;\n    connect shooter.photoOut to photoOut;\n  }\n\n  part system : PhotographySystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/23/23_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/23/23.sysml",
+  "response": {
+    "id": "resp_0609b3c1846c3a76006998001dafa8819c8a7a789f83c9bb19",
+    "created_at": 1771569181.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0609b3c1846c3a76006998001df940819c9152985660c2197d",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Claims:**\n\n1. There is a package named 'PhotographyWorkflow'.\n2. There is a part definition named 'Scene'.\n3. There is a part definition named 'Image'.\n4. The part 'Image' has an attribute 'isWellFocused' of type 'ScalarValues::Boolean'.\n5. There is a part definition named 'Picture'.\n6. There is an action definition named 'Focus' with input 'scene' of type 'Scene' and output 'image' of type 'Image'.\n7. There is an action definition named 'Shoot' with input 'image' of type 'Image' and output 'picture' of type 'Picture'.\n8. There is an action definition named 'TakePicture' with input 'scene' of type 'Scene' and output 'picture' of type 'Picture'.\n9. There is an action 'takePicture' of type 'TakePicture' with:\n    - input item 'scene'\n    - output item 'picture'\n    - an inner action 'focus' of type 'Focus' with:\n        - input item 'scene' mapped from 'takePicture::scene'\n        - output item 'image'\n    - 'focus' is executed first\n    - if 'focus.image.isWellFocused' then 'shoot'\n    - flow from 'focus.image' to 'shoot.image'\n    - an inner action 'shoot' of type 'Shoot' with:\n        - input item\n        - output item 'picture' mapped from 'takePicture::picture'\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n**1. There is a package named 'PhotographyWorkflow'.**\n- **Covered.** The generated model has a package with the same name.\n\n**2. There is a part definition named 'Scene'.**\n- **Covered.** The generated model defines `item def Scene`.\n\n**3. There is a part definition named 'Image'.**\n- **Not Covered.** The generated model does not define a part or item named 'Image'.\n\n**4. The part 'Image' has an attribute 'isWellFocused' of type 'ScalarValues::Boolean'.**\n- **Not Covered.** There is no 'Image' part, nor an 'isWellFocused' attribute.\n\n**5. There is a part definition named 'Picture'.**\n- **Not Covered.** The generated model defines 'Photo', which could be equivalent, but there is no explicit mapping or indication that 'Photo' = 'Picture'. For recall, unless it's clear, we do not count it.\n\n**6. There is an action definition named 'Focus' with input 'scene' of type 'Scene' and output 'image' of type 'Image'.**\n- **Partially Covered.** The generated model has a 'FocusUnit' part with a 'sceneIn' port (Scene) and a 'focusStatusOut' port (FocusState). However, there is no explicit action named 'Focus', nor an output of type 'Image'. The closest is 'FocusState', which is not the same as 'Image'. **Not Covered.**\n\n**7. There is an action definition named 'Shoot' with input 'image' of type 'Image' and output 'picture' of type 'Picture'.**\n- **Not Covered.** There is no action or part that takes 'Image' and produces 'Picture' (or 'Photo').\n\n**8. There is an action definition named 'TakePicture' with input 'scene' of type 'Scene' and output 'picture' of type 'Picture'.**\n- **Partially Covered.** The overall system connects 'Scene' to 'Photo', but not as an explicit action. **Not Covered.**\n\n**9. There is an action 'takePicture' of type 'TakePicture' with:**\n   - **input item 'scene'**\n   - **output item 'picture'**\n   - **an inner action 'focus' of type 'Focus' with:**\n     - **input item 'scene' mapped from 'takePicture::scene'**\n     - **output item 'image'**\n   - **'focus' is executed first**\n   - **if 'focus.image.isWellFocused' then 'shoot'**\n   - **flow from 'focus.image' to 'shoot.image'**\n   - **an inner action 'shoot' of type 'Shoot' with:**\n     - **input item**\n     - **output item 'picture' mapped from 'takePicture::picture'**\n\n- **Not Covered.** The generated model does not define composite actions or control flow logic, nor does it have the inner action structure or conditional logic.\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n- 1. There is a package named 'PhotographyWorkflow'.\n- 2. There is a part definition named 'Scene'.\n\n**Total Claims:** 9  \n**Covered Claims:** 2\n\n---\n\n**Score: 2/9**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 618,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1043,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1661
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569195,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Claims:**\n\n1. There is a package named 'PhotographyWorkflow'.\n2. There is a part definition named 'Scene'.\n3. There is a part definition named 'Image'.\n4. The part 'Image' has an attribute 'isWellFocused' of type 'ScalarValues::Boolean'.\n5. There is a part definition named 'Picture'.\n6. There is an action definition named 'Focus' with input 'scene' of type 'Scene' and output 'image' of type 'Image'.\n7. There is an action definition named 'Shoot' with input 'image' of type 'Image' and output 'picture' of type 'Picture'.\n8. There is an action definition named 'TakePicture' with input 'scene' of type 'Scene' and output 'picture' of type 'Picture'.\n9. There is an action 'takePicture' of type 'TakePicture' with:\n    - input item 'scene'\n    - output item 'picture'\n    - an inner action 'focus' of type 'Focus' with:\n        - input item 'scene' mapped from 'takePicture::scene'\n        - output item 'image'\n    - 'focus' is executed first\n    - if 'focus.image.isWellFocused' then 'shoot'\n    - flow from 'focus.image' to 'shoot.image'\n    - an inner action 'shoot' of type 'Shoot' with:\n        - input item\n        - output item 'picture' mapped from 'takePicture::picture'\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n**1. There is a package named 'PhotographyWorkflow'.**\n- **Covered.** The generated model has a package with the same name.\n\n**2. There is a part definition named 'Scene'.**\n- **Covered.** The generated model defines `item def Scene`.\n\n**3. There is a part definition named 'Image'.**\n- **Not Covered.** The generated model does not define a part or item named 'Image'.\n\n**4. The part 'Image' has an attribute 'isWellFocused' of type 'ScalarValues::Boolean'.**\n- **Not Covered.** There is no 'Image' part, nor an 'isWellFocused' attribute.\n\n**5. There is a part definition named 'Picture'.**\n- **Not Covered.** The generated model defines 'Photo', which could be equivalent, but there is no explicit mapping or indication that 'Photo' = 'Picture'. For recall, unless it's clear, we do not count it.\n\n**6. There is an action definition named 'Focus' with input 'scene' of type 'Scene' and output 'image' of type 'Image'.**\n- **Partially Covered.** The generated model has a 'FocusUnit' part with a 'sceneIn' port (Scene) and a 'focusStatusOut' port (FocusState). However, there is no explicit action named 'Focus', nor an output of type 'Image'. The closest is 'FocusState', which is not the same as 'Image'. **Not Covered.**\n\n**7. There is an action definition named 'Shoot' with input 'image' of type 'Image' and output 'picture' of type 'Picture'.**\n- **Not Covered.** There is no action or part that takes 'Image' and produces 'Picture' (or 'Photo').\n\n**8. There is an action definition named 'TakePicture' with input 'scene' of type 'Scene' and output 'picture' of type 'Picture'.**\n- **Partially Covered.** The overall system connects 'Scene' to 'Photo', but not as an explicit action. **Not Covered.**\n\n**9. There is an action 'takePicture' of type 'TakePicture' with:**\n   - **input item 'scene'**\n   - **output item 'picture'**\n   - **an inner action 'focus' of type 'Focus' with:**\n     - **input item 'scene' mapped from 'takePicture::scene'**\n     - **output item 'image'**\n   - **'focus' is executed first**\n   - **if 'focus.image.isWellFocused' then 'shoot'**\n   - **flow from 'focus.image' to 'shoot.image'**\n   - **an inner action 'shoot' of type 'Shoot' with:**\n     - **input item**\n     - **output item 'picture' mapped from 'takePicture::picture'**\n\n- **Not Covered.** The generated model does not define composite actions or control flow logic, nor does it have the inner action structure or conditional logic.\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n- 1. There is a package named 'PhotographyWorkflow'.\n- 2. There is a part definition named 'Scene'.\n\n**Total Claims:** 9  \n**Covered Claims:** 2\n\n---\n\n**Score: 2/9**"
+  }
+}

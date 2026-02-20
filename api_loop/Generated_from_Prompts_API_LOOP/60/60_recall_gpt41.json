@@ -1,0 +1,85 @@
+{
+  "model_id": 60,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDynamicsCalculation' {\n\tprivate import ScalarValues::Real;\n\tprivate import ISQ::*;\n\tcalc def Power { in whlpwr : PowerValue; in Cd : Real; in Cf : Real; in tm : MassValue; in v : SpeedValue;\n\t\tattribute drag = Cd * v;\n\t\tattribute friction = Cf * tm * v;\n\t\treturn : PowerValue = whlpwr - drag - friction;\n\t}\n\tcalc def Acceleration { in tp: PowerValue; in tm : MassValue; in v : SpeedValue;\n\t\treturn : AccelerationValue = tp / (tm * v);\n\t}\n\tcalc def Velocity { in dt : TimeValue; in v0 : SpeedValue; in a : AccelerationValue;\n\t\treturn : SpeedValue = v0 + a * dt;\n \t}\n\tcalc def Position { in dt : TimeValue; in x0 : LengthValue; in v : SpeedValue;\n\t\treturn : LengthValue = x0 + v * dt;\n\t}\n\tattribute def DynamicState {\n\t\tattribute v: SpeedValue;\n\t\tattribute x: LengthValue;\n\t}\n\tpart def VehicleDynamics {\n\t\tattribute C_d : Real;\n\t\tattribute C_f : Real;\n\t\tattribute wheelPower : PowerValue;\n\t\tattribute mass : MassValue;\t\n\t\tcalc updateState { \n\t\t\tin delta_t : TimeValue; \n\t\t\tin currState : DynamicState;\n\t\t\tattribute totalPower : PowerValue = Power(wheelPower, C_d, C_f, mass, currState.v);\n\t\t\treturn attribute newState : DynamicState {\n\t\t\t\t:>> v = Velocity(delta_t, currState.v, Acceleration(totalPower, mass, currState.v));\n\t\t\t\t:>> x = Position(delta_t, currState.x, currState.v);\n\t\t\t}\n\t\t}\n\t} \n}\n\nGenerated Model:\npackage VehicleDynamicsSimulation {\n  private import ScalarValues::*;\n\n  part def VehicleParameters {\n    attribute mass : Real;\n    attribute wheelPower : Real;\n    attribute dragCoefficient : Real;\n    attribute rollingResistanceCoefficient : Real;\n    attribute frontalArea : Real;\n  }\n\n  part def InitialConditions {\n    attribute initialSpeed : Real;\n    attribute initialPosition : Real;\n  }\n\n  part def Environment {\n    attribute airDensity : Real;\n    attribute gravity : Real;\n  }\n\n  part def VehicleState {\n    attribute time : Real;\n    attribute speed : Real;\n    attribute position : Real;\n    attribute acceleration : Real;\n    attribute displacement : Real;\n  }\n\n  part def SimulationControl {\n    attribute timeStep : Real;\n    attribute totalTime : Real;\n  }\n\n  part def VehicleDynamicsSystem {\n    part parameters : VehicleParameters;\n    part initial : InitialConditions;\n    part environment : Environment;\n    part vehicleState : VehicleState;\n    part control : SimulationControl;\n\n    attribute computedDragForce : Real;\n    attribute computedRollingResistanceForce : Real;\n    attribute computedNetForce : Real;\n    attribute computedAcceleration : Real;\n  }\n\n  part system : VehicleDynamicsSystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/60/60_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/60/60.sysml",
+  "response": {
+    "id": "resp_06aae648b34e6d740069980057bd6c819589e1c7583f58f5fd",
+    "created_at": 1771569239.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_06aae648b34e6d740069980057f514819583835af647cf94b8",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### Imports and Package\n1. The package is named 'VehicleDynamicsCalculation'.\n2. Private import of ScalarValues::Real.\n3. Private import of ISQ::*.\n\n#### Calculations (calc def)\n4. Definition of calculation Power with inputs: whlpwr (PowerValue), Cd (Real), Cf (Real), tm (MassValue), v (SpeedValue).\n5. In Power, attribute drag = Cd * v.\n6. In Power, attribute friction = Cf * tm * v.\n7. In Power, return value: PowerValue = whlpwr - drag - friction.\n8. Definition of calculation Acceleration with inputs: tp (PowerValue), tm (MassValue), v (SpeedValue).\n9. In Acceleration, return value: AccelerationValue = tp / (tm * v).\n10. Definition of calculation Velocity with inputs: dt (TimeValue), v0 (SpeedValue), a (AccelerationValue).\n11. In Velocity, return value: SpeedValue = v0 + a * dt.\n12. Definition of calculation Position with inputs: dt (TimeValue), x0 (LengthValue), v (SpeedValue).\n13. In Position, return value: LengthValue = x0 + v * dt.\n\n#### Attribute and Part Definitions\n14. Definition of attribute DynamicState.\n15. In DynamicState, attribute v: SpeedValue.\n16. In DynamicState, attribute x: LengthValue.\n17. Definition of part VehicleDynamics.\n18. In VehicleDynamics, attribute C_d : Real.\n19. In VehicleDynamics, attribute C_f : Real.\n20. In VehicleDynamics, attribute wheelPower : PowerValue.\n21. In VehicleDynamics, attribute mass : MassValue.\n\n#### Calculation in Part\n22. In VehicleDynamics, definition of calculation updateState with inputs: delta_t (TimeValue), currState (DynamicState).\n23. In updateState, attribute totalPower : PowerValue = Power(wheelPower, C_d, C_f, mass, currState.v).\n24. In updateState, return attribute newState : DynamicState with:\n   - v = Velocity(delta_t, currState.v, Acceleration(totalPower, mass, currState.v))\n   - x = Position(delta_t, currState.x, currState.v)\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n#### Imports and Package\n1. **Package name**: Not covered (different name, but this is not a modeling claim relevant to structure/semantics).\n2. **Import ScalarValues::Real**: Partially covered (import ScalarValues::*, but not ISQ).\n3. **Import ISQ::*:** Not covered.\n\n#### Calculations (calc def)\n4. **Power calculation definition with inputs**: Not covered (no calculation definitions in generated model).\n5. **Power: drag = Cd * v**: Partially covered (computedDragForce exists, but not as a calculation).\n6. **Power: friction = Cf * tm * v**: Partially covered (computedRollingResistanceForce exists, but not as a calculation).\n7. **Power: return PowerValue = whlpwr - drag - friction**: Not covered (no calculation).\n8. **Acceleration calculation definition with inputs**: Not covered.\n9. **Acceleration: return AccelerationValue = tp / (tm * v)**: Not covered.\n10. **Velocity calculation definition with inputs**: Not covered.\n11. **Velocity: return SpeedValue = v0 + a * dt**: Not covered.\n12. **Position calculation definition with inputs**: Not covered.\n13. **Position: return LengthValue = x0 + v * dt**: Not covered.\n\n#### Attribute and Part Definitions\n14. **Attribute def DynamicState**: Partially covered (VehicleState part exists, but not as an attribute).\n15. **DynamicState: attribute v: SpeedValue**: Covered (VehicleState.speed).\n16. **DynamicState: attribute x: LengthValue**: Covered (VehicleState.position).\n17. **Part def VehicleDynamics**: Covered (VehicleDynamicsSystem exists, similar role).\n18. **VehicleDynamics: attribute C_d : Real**: Covered (VehicleParameters.dragCoefficient).\n19. **VehicleDynamics: attribute C_f : Real**: Covered (VehicleParameters.rollingResistanceCoefficient).\n20. **VehicleDynamics: attribute wheelPower : PowerValue**: Covered (VehicleParameters.wheelPower).\n21. **VehicleDynamics: attribute mass : MassValue**: Covered (VehicleParameters.mass).\n\n#### Calculation in Part\n22. **VehicleDynamics: calc updateState with inputs**: Not covered (no calculation definitions).\n23. **updateState: attribute totalPower = Power(...)**: Not covered.\n24. **updateState: return attribute newState : DynamicState {...}**: Not covered.\n\n---\n\n### 3. Summarize the results\n\n#### Tally of covered claims\n\n- **Covered**: 15, 16, 17, 18, 19, 20, 21 (7 claims)\n- **Partially covered**: 2, 5, 6, 14 (4 claims)  \n  (For recall, partial coverage is typically not counted as full coverage unless specified.)\n- **Not covered**: 1, 3, 4, 7, 8, 9, 10, 11, 12, 13, 22, 23, 24 (13 claims)\n\n**Total atomic claims:** 24  \n**Number of covered claims:** 7\n\n---\n\n**Score: 7/24**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 813,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1176,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1989
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569250,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### Imports and Package\n1. The package is named 'VehicleDynamicsCalculation'.\n2. Private import of ScalarValues::Real.\n3. Private import of ISQ::*.\n\n#### Calculations (calc def)\n4. Definition of calculation Power with inputs: whlpwr (PowerValue), Cd (Real), Cf (Real), tm (MassValue), v (SpeedValue).\n5. In Power, attribute drag = Cd * v.\n6. In Power, attribute friction = Cf * tm * v.\n7. In Power, return value: PowerValue = whlpwr - drag - friction.\n8. Definition of calculation Acceleration with inputs: tp (PowerValue), tm (MassValue), v (SpeedValue).\n9. In Acceleration, return value: AccelerationValue = tp / (tm * v).\n10. Definition of calculation Velocity with inputs: dt (TimeValue), v0 (SpeedValue), a (AccelerationValue).\n11. In Velocity, return value: SpeedValue = v0 + a * dt.\n12. Definition of calculation Position with inputs: dt (TimeValue), x0 (LengthValue), v (SpeedValue).\n13. In Position, return value: LengthValue = x0 + v * dt.\n\n#### Attribute and Part Definitions\n14. Definition of attribute DynamicState.\n15. In DynamicState, attribute v: SpeedValue.\n16. In DynamicState, attribute x: LengthValue.\n17. Definition of part VehicleDynamics.\n18. In VehicleDynamics, attribute C_d : Real.\n19. In VehicleDynamics, attribute C_f : Real.\n20. In VehicleDynamics, attribute wheelPower : PowerValue.\n21. In VehicleDynamics, attribute mass : MassValue.\n\n#### Calculation in Part\n22. In VehicleDynamics, definition of calculation updateState with inputs: delta_t (TimeValue), currState (DynamicState).\n23. In updateState, attribute totalPower : PowerValue = Power(wheelPower, C_d, C_f, mass, currState.v).\n24. In updateState, return attribute newState : DynamicState with:\n   - v = Velocity(delta_t, currState.v, Acceleration(totalPower, mass, currState.v))\n   - x = Position(delta_t, currState.x, currState.v)\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n#### Imports and Package\n1. **Package name**: Not covered (different name, but this is not a modeling claim relevant to structure/semantics).\n2. **Import ScalarValues::Real**: Partially covered (import ScalarValues::*, but not ISQ).\n3. **Import ISQ::*:** Not covered.\n\n#### Calculations (calc def)\n4. **Power calculation definition with inputs**: Not covered (no calculation definitions in generated model).\n5. **Power: drag = Cd * v**: Partially covered (computedDragForce exists, but not as a calculation).\n6. **Power: friction = Cf * tm * v**: Partially covered (computedRollingResistanceForce exists, but not as a calculation).\n7. **Power: return PowerValue = whlpwr - drag - friction**: Not covered (no calculation).\n8. **Acceleration calculation definition with inputs**: Not covered.\n9. **Acceleration: return AccelerationValue = tp / (tm * v)**: Not covered.\n10. **Velocity calculation definition with inputs**: Not covered.\n11. **Velocity: return SpeedValue = v0 + a * dt**: Not covered.\n12. **Position calculation definition with inputs**: Not covered.\n13. **Position: return LengthValue = x0 + v * dt**: Not covered.\n\n#### Attribute and Part Definitions\n14. **Attribute def DynamicState**: Partially covered (VehicleState part exists, but not as an attribute).\n15. **DynamicState: attribute v: SpeedValue**: Covered (VehicleState.speed).\n16. **DynamicState: attribute x: LengthValue**: Covered (VehicleState.position).\n17. **Part def VehicleDynamics**: Covered (VehicleDynamicsSystem exists, similar role).\n18. **VehicleDynamics: attribute C_d : Real**: Covered (VehicleParameters.dragCoefficient).\n19. **VehicleDynamics: attribute C_f : Real**: Covered (VehicleParameters.rollingResistanceCoefficient).\n20. **VehicleDynamics: attribute wheelPower : PowerValue**: Covered (VehicleParameters.wheelPower).\n21. **VehicleDynamics: attribute mass : MassValue**: Covered (VehicleParameters.mass).\n\n#### Calculation in Part\n22. **VehicleDynamics: calc updateState with inputs**: Not covered (no calculation definitions).\n23. **updateState: attribute totalPower = Power(...)**: Not covered.\n24. **updateState: return attribute newState : DynamicState {...}**: Not covered.\n\n---\n\n### 3. Summarize the results\n\n#### Tally of covered claims\n\n- **Covered**: 15, 16, 17, 18, 19, 20, 21 (7 claims)\n- **Partially covered**: 2, 5, 6, 14 (4 claims)  \n  (For recall, partial coverage is typically not counted as full coverage unless specified.)\n- **Not covered**: 1, 3, 4, 7, 8, 9, 10, 11, 12, 13, 22, 23, 24 (13 claims)\n\n**Total atomic claims:** 24  \n**Number of covered claims:** 7\n\n---\n\n**Score: 7/24**"
+  }
+}

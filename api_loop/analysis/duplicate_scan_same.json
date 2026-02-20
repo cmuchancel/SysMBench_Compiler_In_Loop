@@ -1,0 +1,2197 @@
+[
+  [
+    ".env 2.example",
+    ".env.example",
+    "same"
+  ],
+  [
+    "evaluation_scripts/verify_final_sysml_checks 2.py",
+    "evaluation_scripts/verify_final_sysml_checks.py",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_chatglm 2.sh",
+    "sysmbench_original_upstream/scripts/run_chatglm.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_codellama 2.sh",
+    "sysmbench_original_upstream/scripts/run_codellama.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_octocoder 2.sh",
+    "sysmbench_original_upstream/scripts/run_octocoder.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_codegen 2.sh",
+    "sysmbench_original_upstream/scripts/run_codegen.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_magicoder 2.sh",
+    "sysmbench_original_upstream/scripts/run_magicoder.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/evaluate 2.sh",
+    "sysmbench_original_upstream/scripts/evaluate.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_starcoder 2.sh",
+    "sysmbench_original_upstream/scripts/run_starcoder.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_deepseek 2.sh",
+    "sysmbench_original_upstream/scripts/run_deepseek.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_claude 2.sh",
+    "sysmbench_original_upstream/scripts/run_claude.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_qwen3 2.sh",
+    "sysmbench_original_upstream/scripts/run_qwen3.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_internlm 2.sh",
+    "sysmbench_original_upstream/scripts/run_internlm.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_gpt4 2.sh",
+    "sysmbench_original_upstream/scripts/run_gpt4.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_wizardCoder 2.sh",
+    "sysmbench_original_upstream/scripts/run_wizardCoder.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_baichuan 2.sh",
+    "sysmbench_original_upstream/scripts/run_baichuan.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_deepseekcoder 2.sh",
+    "sysmbench_original_upstream/scripts/run_deepseekcoder.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_phindcodellama 2.sh",
+    "sysmbench_original_upstream/scripts/run_phindcodellama.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_mistral 2.sh",
+    "sysmbench_original_upstream/scripts/run_mistral.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_codestral 2.sh",
+    "sysmbench_original_upstream/scripts/run_codestral.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_gemma 2.sh",
+    "sysmbench_original_upstream/scripts/run_gemma.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/scripts/run_llama 2.sh",
+    "sysmbench_original_upstream/scripts/run_llama.sh",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/prompts/few-shot 2.txt",
+    "sysmbench_original_upstream/prompts/few-shot.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/prompts/grammar 2.txt",
+    "sysmbench_original_upstream/prompts/grammar.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/prompts/cot 2.txt",
+    "sysmbench_original_upstream/prompts/cot.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/prompts/direct 2.txt",
+    "sysmbench_original_upstream/prompts/direct.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/src/print_grammar 2.py",
+    "sysmbench_original_upstream/src/print_grammar.py",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/src/print_case 2.py",
+    "sysmbench_original_upstream/src/print_case.py",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/135/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/135/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/61/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/61/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/95/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/95/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/132/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/132/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/59/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/59/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/92/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/92/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/66/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/66/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/104/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/104/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/50/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/50/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/68/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/68/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/103/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/103/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/57/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/57/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/150/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/150/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/32/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/32/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/35/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/35/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/102/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/102/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/69/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/69/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/56/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/56/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/105/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/105/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/51/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/51/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/58/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/58/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/133/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/133/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/67/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/67/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/93/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/93/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/134/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/134/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/94/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/94/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/60/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/60/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/34/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/34/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/33/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/33/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/151/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/151/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/20/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/20/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/18/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/18/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/27/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/27/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/9/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/9/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/145/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/145/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/11/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/11/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/142/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/142/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/7/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/7/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/29/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/29/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/16/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/16/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/129/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/129/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/42/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/42/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/89/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/89/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/116/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/116/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/45/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/45/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/111/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/111/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/73/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/73/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/118/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/118/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/87/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/87/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/127/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/127/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/80/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/80/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/74/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/74/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/120/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/120/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/6/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/6/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/28/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/28/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/143/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/143/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/17/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/17/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/144/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/144/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/1/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/1/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/10/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/10/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/19/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/19/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/26/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/26/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/8/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/8/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/21/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/21/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/75/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/75/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/81/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/81/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/121/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/121/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/119/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/119/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/86/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/86/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/72/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/72/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/126/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/126/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/44/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/44/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/110/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/110/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/43/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/43/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/128/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/128/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/88/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/88/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/117/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/117/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/38/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/38/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/36/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/36/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/31/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/31/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/131/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/131/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/91/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/91/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/65/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/65/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/136/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/136/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/62/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/62/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/96/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/96/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/109/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/109/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/100/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/100/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/54/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/54/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/107/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/107/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/98/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/98/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/138/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/138/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/53/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/53/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/30/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/30/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/37/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/37/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/39/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/39/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/106/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/106/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/99/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/99/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/52/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/52/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/139/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/139/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/101/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/101/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/55/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/55/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/137/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/137/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/97/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/97/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/108/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/108/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/63/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/63/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/130/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/130/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/64/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/64/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/90/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/90/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/46/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/46/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/79/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/79/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/112/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/112/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/41/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/41/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/115/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/115/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/83/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/83/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/77/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/77/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/123/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/123/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/48/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/48/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/70/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/70/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/84/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/84/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/124/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/124/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/24/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/24/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/148/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/148/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/23/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/23/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/141/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/141/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/4/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/4/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/15/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/15/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/3/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/3/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/146/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/146/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/12/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/12/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/85/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/85/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/71/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/71/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/125/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/125/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/76/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/76/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/82/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/82/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/49/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/49/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/122/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/122/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/40/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/40/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/114/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/114/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/47/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/47/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/113/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/113/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/78/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/78/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/147/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/147/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/2/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/2/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/13/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/13/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/5/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/5/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/140/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/140/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/14/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/14/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/22/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/22/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/149/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/149/nl.txt",
+    "same"
+  ],
+  [
+    "sysmbench_original_upstream/nl_prompts/25/nl 2.txt",
+    "sysmbench_original_upstream/nl_prompts/25/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/065_Flow_Connection/design 2.sysml",
+    "ai_agent/context_examples/065_Flow_Connection/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/065_Flow_Connection/nl 2.txt",
+    "ai_agent/context_examples/065_Flow_Connection/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/075_Conditional_Succession/design 2.sysml",
+    "ai_agent/context_examples/075_Conditional_Succession/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/075_Conditional_Succession/nl 2.txt",
+    "ai_agent/context_examples/075_Conditional_Succession/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/144_View/design 2.sysml",
+    "ai_agent/context_examples/144_View/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/144_View/nl 2.txt",
+    "ai_agent/context_examples/144_View/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/064_SequenceModeling/design 2.sysml",
+    "ai_agent/context_examples/064_SequenceModeling/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/064_SequenceModeling/nl 2.txt",
+    "ai_agent/context_examples/064_SequenceModeling/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/137_Metadata/design 2.sysml",
+    "ai_agent/context_examples/137_Metadata/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/137_Metadata/nl 2.txt",
+    "ai_agent/context_examples/137_Metadata/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/010_Port/design 2.sysml",
+    "ai_agent/context_examples/010_Port/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/010_Port/nl 2.txt",
+    "ai_agent/context_examples/010_Port/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/046_Language_Extension/design 2.sysml",
+    "ai_agent/context_examples/046_Language_Extension/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/046_Language_Extension/nl 2.txt",
+    "ai_agent/context_examples/046_Language_Extension/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/089_State/design 2.sysml",
+    "ai_agent/context_examples/089_State/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/089_State/nl 2.txt",
+    "ai_agent/context_examples/089_State/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/049_Expression/design 2.sysml",
+    "ai_agent/context_examples/049_Expression/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/049_Expression/nl 2.txt",
+    "ai_agent/context_examples/049_Expression/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/027_Variant_Configuration/design 2.sysml",
+    "ai_agent/context_examples/027_Variant_Configuration/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/027_Variant_Configuration/nl 2.txt",
+    "ai_agent/context_examples/027_Variant_Configuration/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/001_Attribute/design 2.sysml",
+    "ai_agent/context_examples/001_Attribute/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/001_Attribute/nl 2.txt",
+    "ai_agent/context_examples/001_Attribute/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/007_Part/design 2.sysml",
+    "ai_agent/context_examples/007_Part/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/007_Part/nl 2.txt",
+    "ai_agent/context_examples/007_Part/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/077_Control_Structure/design 2.sysml",
+    "ai_agent/context_examples/077_Control_Structure/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/077_Control_Structure/nl 2.txt",
+    "ai_agent/context_examples/077_Control_Structure/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/083_Assignment_Action/design 2.sysml",
+    "ai_agent/context_examples/083_Assignment_Action/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/083_Assignment_Action/nl 2.txt",
+    "ai_agent/context_examples/083_Assignment_Action/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/096_Occurrence/design 2.sysml",
+    "ai_agent/context_examples/096_Occurrence/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/096_Occurrence/nl 2.txt",
+    "ai_agent/context_examples/096_Occurrence/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/129_Use_Case/design 2.sysml",
+    "ai_agent/context_examples/129_Use_Case/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/129_Use_Case/nl 2.txt",
+    "ai_agent/context_examples/129_Use_Case/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/124_Analysis/design 2.sysml",
+    "ai_agent/context_examples/124_Analysis/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/124_Analysis/nl 2.txt",
+    "ai_agent/context_examples/124_Analysis/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/039_Dependency/design 2.sysml",
+    "ai_agent/context_examples/039_Dependency/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/039_Dependency/nl 2.txt",
+    "ai_agent/context_examples/039_Dependency/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/146_Package/design 2.sysml",
+    "ai_agent/context_examples/146_Package/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/146_Package/nl 2.txt",
+    "ai_agent/context_examples/146_Package/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/113_Constraint/design 2.sysml",
+    "ai_agent/context_examples/113_Constraint/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/113_Constraint/nl 2.txt",
+    "ai_agent/context_examples/113_Constraint/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/002_Generalization/design 2.sysml",
+    "ai_agent/context_examples/002_Generalization/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/002_Generalization/nl 2.txt",
+    "ai_agent/context_examples/002_Generalization/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/074_Action/design 2.sysml",
+    "ai_agent/context_examples/074_Action/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/074_Action/nl 2.txt",
+    "ai_agent/context_examples/074_Action/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/009_Connection/design 2.sysml",
+    "ai_agent/context_examples/009_Connection/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/009_Connection/nl 2.txt",
+    "ai_agent/context_examples/009_Connection/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/135_Functional_Allocation/design 2.sysml",
+    "ai_agent/context_examples/135_Functional_Allocation/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/135_Functional_Allocation/nl 2.txt",
+    "ai_agent/context_examples/135_Functional_Allocation/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/021_Interface/design 2.sysml",
+    "ai_agent/context_examples/021_Interface/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/021_Interface/nl 2.txt",
+    "ai_agent/context_examples/021_Interface/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/004_Redefinition/design 2.sysml",
+    "ai_agent/context_examples/004_Redefinition/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/004_Redefinition/nl 2.txt",
+    "ai_agent/context_examples/004_Redefinition/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/092_Transition/design 2.sysml",
+    "ai_agent/context_examples/092_Transition/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/092_Transition/nl 2.txt",
+    "ai_agent/context_examples/092_Transition/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/084_Message/design 2.sysml",
+    "ai_agent/context_examples/084_Message/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/084_Message/nl 2.txt",
+    "ai_agent/context_examples/084_Message/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/005_Enumeration/design 2.sysml",
+    "ai_agent/context_examples/005_Enumeration/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/005_Enumeration/nl 2.txt",
+    "ai_agent/context_examples/005_Enumeration/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/003_Subsetting/design 2.sysml",
+    "ai_agent/context_examples/003_Subsetting/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/003_Subsetting/nl 2.txt",
+    "ai_agent/context_examples/003_Subsetting/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/031_Verification/design 2.sysml",
+    "ai_agent/context_examples/031_Verification/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/031_Verification/nl 2.txt",
+    "ai_agent/context_examples/031_Verification/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/008_Item/design 2.sysml",
+    "ai_agent/context_examples/008_Item/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/008_Item/nl 2.txt",
+    "ai_agent/context_examples/008_Item/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/110_Calculation/design 2.sysml",
+    "ai_agent/context_examples/110_Calculation/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/110_Calculation/nl 2.txt",
+    "ai_agent/context_examples/110_Calculation/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/043_Binding_Connector/design 2.sysml",
+    "ai_agent/context_examples/043_Binding_Connector/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/043_Binding_Connector/nl 2.txt",
+    "ai_agent/context_examples/043_Binding_Connector/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/070_Action_Definition/design 2.sysml",
+    "ai_agent/context_examples/070_Action_Definition/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/070_Action_Definition/nl 2.txt",
+    "ai_agent/context_examples/070_Action_Definition/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/030_Requirement/design 2.sysml",
+    "ai_agent/context_examples/030_Requirement/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/030_Requirement/nl 2.txt",
+    "ai_agent/context_examples/030_Requirement/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/026_Individual_and_Snapshot/design 2.sysml",
+    "ai_agent/context_examples/026_Individual_and_Snapshot/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/026_Individual_and_Snapshot/nl 2.txt",
+    "ai_agent/context_examples/026_Individual_and_Snapshot/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/131_Variability/design 2.sysml",
+    "ai_agent/context_examples/131_Variability/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/131_Variability/nl 2.txt",
+    "ai_agent/context_examples/131_Variability/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/139_Filtering/design 2.sysml",
+    "ai_agent/context_examples/139_Filtering/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/139_Filtering/nl 2.txt",
+    "ai_agent/context_examples/139_Filtering/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/086_Opaque_Action/design 2.sysml",
+    "ai_agent/context_examples/086_Opaque_Action/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/086_Opaque_Action/nl 2.txt",
+    "ai_agent/context_examples/086_Opaque_Action/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/087_State_Definition/design 2.sysml",
+    "ai_agent/context_examples/087_State_Definition/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/087_State_Definition/nl 2.txt",
+    "ai_agent/context_examples/087_State_Definition/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/037_View_and_Viewpoint/design 2.sysml",
+    "ai_agent/context_examples/037_View_and_Viewpoint/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/037_View_and_Viewpoint/nl 2.txt",
+    "ai_agent/context_examples/037_View_and_Viewpoint/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/042_Model_Constrainment/design 2.sysml",
+    "ai_agent/context_examples/042_Model_Constrainment/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/042_Model_Constrainment/nl 2.txt",
+    "ai_agent/context_examples/042_Model_Constrainment/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/015_Function-based_Behavior/design 2.sysml",
+    "ai_agent/context_examples/015_Function-based_Behavior/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/015_Function-based_Behavior/nl 2.txt",
+    "ai_agent/context_examples/015_Function-based_Behavior/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/103_Individual/design 2.sysml",
+    "ai_agent/context_examples/103_Individual/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/103_Individual/nl 2.txt",
+    "ai_agent/context_examples/103_Individual/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/024_State-based_Behavior/design 2.sysml",
+    "ai_agent/context_examples/024_State-based_Behavior/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/024_State-based_Behavior/nl 2.txt",
+    "ai_agent/context_examples/024_State-based_Behavior/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/033_Analysis_and_Trade/design 2.sysml",
+    "ai_agent/context_examples/033_Analysis_and_Trade/design.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/context_examples/033_Analysis_and_Trade/nl 2.txt",
+    "ai_agent/context_examples/033_Analysis_and_Trade/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/132_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/132_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/132 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/132.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/132_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/132_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/132_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/132/132_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/32/32_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/32/32_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/32/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/32/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/32/32 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/32/32.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/18 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/18.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/18_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/18_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/18_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/18_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/18_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/18/18_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/143 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/143.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/143_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/143_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/143_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/143_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/143_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/143_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/143/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/121 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/121.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/121_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/121_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/121_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/121_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/121_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/121_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/121/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/107_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/107_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/107 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/107.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/107_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/107_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/107_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/107/107_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/101_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/101_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/101 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/101.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/101_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/101_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/101_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/101/101_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/130_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/130_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/130 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/130.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/130_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/130_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/130_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/130/130_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/90/90_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/90/90_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/123_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/123_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/123 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/123.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/123_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/123_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/123_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/123_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/123/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/148_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/148_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/148 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/148.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/148_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/148_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/148_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/148/148_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/71_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/71_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/71 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/71.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/71_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/71_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/71_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/71_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/71/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/82_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/82_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/082 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/082.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/82_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/82_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/82_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/82_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/82/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/78_precision_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/78_precision_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/78_groundtruth 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/78_groundtruth.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/78 2.sysml",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/78.sysml",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/nl 2.txt",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/78_recall_gpt41 2.json",
+    "ai_agent/Generated_from_Prompts_AI_AGENT/78/78_recall_gpt41.json",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/61/nl 2.txt",
+    "ai_agent/generation_prompts/61/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/95/nl 2.txt",
+    "ai_agent/generation_prompts/95/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/132/nl 2.txt",
+    "ai_agent/generation_prompts/132/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/59/nl 2.txt",
+    "ai_agent/generation_prompts/59/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/66/nl 2.txt",
+    "ai_agent/generation_prompts/66/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/104/nl 2.txt",
+    "ai_agent/generation_prompts/104/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/50/nl 2.txt",
+    "ai_agent/generation_prompts/50/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/68/nl 2.txt",
+    "ai_agent/generation_prompts/68/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/57/nl 2.txt",
+    "ai_agent/generation_prompts/57/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/150/nl 2.txt",
+    "ai_agent/generation_prompts/150/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/32/nl 2.txt",
+    "ai_agent/generation_prompts/32/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/35/nl 2.txt",
+    "ai_agent/generation_prompts/35/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/102/nl 2.txt",
+    "ai_agent/generation_prompts/102/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/69/nl 2.txt",
+    "ai_agent/generation_prompts/69/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/56/nl 2.txt",
+    "ai_agent/generation_prompts/56/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/105/nl 2.txt",
+    "ai_agent/generation_prompts/105/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/51/nl 2.txt",
+    "ai_agent/generation_prompts/51/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/58/nl 2.txt",
+    "ai_agent/generation_prompts/58/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/133/nl 2.txt",
+    "ai_agent/generation_prompts/133/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/67/nl 2.txt",
+    "ai_agent/generation_prompts/67/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/93/nl 2.txt",
+    "ai_agent/generation_prompts/93/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/134/nl 2.txt",
+    "ai_agent/generation_prompts/134/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/94/nl 2.txt",
+    "ai_agent/generation_prompts/94/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/60/nl 2.txt",
+    "ai_agent/generation_prompts/60/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/34/nl 2.txt",
+    "ai_agent/generation_prompts/34/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/151/nl 2.txt",
+    "ai_agent/generation_prompts/151/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/20/nl 2.txt",
+    "ai_agent/generation_prompts/20/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/18/nl 2.txt",
+    "ai_agent/generation_prompts/18/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/145/nl 2.txt",
+    "ai_agent/generation_prompts/145/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/11/nl 2.txt",
+    "ai_agent/generation_prompts/11/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/142/nl 2.txt",
+    "ai_agent/generation_prompts/142/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/29/nl 2.txt",
+    "ai_agent/generation_prompts/29/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/16/nl 2.txt",
+    "ai_agent/generation_prompts/16/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/116/nl 2.txt",
+    "ai_agent/generation_prompts/116/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/45/nl 2.txt",
+    "ai_agent/generation_prompts/45/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/111/nl 2.txt",
+    "ai_agent/generation_prompts/111/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/73/nl 2.txt",
+    "ai_agent/generation_prompts/73/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/118/nl 2.txt",
+    "ai_agent/generation_prompts/118/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/127/nl 2.txt",
+    "ai_agent/generation_prompts/127/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/80/nl 2.txt",
+    "ai_agent/generation_prompts/80/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/120/nl 2.txt",
+    "ai_agent/generation_prompts/120/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/6/nl 2.txt",
+    "ai_agent/generation_prompts/6/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/28/nl 2.txt",
+    "ai_agent/generation_prompts/28/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/143/nl 2.txt",
+    "ai_agent/generation_prompts/143/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/17/nl 2.txt",
+    "ai_agent/generation_prompts/17/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/19/nl 2.txt",
+    "ai_agent/generation_prompts/19/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/81/nl 2.txt",
+    "ai_agent/generation_prompts/81/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/121/nl 2.txt",
+    "ai_agent/generation_prompts/121/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/119/nl 2.txt",
+    "ai_agent/generation_prompts/119/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/72/nl 2.txt",
+    "ai_agent/generation_prompts/72/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/126/nl 2.txt",
+    "ai_agent/generation_prompts/126/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/44/nl 2.txt",
+    "ai_agent/generation_prompts/44/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/128/nl 2.txt",
+    "ai_agent/generation_prompts/128/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/88/nl 2.txt",
+    "ai_agent/generation_prompts/88/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/117/nl 2.txt",
+    "ai_agent/generation_prompts/117/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/38/nl 2.txt",
+    "ai_agent/generation_prompts/38/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/36/nl 2.txt",
+    "ai_agent/generation_prompts/36/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/91/nl 2.txt",
+    "ai_agent/generation_prompts/91/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/136/nl 2.txt",
+    "ai_agent/generation_prompts/136/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/62/nl 2.txt",
+    "ai_agent/generation_prompts/62/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/109/nl 2.txt",
+    "ai_agent/generation_prompts/109/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/100/nl 2.txt",
+    "ai_agent/generation_prompts/100/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/54/nl 2.txt",
+    "ai_agent/generation_prompts/54/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/107/nl 2.txt",
+    "ai_agent/generation_prompts/107/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/98/nl 2.txt",
+    "ai_agent/generation_prompts/98/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/138/nl 2.txt",
+    "ai_agent/generation_prompts/138/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/53/nl 2.txt",
+    "ai_agent/generation_prompts/53/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/106/nl 2.txt",
+    "ai_agent/generation_prompts/106/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/99/nl 2.txt",
+    "ai_agent/generation_prompts/99/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/52/nl 2.txt",
+    "ai_agent/generation_prompts/52/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/101/nl 2.txt",
+    "ai_agent/generation_prompts/101/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/55/nl 2.txt",
+    "ai_agent/generation_prompts/55/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/97/nl 2.txt",
+    "ai_agent/generation_prompts/97/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/108/nl 2.txt",
+    "ai_agent/generation_prompts/108/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/63/nl 2.txt",
+    "ai_agent/generation_prompts/63/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/130/nl 2.txt",
+    "ai_agent/generation_prompts/130/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/90/nl 2.txt",
+    "ai_agent/generation_prompts/90/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/79/nl 2.txt",
+    "ai_agent/generation_prompts/79/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/112/nl 2.txt",
+    "ai_agent/generation_prompts/112/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/41/nl 2.txt",
+    "ai_agent/generation_prompts/41/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/115/nl 2.txt",
+    "ai_agent/generation_prompts/115/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/123/nl 2.txt",
+    "ai_agent/generation_prompts/123/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/48/nl 2.txt",
+    "ai_agent/generation_prompts/48/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/148/nl 2.txt",
+    "ai_agent/generation_prompts/148/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/23/nl 2.txt",
+    "ai_agent/generation_prompts/23/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/12/nl 2.txt",
+    "ai_agent/generation_prompts/12/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/85/nl 2.txt",
+    "ai_agent/generation_prompts/85/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/71/nl 2.txt",
+    "ai_agent/generation_prompts/71/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/125/nl 2.txt",
+    "ai_agent/generation_prompts/125/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/76/nl 2.txt",
+    "ai_agent/generation_prompts/76/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/82/nl 2.txt",
+    "ai_agent/generation_prompts/82/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/122/nl 2.txt",
+    "ai_agent/generation_prompts/122/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/40/nl 2.txt",
+    "ai_agent/generation_prompts/40/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/114/nl 2.txt",
+    "ai_agent/generation_prompts/114/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/47/nl 2.txt",
+    "ai_agent/generation_prompts/47/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/78/nl 2.txt",
+    "ai_agent/generation_prompts/78/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/147/nl 2.txt",
+    "ai_agent/generation_prompts/147/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/13/nl 2.txt",
+    "ai_agent/generation_prompts/13/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/14/nl 2.txt",
+    "ai_agent/generation_prompts/14/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/22/nl 2.txt",
+    "ai_agent/generation_prompts/22/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/149/nl 2.txt",
+    "ai_agent/generation_prompts/149/nl.txt",
+    "same"
+  ],
+  [
+    "ai_agent/generation_prompts/25/nl 2.txt",
+    "ai_agent/generation_prompts/25/nl.txt",
+    "same"
+  ]
+]

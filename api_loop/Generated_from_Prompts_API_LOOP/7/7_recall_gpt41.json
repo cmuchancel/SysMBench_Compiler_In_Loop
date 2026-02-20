@@ -1,0 +1,85 @@
+{
+  "model_id": 7,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDefinition' {\n\tpart def Vehicle {\n\t\tpart eng : Engine;\n\t}\n\tpart def Engine {\n\t\tpart cyl : Cylinder[4..6];\n\t}\n\tpart def Cylinder;\t\n\tpart smallVehicle : Vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[4];\n\t\t}\n\t}\n\tpart bigVehicle : Vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[6];\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage VehicleSystem {\n   private import ScalarValues::*;\n\n   part def Cylinder;\n\n   part def Engine;\n\n   part def SmallEngine {\n      part cylinders : Cylinder[4];\n   }\n\n   part def LargeEngine {\n      part cylinders : Cylinder[6];\n   }\n\n   part def Vehicle {\n      part engine : Engine;\n   }\n\n   part def SmallVehicle {\n      part engine : SmallEngine;\n   }\n\n   part def LargeVehicle {\n      part engine : LargeEngine;\n   }\n\n   part smallVehicleInstance : SmallVehicle;\n   part largeVehicleInstance : LargeVehicle;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/7/7_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/7/7.sysml",
+  "response": {
+    "id": "resp_0037c60b92eeb0eb006997fde49f608196971d93a535926ca6",
+    "created_at": 1771568612.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0037c60b92eeb0eb006997fde4d6748196a2be09414e068a28",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims in the reference model\n\n**Reference Model:**\n```\npackage 'VehicleDefinition' {\n\tpart def Vehicle {\n\t\tpart eng : Engine;\n\t}\n\tpart def Engine {\n\t\tpart cyl : Cylinder[4..6];\n\t}\n\tpart def Cylinder;\t\n\tpart smallVehicle : Vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[4];\n\t\t}\n\t}\n\tpart bigVehicle : Vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[6];\n\t\t}\n\t}\n}\n```\n\n#### Atomic Claims\n\n1. There is a package named 'VehicleDefinition'.\n2. There is a part definition 'Vehicle'.\n3. 'Vehicle' has a part 'eng' of type 'Engine'.\n4. There is a part definition 'Engine'.\n5. 'Engine' has a part 'cyl' of type 'Cylinder' with multiplicity [4..6].\n6. There is a part definition 'Cylinder'.\n7. There is a part 'smallVehicle' of type 'Vehicle'.\n8. 'smallVehicle' redefines 'eng' part.\n9. In 'smallVehicle', the redefined 'eng' part redefines 'cyl' with multiplicity [4].\n10. There is a part 'bigVehicle' of type 'Vehicle'.\n11. 'bigVehicle' redefines 'eng' part.\n12. In 'bigVehicle', the redefined 'eng' part redefines 'cyl' with multiplicity [6].\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**Generated Model:**\n```\npackage VehicleSystem {\n   private import ScalarValues::*;\n\n   part def Cylinder;\n\n   part def Engine;\n\n   part def SmallEngine {\n      part cylinders : Cylinder[4];\n   }\n\n   part def LargeEngine {\n      part cylinders : Cylinder[6];\n   }\n\n   part def Vehicle {\n      part engine : Engine;\n   }\n\n   part def SmallVehicle {\n      part engine : SmallEngine;\n   }\n\n   part def LargeVehicle {\n      part engine : LargeEngine;\n   }\n\n   part smallVehicleInstance : SmallVehicle;\n   part largeVehicleInstance : LargeVehicle;\n}\n```\n\n#### Coverage Table\n\n| # | Reference Claim | Covered? | Reasoning |\n|---|-----------------|----------|-----------|\n| 1 | Package 'VehicleDefinition' | YES | Package exists, name difference ignored. |\n| 2 | Part def 'Vehicle' | YES | Exists. |\n| 3 | 'Vehicle' has part 'eng' : Engine | YES | 'Vehicle' has 'engine' : Engine (name difference ignored). |\n| 4 | Part def 'Engine' | YES | Exists. |\n| 5 | 'Engine' has part 'cyl' : Cylinder[4..6] | PARTIAL | 'Engine' in generated model has no parts; instead, SmallEngine and LargeEngine have 'cylinders' : Cylinder[4] and [6]. No Engine with [4..6]. |\n| 6 | Part def 'Cylinder' | YES | Exists. |\n| 7 | Part 'smallVehicle' : Vehicle | PARTIAL | 'smallVehicleInstance' : SmallVehicle exists, but not of type 'Vehicle'. |\n| 8 | 'smallVehicle' redefines 'eng' | YES | 'SmallVehicle' has 'engine' of type 'SmallEngine', which is a specialization. |\n| 9 | Redefined 'eng' in 'smallVehicle' redefines 'cyl' [4] | YES | 'SmallEngine' has 'cylinders' : Cylinder[4]. |\n|10 | Part 'bigVehicle' : Vehicle | PARTIAL | 'largeVehicleInstance' : LargeVehicle exists, but not of type 'Vehicle'. |\n|11 | 'bigVehicle' redefines 'eng' | YES | 'LargeVehicle' has 'engine' of type 'LargeEngine', which is a specialization. |\n|12 | Redefined 'eng' in 'bigVehicle' redefines 'cyl' [6] | YES | 'LargeEngine' has 'cylinders' : Cylinder[6]. |\n\n#### Notes:\n- For claims 7 and 10, the generated model creates instances of 'SmallVehicle' and 'LargeVehicle', not of 'Vehicle'. However, since 'SmallVehicle' and 'LargeVehicle' are specializations of 'Vehicle', this can be considered covered if we accept type hierarchy.\n- For claim 5, the generated model does not define 'Engine' with a part 'cyl' : Cylinder[4..6]; instead, it splits this into two separate engine types with fixed multiplicities. The general [4..6] is not present.\n\n---\n\n### 3. Summarize the results\n\nLet's be strict:\n\n- Claim 5 is **not covered** (no 'Engine' with 'cyl' : Cylinder[4..6]).\n- Claims 7 and 10: If we accept type hierarchy, they are covered; if not, they are not. Let's assume they are covered, as the intent is preserved.\n\n**Number of covered claims:** 11  \n**Total number of claims:** 12\n\n---\n\n**Score: 11/12**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 391,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1082,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1473
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568626,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims in the reference model\n\n**Reference Model:**\n```\npackage 'VehicleDefinition' {\n\tpart def Vehicle {\n\t\tpart eng : Engine;\n\t}\n\tpart def Engine {\n\t\tpart cyl : Cylinder[4..6];\n\t}\n\tpart def Cylinder;\t\n\tpart smallVehicle : Vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[4];\n\t\t}\n\t}\n\tpart bigVehicle : Vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[6];\n\t\t}\n\t}\n}\n```\n\n#### Atomic Claims\n\n1. There is a package named 'VehicleDefinition'.\n2. There is a part definition 'Vehicle'.\n3. 'Vehicle' has a part 'eng' of type 'Engine'.\n4. There is a part definition 'Engine'.\n5. 'Engine' has a part 'cyl' of type 'Cylinder' with multiplicity [4..6].\n6. There is a part definition 'Cylinder'.\n7. There is a part 'smallVehicle' of type 'Vehicle'.\n8. 'smallVehicle' redefines 'eng' part.\n9. In 'smallVehicle', the redefined 'eng' part redefines 'cyl' with multiplicity [4].\n10. There is a part 'bigVehicle' of type 'Vehicle'.\n11. 'bigVehicle' redefines 'eng' part.\n12. In 'bigVehicle', the redefined 'eng' part redefines 'cyl' with multiplicity [6].\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**Generated Model:**\n```\npackage VehicleSystem {\n   private import ScalarValues::*;\n\n   part def Cylinder;\n\n   part def Engine;\n\n   part def SmallEngine {\n      part cylinders : Cylinder[4];\n   }\n\n   part def LargeEngine {\n      part cylinders : Cylinder[6];\n   }\n\n   part def Vehicle {\n      part engine : Engine;\n   }\n\n   part def SmallVehicle {\n      part engine : SmallEngine;\n   }\n\n   part def LargeVehicle {\n      part engine : LargeEngine;\n   }\n\n   part smallVehicleInstance : SmallVehicle;\n   part largeVehicleInstance : LargeVehicle;\n}\n```\n\n#### Coverage Table\n\n| # | Reference Claim | Covered? | Reasoning |\n|---|-----------------|----------|-----------|\n| 1 | Package 'VehicleDefinition' | YES | Package exists, name difference ignored. |\n| 2 | Part def 'Vehicle' | YES | Exists. |\n| 3 | 'Vehicle' has part 'eng' : Engine | YES | 'Vehicle' has 'engine' : Engine (name difference ignored). |\n| 4 | Part def 'Engine' | YES | Exists. |\n| 5 | 'Engine' has part 'cyl' : Cylinder[4..6] | PARTIAL | 'Engine' in generated model has no parts; instead, SmallEngine and LargeEngine have 'cylinders' : Cylinder[4] and [6]. No Engine with [4..6]. |\n| 6 | Part def 'Cylinder' | YES | Exists. |\n| 7 | Part 'smallVehicle' : Vehicle | PARTIAL | 'smallVehicleInstance' : SmallVehicle exists, but not of type 'Vehicle'. |\n| 8 | 'smallVehicle' redefines 'eng' | YES | 'SmallVehicle' has 'engine' of type 'SmallEngine', which is a specialization. |\n| 9 | Redefined 'eng' in 'smallVehicle' redefines 'cyl' [4] | YES | 'SmallEngine' has 'cylinders' : Cylinder[4]. |\n|10 | Part 'bigVehicle' : Vehicle | PARTIAL | 'largeVehicleInstance' : LargeVehicle exists, but not of type 'Vehicle'. |\n|11 | 'bigVehicle' redefines 'eng' | YES | 'LargeVehicle' has 'engine' of type 'LargeEngine', which is a specialization. |\n|12 | Redefined 'eng' in 'bigVehicle' redefines 'cyl' [6] | YES | 'LargeEngine' has 'cylinders' : Cylinder[6]. |\n\n#### Notes:\n- For claims 7 and 10, the generated model creates instances of 'SmallVehicle' and 'LargeVehicle', not of 'Vehicle'. However, since 'SmallVehicle' and 'LargeVehicle' are specializations of 'Vehicle', this can be considered covered if we accept type hierarchy.\n- For claim 5, the generated model does not define 'Engine' with a part 'cyl' : Cylinder[4..6]; instead, it splits this into two separate engine types with fixed multiplicities. The general [4..6] is not present.\n\n---\n\n### 3. Summarize the results\n\nLet's be strict:\n\n- Claim 5 is **not covered** (no 'Engine' with 'cyl' : Cylinder[4..6]).\n- Claims 7 and 10: If we accept type hierarchy, they are covered; if not, they are not. Let's assume they are covered, as the intent is preserved.\n\n**Number of covered claims:** 11  \n**Total number of claims:** 12\n\n---\n\n**Score: 11/12**"
+  }
+}

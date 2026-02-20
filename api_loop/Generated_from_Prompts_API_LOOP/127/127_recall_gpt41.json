@@ -1,0 +1,85 @@
+{
+  "model_id": 127,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PowertrainFunctionComponentAllocation' {\n\tprivate import SI::*;\n\tprivate import RequirementModel::*;\n\tprivate import LogicalModel::*;\n\tprivate import PhysicalModel::*;\n\tpackage RequirementModel {\n\t\trequirement torqueGeneration {\n\t\t\tsubject generator: TorqueGenerator;\n\t\t\trequire constraint { \n\t\t\t\t generator.generateTorque.torque > 0.0 [N*m]\n\t\t\t}\n\t\t}\n\t}\n\tpackage LogicalModel {\n\t\taction def GenerateTorque { out torque :> ISQ::torque; }\n\t\tpart def LogicalElement;\n\t\tpart def TorqueGenerator :> LogicalElement {\n\t\t\tperform action generateTorque : GenerateTorque;\n\t\t}\t\n\t\taction providePower {\n\t\t\taction generateTorque : GenerateTorque;\n\t\t}\n\t\tpart torqueGenerator : TorqueGenerator {\n\t\t\tperform providePower.generateTorque :>> generateTorque;\n\t\t}\n\t\tsatisfy torqueGeneration by torqueGenerator;\t\t\t\n\t}\n\tpackage PhysicalModel {\n\t\tpart def PhysicalElement;\n\t\tpart def PowerTrain :> PhysicalElement;\n\t\tpart powerTrain : PowerTrain {\n\t\t\tpart engine {\n\t\t\t\tperform providePower.generateTorque;\n\t\t\t}\n\t\t}\n\t}\n\tallocation def LogicalToPhysical {\n\t\tend logical : LogicalElement;\n\t\tend physical : PhysicalElement;\n\t}\n\tallocation torqueGenAlloc : LogicalToPhysical \n\t\tallocate logical ::> torqueGenerator to physical ::> powerTrain {\n\t\tallocate torqueGenerator.generateTorque to powerTrain.engine.generateTorque;\t\t\n\t}\n}\n\nGenerated Model:\npackage PowertrainTorqueGeneration {\n  private import ScalarValues::*;\n\n  port def TorquePort {\n    attribute torqueNm: Real;\n  }\n\n  part def TorqueGeneratorFunction {\n    port outTorque: TorquePort;\n    attribute producedTorqueNm: Real = 100.0;\n  }\n\n  part def Engine {\n    port inTorque: TorquePort;\n    attribute actualTorqueNm: Real = 100.0;\n  }\n\n  part def PowertrainSystem {\n    part logic: TorqueGeneratorFunction;\n    part engine: Engine;\n    connect logic.outTorque to engine.inTorque;\n    attribute systemTorqueNm: Real = 100.0;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/127/127_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/127/127.sysml",
+  "response": {
+    "id": "resp_0ba837247b12b6a0006997ff8b751881a086650f66602ecafd",
+    "created_at": 1771569035.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0ba837247b12b6a0006997ff8c339081a0bf28ae8f7eda75dc",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n#### Imports\n1. Import of SI::*.\n2. Import of RequirementModel::*.\n3. Import of LogicalModel::*.\n4. Import of PhysicalModel::*.\n\n#### RequirementModel\n5. Definition of requirement `torqueGeneration`.\n6. Subject of requirement: `generator` of type `TorqueGenerator`.\n7. Constraint in requirement: `generator.generateTorque.torque > 0.0 [N*m]`.\n\n#### LogicalModel\n8. Definition of action `GenerateTorque` with output `torque` of type `ISQ::torque`.\n9. Definition of part `LogicalElement`.\n10. Definition of part `TorqueGenerator` as subtype of `LogicalElement`.\n11. `TorqueGenerator` performs action `generateTorque` of type `GenerateTorque`.\n12. Definition of action `providePower` with subaction `generateTorque` of type `GenerateTorque`.\n13. Definition of part `torqueGenerator` of type `TorqueGenerator`.\n14. `torqueGenerator` performs `providePower.generateTorque` mapped to `generateTorque`.\n15. Satisfaction link: `torqueGeneration` is satisfied by `torqueGenerator`.\n\n#### PhysicalModel\n16. Definition of part `PhysicalElement`.\n17. Definition of part `PowerTrain` as subtype of `PhysicalElement`.\n18. Definition of part `powerTrain` of type `PowerTrain`.\n19. `powerTrain` has part `engine`.\n20. `engine` performs `providePower.generateTorque`.\n\n#### Allocation\n21. Definition of allocation `LogicalToPhysical` with ends `logical: LogicalElement` and `physical: PhysicalElement`.\n22. Definition of allocation `torqueGenAlloc` of type `LogicalToPhysical`.\n23. Allocation: `torqueGenerator` allocated to `powerTrain`.\n24. Allocation: `torqueGenerator.generateTorque` allocated to `powerTrain.engine.generateTorque`.\n\n---\n\n### 2. For each atomic claim, determine coverage by the generated model\n\n#### Imports\n1. **Import of SI::*:** **Not covered** (Generated model imports `ScalarValues::*`, not SI).\n2. **Import of RequirementModel::*:** **Not covered**.\n3. **Import of LogicalModel::*:** **Not covered**.\n4. **Import of PhysicalModel::*:** **Not covered**.\n\n#### RequirementModel\n5. **Definition of requirement `torqueGeneration`:** **Not covered** (No requirements in generated model).\n6. **Subject of requirement: `generator` of type `TorqueGenerator`:** **Not covered**.\n7. **Constraint in requirement: `generator.generateTorque.torque > 0.0 [N*m]`:** **Not covered**.\n\n#### LogicalModel\n8. **Definition of action `GenerateTorque` with output `torque` of type `ISQ::torque`:** **Partially covered** (Generated model has a port `TorquePort` with attribute `torqueNm: Real`, which is similar to an output torque, but not an action; let's be strict: **Not covered**).\n9. **Definition of part `LogicalElement`:** **Not covered**.\n10. **Definition of part `TorqueGenerator` as subtype of `LogicalElement`:** **Partially covered** (Generated model has `TorqueGeneratorFunction`, but no explicit inheritance; let's be strict: **Not covered**).\n11. **`TorqueGenerator` performs action `generateTorque` of type `GenerateTorque`:** **Partially covered** (Generated model has a function that produces torque, but not as an explicit action; **Not covered**).\n12. **Definition of action `providePower` with subaction `generateTorque` of type `GenerateTorque`:** **Not covered**.\n13. **Definition of part `torqueGenerator` of type `TorqueGenerator`:** **Covered** (`logic: TorqueGeneratorFunction` in generated model).\n14. **`torqueGenerator` performs `providePower.generateTorque` mapped to `generateTorque`:** **Not covered**.\n15. **Satisfaction link: `torqueGeneration` is satisfied by `torqueGenerator`:** **Not covered**.\n\n#### PhysicalModel\n16. **Definition of part `PhysicalElement`:** **Not covered**.\n17. **Definition of part `PowerTrain` as subtype of `PhysicalElement`:** **Partially covered** (Generated model has `PowertrainSystem`, but not as a subtype; **Not covered**).\n18. **Definition of part `powerTrain` of type `PowerTrain`:** **Covered** (`PowertrainSystem` in generated model).\n19. **`powerTrain` has part `engine`:** **Covered** (`engine: Engine` in generated model).\n20. **`engine` performs `providePower.generateTorque`:** **Partially covered** (Engine has an input torque port and attribute, but no explicit action; **Not covered**).\n\n#### Allocation\n21. **Definition of allocation `LogicalToPhysical` with ends `logical: LogicalElement` and `physical: PhysicalElement`:** **Not covered**.\n22. **Definition of allocation `torqueGenAlloc` of type `LogicalToPhysical`:** **Not covered**.\n23. **Allocation: `torqueGenerator` allocated to `powerTrain`:** **Not covered**.\n24. **Allocation: `torqueGenerator.generateTorque` allocated to `powerTrain.engine.generateTorque`:** **Not covered**.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 13. Definition of part `torqueGenerator` of type `TorqueGenerator` (as `logic: TorqueGeneratorFunction`)\n- 18. Definition of part `powerTrain` of type `PowerTrain` (as `PowertrainSystem`)\n- 19. `powerTrain` has part `engine` (as `engine: Engine` in `PowertrainSystem`)\n\n**Total covered:** 3\n\n**Total claims:** 24\n\n---\n\n**Score: 3/24**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 613,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1258,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1871
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569056,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n#### Imports\n1. Import of SI::*.\n2. Import of RequirementModel::*.\n3. Import of LogicalModel::*.\n4. Import of PhysicalModel::*.\n\n#### RequirementModel\n5. Definition of requirement `torqueGeneration`.\n6. Subject of requirement: `generator` of type `TorqueGenerator`.\n7. Constraint in requirement: `generator.generateTorque.torque > 0.0 [N*m]`.\n\n#### LogicalModel\n8. Definition of action `GenerateTorque` with output `torque` of type `ISQ::torque`.\n9. Definition of part `LogicalElement`.\n10. Definition of part `TorqueGenerator` as subtype of `LogicalElement`.\n11. `TorqueGenerator` performs action `generateTorque` of type `GenerateTorque`.\n12. Definition of action `providePower` with subaction `generateTorque` of type `GenerateTorque`.\n13. Definition of part `torqueGenerator` of type `TorqueGenerator`.\n14. `torqueGenerator` performs `providePower.generateTorque` mapped to `generateTorque`.\n15. Satisfaction link: `torqueGeneration` is satisfied by `torqueGenerator`.\n\n#### PhysicalModel\n16. Definition of part `PhysicalElement`.\n17. Definition of part `PowerTrain` as subtype of `PhysicalElement`.\n18. Definition of part `powerTrain` of type `PowerTrain`.\n19. `powerTrain` has part `engine`.\n20. `engine` performs `providePower.generateTorque`.\n\n#### Allocation\n21. Definition of allocation `LogicalToPhysical` with ends `logical: LogicalElement` and `physical: PhysicalElement`.\n22. Definition of allocation `torqueGenAlloc` of type `LogicalToPhysical`.\n23. Allocation: `torqueGenerator` allocated to `powerTrain`.\n24. Allocation: `torqueGenerator.generateTorque` allocated to `powerTrain.engine.generateTorque`.\n\n---\n\n### 2. For each atomic claim, determine coverage by the generated model\n\n#### Imports\n1. **Import of SI::*:** **Not covered** (Generated model imports `ScalarValues::*`, not SI).\n2. **Import of RequirementModel::*:** **Not covered**.\n3. **Import of LogicalModel::*:** **Not covered**.\n4. **Import of PhysicalModel::*:** **Not covered**.\n\n#### RequirementModel\n5. **Definition of requirement `torqueGeneration`:** **Not covered** (No requirements in generated model).\n6. **Subject of requirement: `generator` of type `TorqueGenerator`:** **Not covered**.\n7. **Constraint in requirement: `generator.generateTorque.torque > 0.0 [N*m]`:** **Not covered**.\n\n#### LogicalModel\n8. **Definition of action `GenerateTorque` with output `torque` of type `ISQ::torque`:** **Partially covered** (Generated model has a port `TorquePort` with attribute `torqueNm: Real`, which is similar to an output torque, but not an action; let's be strict: **Not covered**).\n9. **Definition of part `LogicalElement`:** **Not covered**.\n10. **Definition of part `TorqueGenerator` as subtype of `LogicalElement`:** **Partially covered** (Generated model has `TorqueGeneratorFunction`, but no explicit inheritance; let's be strict: **Not covered**).\n11. **`TorqueGenerator` performs action `generateTorque` of type `GenerateTorque`:** **Partially covered** (Generated model has a function that produces torque, but not as an explicit action; **Not covered**).\n12. **Definition of action `providePower` with subaction `generateTorque` of type `GenerateTorque`:** **Not covered**.\n13. **Definition of part `torqueGenerator` of type `TorqueGenerator`:** **Covered** (`logic: TorqueGeneratorFunction` in generated model).\n14. **`torqueGenerator` performs `providePower.generateTorque` mapped to `generateTorque`:** **Not covered**.\n15. **Satisfaction link: `torqueGeneration` is satisfied by `torqueGenerator`:** **Not covered**.\n\n#### PhysicalModel\n16. **Definition of part `PhysicalElement`:** **Not covered**.\n17. **Definition of part `PowerTrain` as subtype of `PhysicalElement`:** **Partially covered** (Generated model has `PowertrainSystem`, but not as a subtype; **Not covered**).\n18. **Definition of part `powerTrain` of type `PowerTrain`:** **Covered** (`PowertrainSystem` in generated model).\n19. **`powerTrain` has part `engine`:** **Covered** (`engine: Engine` in generated model).\n20. **`engine` performs `providePower.generateTorque`:** **Partially covered** (Engine has an input torque port and attribute, but no explicit action; **Not covered**).\n\n#### Allocation\n21. **Definition of allocation `LogicalToPhysical` with ends `logical: LogicalElement` and `physical: PhysicalElement`:** **Not covered**.\n22. **Definition of allocation `torqueGenAlloc` of type `LogicalToPhysical`:** **Not covered**.\n23. **Allocation: `torqueGenerator` allocated to `powerTrain`:** **Not covered**.\n24. **Allocation: `torqueGenerator.generateTorque` allocated to `powerTrain.engine.generateTorque`:** **Not covered**.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 13. Definition of part `torqueGenerator` of type `TorqueGenerator` (as `logic: TorqueGeneratorFunction`)\n- 18. Definition of part `powerTrain` of type `PowerTrain` (as `PowertrainSystem`)\n- 19. `powerTrain` has part `engine` (as `engine: Engine` in `PowertrainSystem`)\n\n**Total covered:** 3\n\n**Total claims:** 24\n\n---\n\n**Score: 3/24**"
+  }
+}

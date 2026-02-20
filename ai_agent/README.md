@@ -1,5 +1,8 @@
 AI Agent Assets
 
+Generation environment:
+- SysML generation in this workflow was performed with `gpt-5-codex` as a Codex agent in the integrated VS Code IDE.
+
 - `GenerationPrompt.txt`: primary instruction prompt used for agent-driven generation.
 - `context_examples/`: curated NL + SysML grammar exemplars consumed by the agent.
 - `generation_prompts/`: NL-only prompt inputs.

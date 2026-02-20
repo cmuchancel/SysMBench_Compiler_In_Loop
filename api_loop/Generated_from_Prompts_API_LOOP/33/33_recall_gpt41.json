@@ -1,0 +1,85 @@
+{
+  "model_id": 33,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'CameraMessagingSystem' {\n\titem def Scene;\n\titem def Image;\n\titem def Picture;\n\tattribute def Show {\n\t\titem picture : Picture;\n\t}\n\taction def Focus { in item scene : Scene; out item image : Image; }\n\taction def Shoot { in item image : Image; out item picture : Picture; }\n\taction def TakePicture;\n\tpart screen {\n\t\tport displayPort;\n\t}\n\tpart camera {\n\t\tport viewPort;\n\t\tport displayPort;\n\t\taction takePicture : TakePicture {\n\t\t\taction trigger accept scene : Scene via viewPort;\n\t\t\tthen action focus : Focus {\n\t\t\t\tin item scene = trigger.scene;\n\t\t\t\tout item image;\n\t\t\t}\n\t\t\tflow from focus.image to shoot.image;\n\t\t\tthen action shoot : Shoot {\n\t\t\t\tin item image; \n\t\t\t\tout item picture;\n\t\t\t}\n\t\t\tthen send Show(shoot.picture) via displayPort;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage CameraWorkflow {\n  private import ScalarValues::*;\n\n  item def Scene;\n  item def Image;\n  item def Picture;\n\n  port def ScenePort {\n    ref item scene : Scene;\n  }\n\n  port def ImagePort {\n    ref item image : Image;\n  }\n\n  port def PicturePort {\n    ref item picture : Picture;\n  }\n\n  port def DisplayPort {\n    ref item picture : Picture;\n  }\n\n  part def User {\n    port viewPort : ScenePort;\n  }\n\n  part def Focusing {\n    port sceneIn : ScenePort;\n    port imageOut : ImagePort;\n  }\n\n  part def Capturing {\n    port imageIn : ImagePort;\n    port pictureOut : PicturePort;\n  }\n\n  part def Displaying {\n    port pictureIn : PicturePort;\n    port displayPort : DisplayPort;\n  }\n\n  part def CameraSystem {\n    port viewPort : ScenePort;\n    port displayPort : DisplayPort;\n\n    part focusing : Focusing;\n    part capturing : Capturing;\n    part displaying : Displaying;\n\n    connect viewPort to focusing.sceneIn;\n    connect focusing.imageOut to capturing.imageIn;\n    connect capturing.pictureOut to displaying.pictureIn;\n    connect displaying.displayPort to displayPort;\n  }\n\n  part def SystemContext {\n    part user : User;\n    part camera : CameraSystem;\n    connect user.viewPort to camera.viewPort;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/33/33_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/33/33.sysml",
+  "response": {
+    "id": "resp_090d47157eea76560069980157df3081969e554cb9475aa2db",
+    "created_at": 1771569495.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_090d47157eea7656006998015827b08196a2b2125d4c5a98fa",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. Definition of item `Scene`.\n2. Definition of item `Image`.\n3. Definition of item `Picture`.\n4. Definition of attribute `Show` with item `picture` of type `Picture`.\n5. Definition of action `Focus` with input item `scene` of type `Scene` and output item `image` of type `Image`.\n6. Definition of action `Shoot` with input item `image` of type `Image` and output item `picture` of type `Picture`.\n7. Definition of action `TakePicture`.\n8. Definition of part `screen` with port `displayPort`.\n9. Definition of part `camera` with ports `viewPort` and `displayPort`.\n10. Part `camera` contains action `takePicture` of type `TakePicture`.\n11. Action `takePicture` has a trigger that accepts `scene` of type `Scene` via `viewPort`.\n12. Action `takePicture` then performs action `focus` of type `Focus` with input `scene` from trigger and output `image`.\n13. There is a flow from `focus.image` to `shoot.image`.\n14. Action `takePicture` then performs action `shoot` of type `Shoot` with input `image` and output `picture`.\n15. Action `takePicture` then sends `Show(shoot.picture)` via `displayPort`.\n\n**Total atomic claims: 15**\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | item `Scene` | Yes | `item def Scene;` present |\n| 2 | item `Image` | Yes | `item def Image;` present |\n| 3 | item `Picture` | Yes | `item def Picture;` present |\n| 4 | attribute `Show` with item `picture: Picture` | **No** | No attribute or equivalent message/attribute found |\n| 5 | action `Focus` (in: scene, out: image) | **Partial** | Focusing part, but not as an action; ports represent data flow, not actions. No explicit action definition. |\n| 6 | action `Shoot` (in: image, out: picture) | **Partial** | Capturing part, but not as an action; ports represent data flow, not actions. No explicit action definition. |\n| 7 | action `TakePicture` | **No** | No explicit action or equivalent found |\n| 8 | part `screen` with port `displayPort` | **Partial** | Displaying part with `displayPort`, but not named `screen` (naming ignored), but structure matches. |\n| 9 | part `camera` with ports `viewPort` and `displayPort` | Yes | `CameraSystem` part with both ports present |\n| 10 | `camera` contains action `takePicture` of type `TakePicture` | **No** | No explicit action or equivalent found |\n| 11 | `takePicture` triggers on `scene` via `viewPort` | **Partial** | `viewPort` is connected, but no explicit trigger/action mechanism |\n| 12 | `takePicture` then performs `focus` with input/output | **Partial** | Data flow via ports, but not as an action sequence |\n| 13 | Flow from `focus.image` to `shoot.image` | Yes | `focusing.imageOut` connects to `capturing.imageIn` |\n| 14 | `takePicture` then performs `shoot` with input/output | **Partial** | Data flow via ports, but not as an action sequence |\n| 15 | `takePicture` then sends `Show(shoot.picture)` via `displayPort` | **Partial** | Data flow to `displayPort`, but no explicit `Show` attribute/message |\n\n**Clarification on \"Partial\":** For recall, only *full* coverage counts. If the claim is only partially covered (e.g., data flow matches but not the action semantics), it does **not** count as covered.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 1 (item Scene)\n- 2 (item Image)\n- 3 (item Picture)\n- 8 (part screen/displaying with displayPort, structure matches)\n- 9 (part camera/CameraSystem with viewPort and displayPort)\n- 13 (flow from focus.image to shoot.image via port connections)\n\n**Total covered: 6**\n\n**Total claims: 15**\n\n---\n\n**Score: 6/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 659,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 999,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1658
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569507,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. Definition of item `Scene`.\n2. Definition of item `Image`.\n3. Definition of item `Picture`.\n4. Definition of attribute `Show` with item `picture` of type `Picture`.\n5. Definition of action `Focus` with input item `scene` of type `Scene` and output item `image` of type `Image`.\n6. Definition of action `Shoot` with input item `image` of type `Image` and output item `picture` of type `Picture`.\n7. Definition of action `TakePicture`.\n8. Definition of part `screen` with port `displayPort`.\n9. Definition of part `camera` with ports `viewPort` and `displayPort`.\n10. Part `camera` contains action `takePicture` of type `TakePicture`.\n11. Action `takePicture` has a trigger that accepts `scene` of type `Scene` via `viewPort`.\n12. Action `takePicture` then performs action `focus` of type `Focus` with input `scene` from trigger and output `image`.\n13. There is a flow from `focus.image` to `shoot.image`.\n14. Action `takePicture` then performs action `shoot` of type `Shoot` with input `image` and output `picture`.\n15. Action `takePicture` then sends `Show(shoot.picture)` via `displayPort`.\n\n**Total atomic claims: 15**\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | item `Scene` | Yes | `item def Scene;` present |\n| 2 | item `Image` | Yes | `item def Image;` present |\n| 3 | item `Picture` | Yes | `item def Picture;` present |\n| 4 | attribute `Show` with item `picture: Picture` | **No** | No attribute or equivalent message/attribute found |\n| 5 | action `Focus` (in: scene, out: image) | **Partial** | Focusing part, but not as an action; ports represent data flow, not actions. No explicit action definition. |\n| 6 | action `Shoot` (in: image, out: picture) | **Partial** | Capturing part, but not as an action; ports represent data flow, not actions. No explicit action definition. |\n| 7 | action `TakePicture` | **No** | No explicit action or equivalent found |\n| 8 | part `screen` with port `displayPort` | **Partial** | Displaying part with `displayPort`, but not named `screen` (naming ignored), but structure matches. |\n| 9 | part `camera` with ports `viewPort` and `displayPort` | Yes | `CameraSystem` part with both ports present |\n| 10 | `camera` contains action `takePicture` of type `TakePicture` | **No** | No explicit action or equivalent found |\n| 11 | `takePicture` triggers on `scene` via `viewPort` | **Partial** | `viewPort` is connected, but no explicit trigger/action mechanism |\n| 12 | `takePicture` then performs `focus` with input/output | **Partial** | Data flow via ports, but not as an action sequence |\n| 13 | Flow from `focus.image` to `shoot.image` | Yes | `focusing.imageOut` connects to `capturing.imageIn` |\n| 14 | `takePicture` then performs `shoot` with input/output | **Partial** | Data flow via ports, but not as an action sequence |\n| 15 | `takePicture` then sends `Show(shoot.picture)` via `displayPort` | **Partial** | Data flow to `displayPort`, but no explicit `Show` attribute/message |\n\n**Clarification on \"Partial\":** For recall, only *full* coverage counts. If the claim is only partially covered (e.g., data flow matches but not the action semantics), it does **not** count as covered.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 1 (item Scene)\n- 2 (item Image)\n- 3 (item Picture)\n- 8 (part screen/displaying with displayPort, structure matches)\n- 9 (part camera/CameraSystem with viewPort and displayPort)\n- 13 (flow from focus.image to shoot.image via port connections)\n\n**Total covered: 6**\n\n**Total claims: 15**\n\n---\n\n**Score: 6/15**"
+  }
+}

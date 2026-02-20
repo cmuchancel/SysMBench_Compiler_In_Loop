@@ -1,0 +1,85 @@
+{
+  "model_id": 62,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleMassBudgetingConstraints' {\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\tprivate import NumericalFunctions::*;\n\tpart def Engine;\n\tpart def Transmission;\n\tconstraint def MassConstraint {\n\t\tin partMasses : MassValue[0..*];\n\t\tin massLimit : MassValue;\n\t\tsum(partMasses) <= massLimit\n\t}\n\tpart def Vehicle {\n\t\tassert constraint massConstraint : MassConstraint {\n\t\t\tin partMasses = (chassisMass, engine.mass, transmission.mass);\n\t\t\tin massLimit = 2500[kg];\n\t\t}\t\n\t\tattribute chassisMass : MassValue;\n\t\tpart engine : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t\tpart transmission : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t}\t\n}\n\nGenerated Model:\npackage VehicleMassManagement {\n    private import ScalarValues::*;\n\n    part def Chassis {\n        attribute mass : Real;\n    }\n\n    part def Engine {\n        attribute mass : Real;\n    }\n\n    part def Gearbox {\n        attribute mass : Real;\n    }\n\n    part def Vehicle {\n        part chassis : Chassis;\n        part engine : Engine;\n        part gearbox : Gearbox;\n\n        attribute maxMass : Real = 2500;\n        attribute totalMass : Real = chassis.mass + engine.mass + gearbox.mass;\n        attribute overweightWarning : Boolean = totalMass > maxMass;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/62/62_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/62/62.sysml",
+  "response": {
+    "id": "resp_0c4a705b897cc79c0069980091e9348193b45c12d82c6bca70",
+    "created_at": 1771569297.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0c4a705b897cc79c00699800921ea081938fb6e62ae860b84f",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is defined.\n2. Private import of ISQ.\n3. Private import of SI.\n4. Private import of NumericalFunctions.\n5. Definition of part Engine.\n6. Definition of part Transmission.\n7. Definition of constraint MassConstraint.\n8. MassConstraint has input partMasses of type MassValue[0..*].\n9. MassConstraint has input massLimit of type MassValue.\n10. MassConstraint constraint: sum(partMasses) <= massLimit.\n11. Definition of part Vehicle.\n12. Vehicle asserts constraint massConstraint of type MassConstraint.\n13. massConstraint in Vehicle: in partMasses = (chassisMass, engine.mass, transmission.mass).\n14. massConstraint in Vehicle: in massLimit = 2500[kg].\n15. Vehicle has attribute chassisMass of type MassValue.\n16. Vehicle has part engine of type Engine.\n17. engine part has attribute mass of type MassValue.\n18. Vehicle has part transmission of type Engine.\n19. transmission part has attribute mass of type MassValue.\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Atomic Claim | Covered? | Notes |\n|---|--------------|----------|-------|\n| 1 | The package is defined | Yes | Both have a package. |\n| 2 | Private import of ISQ | No | Not present. |\n| 3 | Private import of SI | No | Not present. |\n| 4 | Private import of NumericalFunctions | No | Not present. |\n| 5 | Definition of part Engine | Yes | Present in both. |\n| 6 | Definition of part Transmission | Partial/No | Reference Transmission, generated has Gearbox (semantically similar but not named the same; let's be generous and say covered). |\n| 7 | Definition of constraint MassConstraint | Partial/No | No explicit constraint definition, but logic is present via attributes. |\n| 8 | MassConstraint has input partMasses of type MassValue[0..*] | Partial/No | No explicit input, but totalMass is sum of masses. |\n| 9 | MassConstraint has input massLimit of type MassValue | Partial/No | maxMass attribute present. |\n| 10 | MassConstraint constraint: sum(partMasses) <= massLimit | Yes | Implemented as overweightWarning: totalMass > maxMass. |\n| 11 | Definition of part Vehicle | Yes | Present in both. |\n| 12 | Vehicle asserts constraint massConstraint of type MassConstraint | Partial/No | No explicit assertion, but logic is present. |\n| 13 | massConstraint in Vehicle: in partMasses = (chassisMass, engine.mass, transmission.mass) | Yes | totalMass = chassis.mass + engine.mass + gearbox.mass. |\n| 14 | massConstraint in Vehicle: in massLimit = 2500[kg] | Yes | maxMass = 2500. |\n| 15 | Vehicle has attribute chassisMass of type MassValue | Yes | Chassis part has mass attribute; not directly in Vehicle, but semantically equivalent. |\n| 16 | Vehicle has part engine of type Engine | Yes | Present. |\n| 17 | engine part has attribute mass of type MassValue | Yes | Present. |\n| 18 | Vehicle has part transmission of type Engine | Yes | Gearbox part present; semantically equivalent. |\n| 19 | transmission part has attribute mass of type MassValue | Yes | Gearbox has mass attribute. |\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- Fully covered: 1, 5, 6, 10, 11, 13, 14, 15, 16, 17, 18, 19 (12 claims)\n- Partially covered (if being strict, not fully covered): 7, 8, 9, 12 (0 if strict, 4 if generous)\n- Not covered: 2, 3, 4 (3 claims)\n\nIf we count only fully covered claims: **12/19**\n\nIf we count partials as covered: **16/19**\n\n**Final Score (strict):**\n\nScore: 12/19\n\n---\n\n**If you want to be more generous and count partials as covered:**\n\nScore: 16/19\n\n---\n\n**Defaulting to strict interpretation:**\n\n**Score: 12/19**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 469,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 941,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1410
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569309,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is defined.\n2. Private import of ISQ.\n3. Private import of SI.\n4. Private import of NumericalFunctions.\n5. Definition of part Engine.\n6. Definition of part Transmission.\n7. Definition of constraint MassConstraint.\n8. MassConstraint has input partMasses of type MassValue[0..*].\n9. MassConstraint has input massLimit of type MassValue.\n10. MassConstraint constraint: sum(partMasses) <= massLimit.\n11. Definition of part Vehicle.\n12. Vehicle asserts constraint massConstraint of type MassConstraint.\n13. massConstraint in Vehicle: in partMasses = (chassisMass, engine.mass, transmission.mass).\n14. massConstraint in Vehicle: in massLimit = 2500[kg].\n15. Vehicle has attribute chassisMass of type MassValue.\n16. Vehicle has part engine of type Engine.\n17. engine part has attribute mass of type MassValue.\n18. Vehicle has part transmission of type Engine.\n19. transmission part has attribute mass of type MassValue.\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Atomic Claim | Covered? | Notes |\n|---|--------------|----------|-------|\n| 1 | The package is defined | Yes | Both have a package. |\n| 2 | Private import of ISQ | No | Not present. |\n| 3 | Private import of SI | No | Not present. |\n| 4 | Private import of NumericalFunctions | No | Not present. |\n| 5 | Definition of part Engine | Yes | Present in both. |\n| 6 | Definition of part Transmission | Partial/No | Reference Transmission, generated has Gearbox (semantically similar but not named the same; let's be generous and say covered). |\n| 7 | Definition of constraint MassConstraint | Partial/No | No explicit constraint definition, but logic is present via attributes. |\n| 8 | MassConstraint has input partMasses of type MassValue[0..*] | Partial/No | No explicit input, but totalMass is sum of masses. |\n| 9 | MassConstraint has input massLimit of type MassValue | Partial/No | maxMass attribute present. |\n| 10 | MassConstraint constraint: sum(partMasses) <= massLimit | Yes | Implemented as overweightWarning: totalMass > maxMass. |\n| 11 | Definition of part Vehicle | Yes | Present in both. |\n| 12 | Vehicle asserts constraint massConstraint of type MassConstraint | Partial/No | No explicit assertion, but logic is present. |\n| 13 | massConstraint in Vehicle: in partMasses = (chassisMass, engine.mass, transmission.mass) | Yes | totalMass = chassis.mass + engine.mass + gearbox.mass. |\n| 14 | massConstraint in Vehicle: in massLimit = 2500[kg] | Yes | maxMass = 2500. |\n| 15 | Vehicle has attribute chassisMass of type MassValue | Yes | Chassis part has mass attribute; not directly in Vehicle, but semantically equivalent. |\n| 16 | Vehicle has part engine of type Engine | Yes | Present. |\n| 17 | engine part has attribute mass of type MassValue | Yes | Present. |\n| 18 | Vehicle has part transmission of type Engine | Yes | Gearbox part present; semantically equivalent. |\n| 19 | transmission part has attribute mass of type MassValue | Yes | Gearbox has mass attribute. |\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- Fully covered: 1, 5, 6, 10, 11, 13, 14, 15, 16, 17, 18, 19 (12 claims)\n- Partially covered (if being strict, not fully covered): 7, 8, 9, 12 (0 if strict, 4 if generous)\n- Not covered: 2, 3, 4 (3 claims)\n\nIf we count only fully covered claims: **12/19**\n\nIf we count partials as covered: **16/19**\n\n**Final Score (strict):**\n\nScore: 12/19\n\n---\n\n**If you want to be more generous and count partials as covered:**\n\nScore: 16/19\n\n---\n\n**Defaulting to strict interpretation:**\n\n**Score: 12/19**"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "model_id": 27,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'BatteryChargingControl' {\n\tprivate import ScalarValues::*;\n\tattribute def BatteryCharged;\n\tpart battery;\n\tpart powerSystem;\n\taction def MonitorBattery { out charge : Real; }\n\taction def AddCharge { in charge : Real; }\n\taction def EndCharging;\n\taction def ChargeBattery {\n\t\tfirst start;\n\t\tthen merge continueCharging;\n\t\tthen action monitor : MonitorBattery {\n\t\t\tout batteryCharge : Real;\n\t\t}\n\t\tthen decide;\n\t\t\tif monitor.batteryCharge < 100 then addCharge;\n\t\t\tif monitor.batteryCharge >= 100 then endCharging;\n\t\taction addCharge : AddCharge {\n\t\t\tin charge = monitor.batteryCharge;\n\t\t}\n\t\tthen continueCharging;\n\t\taction endCharging : EndCharging;\n\t\tthen done;\n\t}\n}\n\nGenerated Model:\npackage BatteryChargingControl\n{\n  private import ScalarValues::*;\n  \n  enum def ChargeStatus {\n    enum Charging;\n    enum NotCharging;\n  }\n  \n  item def BatteryLevelSignal {\n    attribute level : Real;\n  }\n  \n  item def ChargeCommand {\n    attribute enable : Boolean;\n  }\n  \n  port def LevelPort {\n    attribute level : Real;\n  }\n  \n  port def CommandPort {\n    attribute enable : Boolean;\n  }\n  \n  part def Battery {\n    attribute capacityPercent : Real;\n    port levelOut : LevelPort;\n  }\n  \n  part def Charger {\n    attribute isEnabled : Boolean;\n    port cmdIn : CommandPort;\n  }\n  \n  part def Controller {\n    attribute targetFullPercent : Real = 100.0;\n    attribute status : ChargeStatus;\n    port levelIn : LevelPort;\n    port cmdOut : CommandPort;\n  }\n  \n  part def BatteryChargingSystem {\n    part battery : Battery;\n    part charger : Charger;\n    part controller : Controller;\n    connect battery.levelOut to controller.levelIn;\n    connect controller.cmdOut to charger.cmdIn;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/27/27_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/27/27.sysml",
+  "response": {
+    "id": "resp_0cbad3163e14273f0069980080cff48193967e78220a56d4a9",
+    "created_at": 1771569280.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0cbad3163e14273f0069980081223c8193a809296a9931304e",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. There is a package named `BatteryChargingControl`.\n2. The package privately imports `ScalarValues::*`.\n\n**Enums**\n3. There is an enum type `ChargeStatus`.\n4. `ChargeStatus` has a value `Charging`.\n5. `ChargeStatus` has a value `NotCharging`.\n\n**Items**\n6. There is an item type `BatteryLevelSignal`.\n7. `BatteryLevelSignal` has an attribute `level` of type `Real`.\n8. There is an item type `ChargeCommand`.\n9. `ChargeCommand` has an attribute `enable` of type `Boolean`.\n\n**Ports**\n10. There is a port type `LevelPort`.\n11. `LevelPort` has an attribute `level` of type `Real`.\n12. There is a port type `CommandPort`.\n13. `CommandPort` has an attribute `enable` of type `Boolean`.\n\n**Parts and Structure**\n14. There is a part type `Battery`.\n15. `Battery` has an attribute `capacityPercent` of type `Real`.\n16. `Battery` has a port `levelOut` of type `LevelPort`.\n17. There is a part type `Charger`.\n18. `Charger` has an attribute `isEnabled` of type `Boolean`.\n19. `Charger` has a port `cmdIn` of type `CommandPort`.\n20. There is a part type `Controller`.\n21. `Controller` has an attribute `targetFullPercent` of type `Real` with default value `100.0`.\n22. `Controller` has an attribute `status` of type `ChargeStatus`.\n23. `Controller` has a port `levelIn` of type `LevelPort`.\n24. `Controller` has a port `cmdOut` of type `CommandPort`.\n25. There is a part type `BatteryChargingSystem`.\n26. `BatteryChargingSystem` has a part `battery` of type `Battery`.\n27. `BatteryChargingSystem` has a part `charger` of type `Charger`.\n28. `BatteryChargingSystem` has a part `controller` of type `Controller`.\n29. `BatteryChargingSystem` connects `battery.levelOut` to `controller.levelIn`.\n30. `BatteryChargingSystem` connects `controller.cmdOut` to `charger.cmdIn`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**1. Package named `BatteryChargingControl`.**\n- **Supported** (Reference model has the same package.)\n\n**2. Private import of `ScalarValues::*`.**\n- **Supported** (Reference model has the same import.)\n\n**3. Enum type `ChargeStatus`.**\n- **Not Supported** (No enum in reference model.)\n\n**4. `ChargeStatus` has value `Charging`.**\n- **Not Supported** (No enum in reference model.)\n\n**5. `ChargeStatus` has value `NotCharging`.**\n- **Not Supported** (No enum in reference model.)\n\n**6. Item type `BatteryLevelSignal`.**\n- **Not Supported** (No such item in reference model.)\n\n**7. `BatteryLevelSignal` has attribute `level : Real`.**\n- **Not Supported** (No such item in reference model.)\n\n**8. Item type `ChargeCommand`.**\n- **Not Supported** (No such item in reference model.)\n\n**9. `ChargeCommand` has attribute `enable : Boolean`.**\n- **Not Supported** (No such item in reference model.)\n\n**10. Port type `LevelPort`.**\n- **Not Supported** (No such port in reference model.)\n\n**11. `LevelPort` has attribute `level : Real`.**\n- **Not Supported** (No such port in reference model.)\n\n**12. Port type `CommandPort`.**\n- **Not Supported** (No such port in reference model.)\n\n**13. `CommandPort` has attribute `enable : Boolean`.**\n- **Not Supported** (No such port in reference model.)\n\n**14. Part type `Battery`.**\n- **Supported** (Reference model has `part battery;`.)\n\n**15. `Battery` has attribute `capacityPercent : Real`.**\n- **Not Supported** (No such attribute in reference model.)\n\n**16. `Battery` has port `levelOut : LevelPort`.**\n- **Not Supported** (No such port in reference model.)\n\n**17. Part type `Charger`.**\n- **Not Supported** (No such part in reference model.)\n\n**18. `Charger` has attribute `isEnabled : Boolean`.**\n- **Not Supported** (No such part in reference model.)\n\n**19. `Charger` has port `cmdIn : CommandPort`.**\n- **Not Supported** (No such part in reference model.)\n\n**20. Part type `Controller`.**\n- **Not Supported** (No such part in reference model.)\n\n**21. `Controller` has attribute `targetFullPercent : Real = 100.0`.**\n- **Not Supported** (No such part in reference model.)\n\n**22. `Controller` has attribute `status : ChargeStatus`.**\n- **Not Supported** (No such part in reference model.)\n\n**23. `Controller` has port `levelIn : LevelPort`.**\n- **Not Supported** (No such part in reference model.)\n\n**24. `Controller` has port `cmdOut : CommandPort`.**\n- **Not Supported** (No such part in reference model.)\n\n**25. Part type `BatteryChargingSystem`.**\n- **Not Supported** (No such part in reference model.)\n\n**26. `BatteryChargingSystem` has part `battery : Battery`.**\n- **Not Supported** (No such part in reference model.)\n\n**27. `BatteryChargingSystem` has part `charger : Charger`.**\n- **Not Supported** (No such part in reference model.)\n\n**28. `BatteryChargingSystem` has part `controller : Controller`.**\n- **Not Supported** (No such part in reference model.)\n\n**29. `BatteryChargingSystem` connects `battery.levelOut` to `controller.levelIn`.**\n- **Not Supported** (No such structure in reference model.)\n\n**30. `BatteryChargingSystem` connects `controller.cmdOut` to `charger.cmdIn`.**\n- **Not Supported** (No such structure in reference model.)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 1. Package named `BatteryChargingControl`\n- 2. Private import of `ScalarValues::*`\n- 14. Part type `Battery`\n\n**Total supported claims:** 3  \n**Total claims in generated model:** 30\n\n---\n\n**Score: 3/30**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 570,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1407,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1977
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569295,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. There is a package named `BatteryChargingControl`.\n2. The package privately imports `ScalarValues::*`.\n\n**Enums**\n3. There is an enum type `ChargeStatus`.\n4. `ChargeStatus` has a value `Charging`.\n5. `ChargeStatus` has a value `NotCharging`.\n\n**Items**\n6. There is an item type `BatteryLevelSignal`.\n7. `BatteryLevelSignal` has an attribute `level` of type `Real`.\n8. There is an item type `ChargeCommand`.\n9. `ChargeCommand` has an attribute `enable` of type `Boolean`.\n\n**Ports**\n10. There is a port type `LevelPort`.\n11. `LevelPort` has an attribute `level` of type `Real`.\n12. There is a port type `CommandPort`.\n13. `CommandPort` has an attribute `enable` of type `Boolean`.\n\n**Parts and Structure**\n14. There is a part type `Battery`.\n15. `Battery` has an attribute `capacityPercent` of type `Real`.\n16. `Battery` has a port `levelOut` of type `LevelPort`.\n17. There is a part type `Charger`.\n18. `Charger` has an attribute `isEnabled` of type `Boolean`.\n19. `Charger` has a port `cmdIn` of type `CommandPort`.\n20. There is a part type `Controller`.\n21. `Controller` has an attribute `targetFullPercent` of type `Real` with default value `100.0`.\n22. `Controller` has an attribute `status` of type `ChargeStatus`.\n23. `Controller` has a port `levelIn` of type `LevelPort`.\n24. `Controller` has a port `cmdOut` of type `CommandPort`.\n25. There is a part type `BatteryChargingSystem`.\n26. `BatteryChargingSystem` has a part `battery` of type `Battery`.\n27. `BatteryChargingSystem` has a part `charger` of type `Charger`.\n28. `BatteryChargingSystem` has a part `controller` of type `Controller`.\n29. `BatteryChargingSystem` connects `battery.levelOut` to `controller.levelIn`.\n30. `BatteryChargingSystem` connects `controller.cmdOut` to `charger.cmdIn`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**1. Package named `BatteryChargingControl`.**\n- **Supported** (Reference model has the same package.)\n\n**2. Private import of `ScalarValues::*`.**\n- **Supported** (Reference model has the same import.)\n\n**3. Enum type `ChargeStatus`.**\n- **Not Supported** (No enum in reference model.)\n\n**4. `ChargeStatus` has value `Charging`.**\n- **Not Supported** (No enum in reference model.)\n\n**5. `ChargeStatus` has value `NotCharging`.**\n- **Not Supported** (No enum in reference model.)\n\n**6. Item type `BatteryLevelSignal`.**\n- **Not Supported** (No such item in reference model.)\n\n**7. `BatteryLevelSignal` has attribute `level : Real`.**\n- **Not Supported** (No such item in reference model.)\n\n**8. Item type `ChargeCommand`.**\n- **Not Supported** (No such item in reference model.)\n\n**9. `ChargeCommand` has attribute `enable : Boolean`.**\n- **Not Supported** (No such item in reference model.)\n\n**10. Port type `LevelPort`.**\n- **Not Supported** (No such port in reference model.)\n\n**11. `LevelPort` has attribute `level : Real`.**\n- **Not Supported** (No such port in reference model.)\n\n**12. Port type `CommandPort`.**\n- **Not Supported** (No such port in reference model.)\n\n**13. `CommandPort` has attribute `enable : Boolean`.**\n- **Not Supported** (No such port in reference model.)\n\n**14. Part type `Battery`.**\n- **Supported** (Reference model has `part battery;`.)\n\n**15. `Battery` has attribute `capacityPercent : Real`.**\n- **Not Supported** (No such attribute in reference model.)\n\n**16. `Battery` has port `levelOut : LevelPort`.**\n- **Not Supported** (No such port in reference model.)\n\n**17. Part type `Charger`.**\n- **Not Supported** (No such part in reference model.)\n\n**18. `Charger` has attribute `isEnabled : Boolean`.**\n- **Not Supported** (No such part in reference model.)\n\n**19. `Charger` has port `cmdIn : CommandPort`.**\n- **Not Supported** (No such part in reference model.)\n\n**20. Part type `Controller`.**\n- **Not Supported** (No such part in reference model.)\n\n**21. `Controller` has attribute `targetFullPercent : Real = 100.0`.**\n- **Not Supported** (No such part in reference model.)\n\n**22. `Controller` has attribute `status : ChargeStatus`.**\n- **Not Supported** (No such part in reference model.)\n\n**23. `Controller` has port `levelIn : LevelPort`.**\n- **Not Supported** (No such part in reference model.)\n\n**24. `Controller` has port `cmdOut : CommandPort`.**\n- **Not Supported** (No such part in reference model.)\n\n**25. Part type `BatteryChargingSystem`.**\n- **Not Supported** (No such part in reference model.)\n\n**26. `BatteryChargingSystem` has part `battery : Battery`.**\n- **Not Supported** (No such part in reference model.)\n\n**27. `BatteryChargingSystem` has part `charger : Charger`.**\n- **Not Supported** (No such part in reference model.)\n\n**28. `BatteryChargingSystem` has part `controller : Controller`.**\n- **Not Supported** (No such part in reference model.)\n\n**29. `BatteryChargingSystem` connects `battery.levelOut` to `controller.levelIn`.**\n- **Not Supported** (No such structure in reference model.)\n\n**30. `BatteryChargingSystem` connects `controller.cmdOut` to `charger.cmdIn`.**\n- **Not Supported** (No such structure in reference model.)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 1. Package named `BatteryChargingControl`\n- 2. Private import of `ScalarValues::*`\n- 14. Part type `Battery`\n\n**Total supported claims:** 3  \n**Total claims in generated model:** 30\n\n---\n\n**Score: 3/30**"
+  }
+}

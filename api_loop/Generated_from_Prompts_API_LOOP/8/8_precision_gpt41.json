@@ -1,0 +1,85 @@
+{
+  "model_id": 8,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDefinition' {\n\tprivate import ScalarValues::*;\n\titem def Fuel;\n\titem def Person;\n\tpart def Vehicle {\n\t\tattribute mass : Real;\n\t\tref item driver : Person;\n\t\tpart fuelTank {\n\t\t\titem fuel: Fuel;\n\t\t}\t\t\n\t}\t\n}\n\nGenerated Model:\npackage VehicleModeling {\n  private import ScalarValues::*;\n\n  enum def FuelType {\n    enum Gasoline;\n    enum Diesel;\n    enum Electric;\n    enum Hydrogen;\n  }\n\n  part def Fuel {\n    attribute fuelType : FuelType;\n    attribute description : String;\n  }\n\n  part def Personnel {\n    attribute name : String;\n    attribute personnelId : String;\n  }\n\n  part def Driver {\n    part info : Personnel;\n    attribute licenseId : String;\n  }\n\n  part def QualityAttributes {\n    attribute safetyLevel : String;\n    attribute reliabilityLevel : String;\n  }\n\n  part def FuelTank {\n    part storedFuel : Fuel;\n    attribute capacity : Real;\n  }\n\n  part def Vehicle {\n    attribute model : String;\n    part quality : QualityAttributes;\n    part driver : Driver;\n    part fuelTank : FuelTank;\n  }\n\n  part def DataRepository {\n    part fuelInfo : Fuel;\n    part personnelInfo : Personnel;\n  }\n\n  part def VehicleModelingSystem {\n    part vehicle : Vehicle;\n    part data : DataRepository;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/8/8_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/8/8.sysml",
+  "response": {
+    "id": "resp_0af41366c521b4f8006997fdf2f12c819787302e6c1013cdb7",
+    "created_at": 1771568626.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0af41366c521b4f8006997fdf486e08197a5bfc8cc00ac4bfd",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model.\n\n**(I will number each claim for easy reference.)**\n\n#### Package and Imports\n1. The model is in a package (VehicleModeling).\n2. The model imports ScalarValues::* privately.\n\n#### Enumerations\n3. There is an enum FuelType.\n4. FuelType has value Gasoline.\n5. FuelType has value Diesel.\n6. FuelType has value Electric.\n7. FuelType has value Hydrogen.\n\n#### Parts and Items\n8. There is a part Fuel.\n9. Fuel has attribute fuelType of type FuelType.\n10. Fuel has attribute description of type String.\n\n11. There is a part Personnel.\n12. Personnel has attribute name of type String.\n13. Personnel has attribute personnelId of type String.\n\n14. There is a part Driver.\n15. Driver has part info of type Personnel.\n16. Driver has attribute licenseId of type String.\n\n17. There is a part QualityAttributes.\n18. QualityAttributes has attribute safetyLevel of type String.\n19. QualityAttributes has attribute reliabilityLevel of type String.\n\n20. There is a part FuelTank.\n21. FuelTank has part storedFuel of type Fuel.\n22. FuelTank has attribute capacity of type Real.\n\n23. There is a part Vehicle.\n24. Vehicle has attribute model of type String.\n25. Vehicle has part quality of type QualityAttributes.\n26. Vehicle has part driver of type Driver.\n27. Vehicle has part fuelTank of type FuelTank.\n\n28. There is a part DataRepository.\n29. DataRepository has part fuelInfo of type Fuel.\n30. DataRepository has part personnelInfo of type Personnel.\n\n31. There is a part VehicleModelingSystem.\n32. VehicleModelingSystem has part vehicle of type Vehicle.\n33. VehicleModelingSystem has part data of type DataRepository.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model.\n\n#### Package and Imports\n1. **Supported** (package exists, name difference ignored)\n2. **Supported** (import exists)\n\n#### Enumerations\n3. **Not Supported** (no FuelType enum in reference)\n4. **Not Supported**\n5. **Not Supported**\n6. **Not Supported**\n7. **Not Supported**\n\n#### Parts and Items\n8. **Supported** (Fuel exists as item in reference)\n9. **Not Supported** (no fuelType attribute in Fuel)\n10. **Not Supported** (no description attribute in Fuel)\n\n11. **Not Supported** (Personnel does not exist; closest is Person as item)\n12. **Not Supported**\n13. **Not Supported**\n\n14. **Not Supported** (Driver does not exist; reference has driver as a reference to Person)\n15. **Not Supported**\n16. **Not Supported**\n\n17. **Not Supported** (QualityAttributes does not exist)\n18. **Not Supported**\n19. **Not Supported**\n\n20. **Supported** (fuelTank exists as part in Vehicle)\n21. **Supported** (fuelTank contains fuel in reference; here, storedFuel is a part of FuelTank)\n22. **Not Supported** (no capacity attribute in fuelTank)\n\n23. **Supported** (Vehicle exists as part)\n24. **Not Supported** (no model attribute in Vehicle)\n25. **Not Supported** (no quality part in Vehicle)\n26. **Not Supported** (driver is a reference to Person in reference, not a part of type Driver)\n27. **Supported** (fuelTank is a part of Vehicle)\n\n28. **Not Supported** (DataRepository does not exist)\n29. **Not Supported**\n30. **Not Supported**\n\n31. **Not Supported** (VehicleModelingSystem does not exist)\n32. **Not Supported**\n33. **Not Supported**\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n1, 2, 8, 20, 21, 23, 27\n\n**Total supported:** 7  \n**Total claims:** 33\n\n---\n\n**Score: 7/33**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 460,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 849,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1309
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568634,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model.\n\n**(I will number each claim for easy reference.)**\n\n#### Package and Imports\n1. The model is in a package (VehicleModeling).\n2. The model imports ScalarValues::* privately.\n\n#### Enumerations\n3. There is an enum FuelType.\n4. FuelType has value Gasoline.\n5. FuelType has value Diesel.\n6. FuelType has value Electric.\n7. FuelType has value Hydrogen.\n\n#### Parts and Items\n8. There is a part Fuel.\n9. Fuel has attribute fuelType of type FuelType.\n10. Fuel has attribute description of type String.\n\n11. There is a part Personnel.\n12. Personnel has attribute name of type String.\n13. Personnel has attribute personnelId of type String.\n\n14. There is a part Driver.\n15. Driver has part info of type Personnel.\n16. Driver has attribute licenseId of type String.\n\n17. There is a part QualityAttributes.\n18. QualityAttributes has attribute safetyLevel of type String.\n19. QualityAttributes has attribute reliabilityLevel of type String.\n\n20. There is a part FuelTank.\n21. FuelTank has part storedFuel of type Fuel.\n22. FuelTank has attribute capacity of type Real.\n\n23. There is a part Vehicle.\n24. Vehicle has attribute model of type String.\n25. Vehicle has part quality of type QualityAttributes.\n26. Vehicle has part driver of type Driver.\n27. Vehicle has part fuelTank of type FuelTank.\n\n28. There is a part DataRepository.\n29. DataRepository has part fuelInfo of type Fuel.\n30. DataRepository has part personnelInfo of type Personnel.\n\n31. There is a part VehicleModelingSystem.\n32. VehicleModelingSystem has part vehicle of type Vehicle.\n33. VehicleModelingSystem has part data of type DataRepository.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model.\n\n#### Package and Imports\n1. **Supported** (package exists, name difference ignored)\n2. **Supported** (import exists)\n\n#### Enumerations\n3. **Not Supported** (no FuelType enum in reference)\n4. **Not Supported**\n5. **Not Supported**\n6. **Not Supported**\n7. **Not Supported**\n\n#### Parts and Items\n8. **Supported** (Fuel exists as item in reference)\n9. **Not Supported** (no fuelType attribute in Fuel)\n10. **Not Supported** (no description attribute in Fuel)\n\n11. **Not Supported** (Personnel does not exist; closest is Person as item)\n12. **Not Supported**\n13. **Not Supported**\n\n14. **Not Supported** (Driver does not exist; reference has driver as a reference to Person)\n15. **Not Supported**\n16. **Not Supported**\n\n17. **Not Supported** (QualityAttributes does not exist)\n18. **Not Supported**\n19. **Not Supported**\n\n20. **Supported** (fuelTank exists as part in Vehicle)\n21. **Supported** (fuelTank contains fuel in reference; here, storedFuel is a part of FuelTank)\n22. **Not Supported** (no capacity attribute in fuelTank)\n\n23. **Supported** (Vehicle exists as part)\n24. **Not Supported** (no model attribute in Vehicle)\n25. **Not Supported** (no quality part in Vehicle)\n26. **Not Supported** (driver is a reference to Person in reference, not a part of type Driver)\n27. **Supported** (fuelTank is a part of Vehicle)\n\n28. **Not Supported** (DataRepository does not exist)\n29. **Not Supported**\n30. **Not Supported**\n\n31. **Not Supported** (VehicleModelingSystem does not exist)\n32. **Not Supported**\n33. **Not Supported**\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n1, 2, 8, 20, 21, 23, 27\n\n**Total supported:** 7  \n**Total claims:** 33\n\n---\n\n**Score: 7/33**"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "model_id": 3,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDefinition' {\n\tpart def Vehicle {\n\t\tpart parts : VehiclePart[*];\n\t\tpart eng : Engine subsets parts;\n\t\tpart trans : Transmission subsets parts;\n\t\tpart wheels : Wheel[4] :> parts;\n\t}\n\tabstract part def VehiclePart;\n\tpart def Engine :> VehiclePart;\n\tpart def Transmission :> VehiclePart;\n\tpart def Wheel :> VehiclePart;\n}\n\nGenerated Model:\npackage VehicleStructure {\n    part def VehicleComponent;\n    part def Engine specializes VehicleComponent;\n    part def Transmission specializes VehicleComponent;\n    part def Wheel specializes VehicleComponent;\n\n    part def Vehicle {\n        part engine : Engine;\n        part transmission : Transmission;\n        part wheels[4] : Wheel;\n    }\n\n    part def Car specializes Vehicle;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/3/3_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/3/3.sysml",
+  "response": {
+    "id": "resp_0ba698812776939e006997fd75010c81a0a8a78e686a1e1975",
+    "created_at": 1771568501.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0ba698812776939e006997fd75761881a0b77e5b4a121f7d72",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage 'VehicleDefinition' {\n\tpart def Vehicle {\n\t\tpart parts : VehiclePart[*];\n\t\tpart eng : Engine subsets parts;\n\t\tpart trans : Transmission subsets parts;\n\t\tpart wheels : Wheel[4] :> parts;\n\t}\n\tabstract part def VehiclePart;\n\tpart def Engine :> VehiclePart;\n\tpart def Transmission :> VehiclePart;\n\tpart def Wheel :> VehiclePart;\n}\n```\n\n**Atomic Claims:**\n\n1. There is a package named 'VehicleDefinition'.\n2. There is a part definition named 'Vehicle'.\n3. 'Vehicle' has a part named 'parts' of type 'VehiclePart' (multiplicity: many).\n4. 'Vehicle' has a part named 'eng' of type 'Engine', which is a subset of 'parts'.\n5. 'Vehicle' has a part named 'trans' of type 'Transmission', which is a subset of 'parts'.\n6. 'Vehicle' has a part named 'wheels' of type 'Wheel' (multiplicity: 4), which is derived from 'parts' (i.e., is a subset or redefinition of 'parts').\n7. There is an abstract part definition named 'VehiclePart'.\n8. There is a part definition named 'Engine' that specializes (is a subtype of) 'VehiclePart'.\n9. There is a part definition named 'Transmission' that specializes 'VehiclePart'.\n10. There is a part definition named 'Wheel' that specializes 'VehiclePart'.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n**Generated Model:**\n```plaintext\npackage VehicleStructure {\n    part def VehicleComponent;\n    part def Engine specializes VehicleComponent;\n    part def Transmission specializes VehicleComponent;\n    part def Wheel specializes VehicleComponent;\n\n    part def Vehicle {\n        part engine : Engine;\n        part transmission : Transmission;\n        part wheels[4] : Wheel;\n    }\n\n    part def Car specializes Vehicle;\n}\n```\n\n**Coverage Analysis:**\n\n1. **Package named 'VehicleDefinition'.**  \n   - **Not covered.** The package is named 'VehicleStructure', but per instructions, naming differences can be ignored if structure/semantics match. So, **covered**.\n\n2. **Part definition named 'Vehicle'.**  \n   - **Covered.**\n\n3. **'Vehicle' has a part named 'parts' of type 'VehiclePart' (multiplicity: many).**  \n   - **Not covered.** There is no 'parts' attribute or equivalent in the generated model.\n\n4. **'Vehicle' has a part named 'eng' of type 'Engine', which is a subset of 'parts'.**  \n   - **Partially covered.** There is a part 'engine' of type 'Engine', but no subset/redefinition relationship to 'parts' (since 'parts' is missing).  \n   - **Not covered.**\n\n5. **'Vehicle' has a part named 'trans' of type 'Transmission', which is a subset of 'parts'.**  \n   - **Partially covered.** There is a part 'transmission' of type 'Transmission', but no subset/redefinition relationship to 'parts' (since 'parts' is missing).  \n   - **Not covered.**\n\n6. **'Vehicle' has a part named 'wheels' of type 'Wheel' (multiplicity: 4), which is derived from 'parts'.**  \n   - **Partially covered.** There is a part 'wheels[4]' of type 'Wheel', but no subset/redefinition relationship to 'parts' (since 'parts' is missing).  \n   - **Not covered.**\n\n7. **Abstract part definition named 'VehiclePart'.**  \n   - **Partially covered.** There is a 'VehicleComponent', but it is not marked as abstract.  \n   - **Not covered.**\n\n8. **Part definition named 'Engine' that specializes 'VehiclePart'.**  \n   - **Covered.** 'Engine' specializes 'VehicleComponent', which is the analog of 'VehiclePart'.\n\n9. **Part definition named 'Transmission' that specializes 'VehiclePart'.**  \n   - **Covered.**\n\n10. **Part definition named 'Wheel' that specializes 'VehiclePart'.**  \n    - **Covered.**\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n1. Package (naming difference ignored)\n2. Vehicle part definition\n8. Engine specializes VehiclePart/VehicleComponent\n9. Transmission specializes VehiclePart/VehicleComponent\n10. Wheel specializes VehiclePart/VehicleComponent\n\n**Not covered:**\n3. 'parts' attribute in Vehicle\n4. 'eng' as subset of 'parts'\n5. 'trans' as subset of 'parts'\n6. 'wheels' as subset of 'parts'\n7. Abstractness of VehiclePart\n\n**Score:** 5/10\n\n---\n\n**Output:**\n\nScore: 5/10",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 337,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1048,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1385
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568513,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage 'VehicleDefinition' {\n\tpart def Vehicle {\n\t\tpart parts : VehiclePart[*];\n\t\tpart eng : Engine subsets parts;\n\t\tpart trans : Transmission subsets parts;\n\t\tpart wheels : Wheel[4] :> parts;\n\t}\n\tabstract part def VehiclePart;\n\tpart def Engine :> VehiclePart;\n\tpart def Transmission :> VehiclePart;\n\tpart def Wheel :> VehiclePart;\n}\n```\n\n**Atomic Claims:**\n\n1. There is a package named 'VehicleDefinition'.\n2. There is a part definition named 'Vehicle'.\n3. 'Vehicle' has a part named 'parts' of type 'VehiclePart' (multiplicity: many).\n4. 'Vehicle' has a part named 'eng' of type 'Engine', which is a subset of 'parts'.\n5. 'Vehicle' has a part named 'trans' of type 'Transmission', which is a subset of 'parts'.\n6. 'Vehicle' has a part named 'wheels' of type 'Wheel' (multiplicity: 4), which is derived from 'parts' (i.e., is a subset or redefinition of 'parts').\n7. There is an abstract part definition named 'VehiclePart'.\n8. There is a part definition named 'Engine' that specializes (is a subtype of) 'VehiclePart'.\n9. There is a part definition named 'Transmission' that specializes 'VehiclePart'.\n10. There is a part definition named 'Wheel' that specializes 'VehiclePart'.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n**Generated Model:**\n```plaintext\npackage VehicleStructure {\n    part def VehicleComponent;\n    part def Engine specializes VehicleComponent;\n    part def Transmission specializes VehicleComponent;\n    part def Wheel specializes VehicleComponent;\n\n    part def Vehicle {\n        part engine : Engine;\n        part transmission : Transmission;\n        part wheels[4] : Wheel;\n    }\n\n    part def Car specializes Vehicle;\n}\n```\n\n**Coverage Analysis:**\n\n1. **Package named 'VehicleDefinition'.**  \n   - **Not covered.** The package is named 'VehicleStructure', but per instructions, naming differences can be ignored if structure/semantics match. So, **covered**.\n\n2. **Part definition named 'Vehicle'.**  \n   - **Covered.**\n\n3. **'Vehicle' has a part named 'parts' of type 'VehiclePart' (multiplicity: many).**  \n   - **Not covered.** There is no 'parts' attribute or equivalent in the generated model.\n\n4. **'Vehicle' has a part named 'eng' of type 'Engine', which is a subset of 'parts'.**  \n   - **Partially covered.** There is a part 'engine' of type 'Engine', but no subset/redefinition relationship to 'parts' (since 'parts' is missing).  \n   - **Not covered.**\n\n5. **'Vehicle' has a part named 'trans' of type 'Transmission', which is a subset of 'parts'.**  \n   - **Partially covered.** There is a part 'transmission' of type 'Transmission', but no subset/redefinition relationship to 'parts' (since 'parts' is missing).  \n   - **Not covered.**\n\n6. **'Vehicle' has a part named 'wheels' of type 'Wheel' (multiplicity: 4), which is derived from 'parts'.**  \n   - **Partially covered.** There is a part 'wheels[4]' of type 'Wheel', but no subset/redefinition relationship to 'parts' (since 'parts' is missing).  \n   - **Not covered.**\n\n7. **Abstract part definition named 'VehiclePart'.**  \n   - **Partially covered.** There is a 'VehicleComponent', but it is not marked as abstract.  \n   - **Not covered.**\n\n8. **Part definition named 'Engine' that specializes 'VehiclePart'.**  \n   - **Covered.** 'Engine' specializes 'VehicleComponent', which is the analog of 'VehiclePart'.\n\n9. **Part definition named 'Transmission' that specializes 'VehiclePart'.**  \n   - **Covered.**\n\n10. **Part definition named 'Wheel' that specializes 'VehiclePart'.**  \n    - **Covered.**\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n1. Package (naming difference ignored)\n2. Vehicle part definition\n8. Engine specializes VehiclePart/VehicleComponent\n9. Transmission specializes VehiclePart/VehicleComponent\n10. Wheel specializes VehiclePart/VehicleComponent\n\n**Not covered:**\n3. 'parts' attribute in Vehicle\n4. 'eng' as subset of 'parts'\n5. 'trans' as subset of 'parts'\n6. 'wheels' as subset of 'parts'\n7. Abstractness of VehiclePart\n\n**Score:** 5/10\n\n---\n\n**Output:**\n\nScore: 5/10"
+  }
+}

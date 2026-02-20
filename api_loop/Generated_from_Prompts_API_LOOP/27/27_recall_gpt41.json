@@ -1,0 +1,85 @@
+{
+  "model_id": 27,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'BatteryChargingControl' {\n\tprivate import ScalarValues::*;\n\tattribute def BatteryCharged;\n\tpart battery;\n\tpart powerSystem;\n\taction def MonitorBattery { out charge : Real; }\n\taction def AddCharge { in charge : Real; }\n\taction def EndCharging;\n\taction def ChargeBattery {\n\t\tfirst start;\n\t\tthen merge continueCharging;\n\t\tthen action monitor : MonitorBattery {\n\t\t\tout batteryCharge : Real;\n\t\t}\n\t\tthen decide;\n\t\t\tif monitor.batteryCharge < 100 then addCharge;\n\t\t\tif monitor.batteryCharge >= 100 then endCharging;\n\t\taction addCharge : AddCharge {\n\t\t\tin charge = monitor.batteryCharge;\n\t\t}\n\t\tthen continueCharging;\n\t\taction endCharging : EndCharging;\n\t\tthen done;\n\t}\n}\n\nGenerated Model:\npackage BatteryChargingControl\n{\n  private import ScalarValues::*;\n  \n  enum def ChargeStatus {\n    enum Charging;\n    enum NotCharging;\n  }\n  \n  item def BatteryLevelSignal {\n    attribute level : Real;\n  }\n  \n  item def ChargeCommand {\n    attribute enable : Boolean;\n  }\n  \n  port def LevelPort {\n    attribute level : Real;\n  }\n  \n  port def CommandPort {\n    attribute enable : Boolean;\n  }\n  \n  part def Battery {\n    attribute capacityPercent : Real;\n    port levelOut : LevelPort;\n  }\n  \n  part def Charger {\n    attribute isEnabled : Boolean;\n    port cmdIn : CommandPort;\n  }\n  \n  part def Controller {\n    attribute targetFullPercent : Real = 100.0;\n    attribute status : ChargeStatus;\n    port levelIn : LevelPort;\n    port cmdOut : CommandPort;\n  }\n  \n  part def BatteryChargingSystem {\n    part battery : Battery;\n    part charger : Charger;\n    part controller : Controller;\n    connect battery.levelOut to controller.levelIn;\n    connect controller.cmdOut to charger.cmdIn;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/27/27_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/27/27.sysml",
+  "response": {
+    "id": "resp_0ce206cd8b510f940069980090422c8192a58f6335e4f05624",
+    "created_at": 1771569296.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0ce206cd8b510f940069980090d9f48192b22e05ba5b5f774d",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is named 'BatteryChargingControl'.\n2. There is a private import of 'ScalarValues::*'.\n3. There is an attribute definition 'BatteryCharged'.\n4. There is a part named 'battery'.\n5. There is a part named 'powerSystem'.\n6. There is an action definition 'MonitorBattery' with an output parameter 'charge' of type Real.\n7. There is an action definition 'AddCharge' with an input parameter 'charge' of type Real.\n8. There is an action definition 'EndCharging'.\n9. There is an action definition 'ChargeBattery' with the following structure:\n   - 9a. The action starts with 'start'.\n   - 9b. Then 'merge continueCharging'.\n   - 9c. Then an action 'monitor' of type 'MonitorBattery' with output 'batteryCharge' of type Real.\n   - 9d. Then a decision:\n       - 9d1. If 'monitor.batteryCharge < 100' then 'addCharge'.\n       - 9d2. If 'monitor.batteryCharge >= 100' then 'endCharging'.\n   - 9e. An action 'addCharge' of type 'AddCharge' with input 'charge = monitor.batteryCharge'.\n   - 9f. Then 'continueCharging'.\n   - 9g. An action 'endCharging' of type 'EndCharging'.\n   - 9h. Then 'done'.\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**1. The package is named 'BatteryChargingControl'.**\n- **Covered** (package name matches).\n\n**2. There is a private import of 'ScalarValues::*'.**\n- **Covered** (present in generated model).\n\n**3. There is an attribute definition 'BatteryCharged'.**\n- **Not Covered** (no such attribute or equivalent in generated model).\n\n**4. There is a part named 'battery'.**\n- **Covered** (part 'battery' exists as part of 'BatteryChargingSystem').\n\n**5. There is a part named 'powerSystem'.**\n- **Not Covered** (no 'powerSystem' part or equivalent).\n\n**6. There is an action definition 'MonitorBattery' with an output parameter 'charge' of type Real.**\n- **Not Covered** (no action definitions; closest is 'LevelPort' with 'level: Real', but not an action).\n\n**7. There is an action definition 'AddCharge' with an input parameter 'charge' of type Real.**\n- **Not Covered** (no action definitions; no equivalent).\n\n**8. There is an action definition 'EndCharging'.**\n- **Not Covered** (no action definitions; no equivalent).\n\n**9. There is an action definition 'ChargeBattery' with the following structure:**\n   - **9a. The action starts with 'start'.**\n     - **Not Covered** (no process/action structure).\n   - **9b. Then 'merge continueCharging'.**\n     - **Not Covered**.\n   - **9c. Then an action 'monitor' of type 'MonitorBattery' with output 'batteryCharge' of type Real.**\n     - **Not Covered**.\n   - **9d. Then a decision:**\n       - **9d1. If 'monitor.batteryCharge < 100' then 'addCharge'.**\n         - **Not Covered**.\n       - **9d2. If 'monitor.batteryCharge >= 100' then 'endCharging'.**\n         - **Not Covered**.\n   - **9e. An action 'addCharge' of type 'AddCharge' with input 'charge = monitor.batteryCharge'.**\n     - **Not Covered**.\n   - **9f. Then 'continueCharging'.**\n     - **Not Covered**.\n   - **9g. An action 'endCharging' of type 'EndCharging'.**\n     - **Not Covered**.\n   - **9h. Then 'done'.**\n     - **Not Covered**.\n\n### 3. Summarize the results\n\n**Total atomic claims:**  \n- 1 (package)  \n- 1 (import)  \n- 1 (attribute)  \n- 1 (battery part)  \n- 1 (powerSystem part)  \n- 1 (MonitorBattery action)  \n- 1 (AddCharge action)  \n- 1 (EndCharging action)  \n- 8 (ChargeBattery action structure: 9a-9h)  \n= **15 atomic claims**\n\n**Number of covered claims:**  \n- 1 (package)  \n- 1 (import)  \n- 1 (battery part)  \n= **3 covered claims**\n\n---\n\n**Score: 3/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 573,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1015,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1588
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569306,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is named 'BatteryChargingControl'.\n2. There is a private import of 'ScalarValues::*'.\n3. There is an attribute definition 'BatteryCharged'.\n4. There is a part named 'battery'.\n5. There is a part named 'powerSystem'.\n6. There is an action definition 'MonitorBattery' with an output parameter 'charge' of type Real.\n7. There is an action definition 'AddCharge' with an input parameter 'charge' of type Real.\n8. There is an action definition 'EndCharging'.\n9. There is an action definition 'ChargeBattery' with the following structure:\n   - 9a. The action starts with 'start'.\n   - 9b. Then 'merge continueCharging'.\n   - 9c. Then an action 'monitor' of type 'MonitorBattery' with output 'batteryCharge' of type Real.\n   - 9d. Then a decision:\n       - 9d1. If 'monitor.batteryCharge < 100' then 'addCharge'.\n       - 9d2. If 'monitor.batteryCharge >= 100' then 'endCharging'.\n   - 9e. An action 'addCharge' of type 'AddCharge' with input 'charge = monitor.batteryCharge'.\n   - 9f. Then 'continueCharging'.\n   - 9g. An action 'endCharging' of type 'EndCharging'.\n   - 9h. Then 'done'.\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**1. The package is named 'BatteryChargingControl'.**\n- **Covered** (package name matches).\n\n**2. There is a private import of 'ScalarValues::*'.**\n- **Covered** (present in generated model).\n\n**3. There is an attribute definition 'BatteryCharged'.**\n- **Not Covered** (no such attribute or equivalent in generated model).\n\n**4. There is a part named 'battery'.**\n- **Covered** (part 'battery' exists as part of 'BatteryChargingSystem').\n\n**5. There is a part named 'powerSystem'.**\n- **Not Covered** (no 'powerSystem' part or equivalent).\n\n**6. There is an action definition 'MonitorBattery' with an output parameter 'charge' of type Real.**\n- **Not Covered** (no action definitions; closest is 'LevelPort' with 'level: Real', but not an action).\n\n**7. There is an action definition 'AddCharge' with an input parameter 'charge' of type Real.**\n- **Not Covered** (no action definitions; no equivalent).\n\n**8. There is an action definition 'EndCharging'.**\n- **Not Covered** (no action definitions; no equivalent).\n\n**9. There is an action definition 'ChargeBattery' with the following structure:**\n   - **9a. The action starts with 'start'.**\n     - **Not Covered** (no process/action structure).\n   - **9b. Then 'merge continueCharging'.**\n     - **Not Covered**.\n   - **9c. Then an action 'monitor' of type 'MonitorBattery' with output 'batteryCharge' of type Real.**\n     - **Not Covered**.\n   - **9d. Then a decision:**\n       - **9d1. If 'monitor.batteryCharge < 100' then 'addCharge'.**\n         - **Not Covered**.\n       - **9d2. If 'monitor.batteryCharge >= 100' then 'endCharging'.**\n         - **Not Covered**.\n   - **9e. An action 'addCharge' of type 'AddCharge' with input 'charge = monitor.batteryCharge'.**\n     - **Not Covered**.\n   - **9f. Then 'continueCharging'.**\n     - **Not Covered**.\n   - **9g. An action 'endCharging' of type 'EndCharging'.**\n     - **Not Covered**.\n   - **9h. Then 'done'.**\n     - **Not Covered**.\n\n### 3. Summarize the results\n\n**Total atomic claims:**  \n- 1 (package)  \n- 1 (import)  \n- 1 (attribute)  \n- 1 (battery part)  \n- 1 (powerSystem part)  \n- 1 (MonitorBattery action)  \n- 1 (AddCharge action)  \n- 1 (EndCharging action)  \n- 8 (ChargeBattery action structure: 9a-9h)  \n= **15 atomic claims**\n\n**Number of covered claims:**  \n- 1 (package)  \n- 1 (import)  \n- 1 (battery part)  \n= **3 covered claims**\n\n---\n\n**Score: 3/15**"
+  }
+}

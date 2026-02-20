@@ -1,0 +1,85 @@
+{
+  "model_id": 128,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PowertrainFunctiontoComponentMapping' {\n\tprivate import LogicalModel::*;\n\tprivate import PhysicalModel::*;\n\tpackage LogicalModel {\n\t\taction providePower {\n\t\t\taction generateTorque;\n\t\t}\n\t\tpart torqueGenerator {\n\t\t\tperform providePower.generateTorque;\n\t\t}\n\t}\n\tpackage PhysicalModel {\n\t\tpart powerTrain {\n\t\t\tpart engine {\n\t\t\t\tperform providePower.generateTorque;\n\t\t\t}\n\t\t}\n\t}\n\tallocate torqueGenerator to powerTrain {\n\t\tallocate torqueGenerator.generateTorque to powerTrain.engine.generateTorque;\n\t}\n}\n\nGenerated Model:\npackage PowerSystem {\n  private import ScalarValues::*;\n\n  item def Torque;\n  item def Power;\n\n  port def TorquePort {\n    ref item torque : Torque;\n  }\n\n  port def PowerPort {\n    ref item power : Power;\n  }\n\n  part def TorqueGenerator {\n    port torqueOut : TorquePort;\n  }\n\n  part def Engine {\n    port torqueOut : TorquePort;\n  }\n\n  part def Powertrain {\n    part engine : Engine;\n    port torqueOut : TorquePort;\n    port powerOut : PowerPort;\n    connect engine.torqueOut to torqueOut;\n  }\n\n  part def PowerTransmissionSystem {\n    part torqueGenerator : TorqueGenerator;\n    part powertrain : Powertrain;\n    port torqueOut : TorquePort;\n    port powerOut : PowerPort;\n    connect torqueGenerator.torqueOut to powertrain.engine.torqueOut;\n    connect powertrain.torqueOut to torqueOut;\n    connect powertrain.powerOut to powerOut;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/128/128_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/128/128.sysml",
+  "response": {
+    "id": "resp_0f0b684cb40d3e96006997ffb5525481a38f50a9f898a7bccd",
+    "created_at": 1771569077.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0f0b684cb40d3e96006997ffb5ae9081a39d22d979c68a2503",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```\npackage 'PowertrainFunctiontoComponentMapping' {\n\tprivate import LogicalModel::*;\n\tprivate import PhysicalModel::*;\n\tpackage LogicalModel {\n\t\taction providePower {\n\t\t\taction generateTorque;\n\t\t}\n\t\tpart torqueGenerator {\n\t\t\tperform providePower.generateTorque;\n\t\t}\n\t}\n\tpackage PhysicalModel {\n\t\tpart powerTrain {\n\t\t\tpart engine {\n\t\t\t\tperform providePower.generateTorque;\n\t\t\t}\n\t\t}\n\t}\n\tallocate torqueGenerator to powerTrain {\n\t\tallocate torqueGenerator.generateTorque to powerTrain.engine.generateTorque;\n\t}\n}\n```\n\n#### Atomic Claims:\n\n1. There is a package named `PowertrainFunctiontoComponentMapping`.\n2. The package imports `LogicalModel::*`.\n3. The package imports `PhysicalModel::*`.\n4. There is a subpackage `LogicalModel`.\n5. In `LogicalModel`, there is an action `providePower`.\n6. In `LogicalModel`, `providePower` contains a sub-action `generateTorque`.\n7. In `LogicalModel`, there is a part `torqueGenerator`.\n8. `torqueGenerator` performs the action `providePower.generateTorque`.\n9. There is a subpackage `PhysicalModel`.\n10. In `PhysicalModel`, there is a part `powerTrain`.\n11. `powerTrain` contains a part `engine`.\n12. `engine` performs the action `providePower.generateTorque`.\n13. There is an allocation from `torqueGenerator` to `powerTrain`.\n14. There is an allocation from `torqueGenerator.generateTorque` to `powerTrain.engine.generateTorque`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n#### Generated Model (summary):\n\n- Packages: `PowerSystem`\n- Parts: `TorqueGenerator`, `Engine`, `Powertrain`, `PowerTransmissionSystem`\n- Ports: `TorquePort`, `PowerPort`\n- Items: `Torque`, `Power`\n- Connections between ports\n- No explicit actions or allocations\n\n#### Claim-by-claim analysis:\n\n| # | Reference Claim | Covered in Generated Model? | Reasoning |\n|---|----------------|----------------------------|-----------|\n| 1 | There is a package named `PowertrainFunctiontoComponentMapping`. | **No** | The generated model uses `PowerSystem` as the package name. Not equivalent. |\n| 2 | The package imports `LogicalModel::*`. | **No** | No such import in the generated model. |\n| 3 | The package imports `PhysicalModel::*`. | **No** | No such import in the generated model. |\n| 4 | There is a subpackage `LogicalModel`. | **No** | No subpackage structure in the generated model. |\n| 5 | In `LogicalModel`, there is an action `providePower`. | **No** | No actions defined in the generated model. |\n| 6 | `providePower` contains a sub-action `generateTorque`. | **No** | No actions defined in the generated model. |\n| 7 | In `LogicalModel`, there is a part `torqueGenerator`. | **Yes** | There is a part `TorqueGenerator` in the generated model. |\n| 8 | `torqueGenerator` performs the action `providePower.generateTorque`. | **No** | No actions or performs in the generated model. |\n| 9 | There is a subpackage `PhysicalModel`. | **No** | No subpackage structure in the generated model. |\n| 10 | In `PhysicalModel`, there is a part `powerTrain`. | **Yes** | There is a part `Powertrain` in the generated model. |\n| 11 | `powerTrain` contains a part `engine`. | **Yes** | `Powertrain` contains a part `engine : Engine`. |\n| 12 | `engine` performs the action `providePower.generateTorque`. | **No** | No actions or performs in the generated model. |\n| 13 | There is an allocation from `torqueGenerator` to `powerTrain`. | **No** | No allocations in the generated model. |\n| 14 | There is an allocation from `torqueGenerator.generateTorque` to `powerTrain.engine.generateTorque`. | **No** | No allocations in the generated model. |\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:** 7, 10, 11  \n**Total claims:** 14\n\n**Score:** 3/14\n\n---\n\n**Final Output:**\n\nScore: 3/14",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 497,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 961,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1458
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569088,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```\npackage 'PowertrainFunctiontoComponentMapping' {\n\tprivate import LogicalModel::*;\n\tprivate import PhysicalModel::*;\n\tpackage LogicalModel {\n\t\taction providePower {\n\t\t\taction generateTorque;\n\t\t}\n\t\tpart torqueGenerator {\n\t\t\tperform providePower.generateTorque;\n\t\t}\n\t}\n\tpackage PhysicalModel {\n\t\tpart powerTrain {\n\t\t\tpart engine {\n\t\t\t\tperform providePower.generateTorque;\n\t\t\t}\n\t\t}\n\t}\n\tallocate torqueGenerator to powerTrain {\n\t\tallocate torqueGenerator.generateTorque to powerTrain.engine.generateTorque;\n\t}\n}\n```\n\n#### Atomic Claims:\n\n1. There is a package named `PowertrainFunctiontoComponentMapping`.\n2. The package imports `LogicalModel::*`.\n3. The package imports `PhysicalModel::*`.\n4. There is a subpackage `LogicalModel`.\n5. In `LogicalModel`, there is an action `providePower`.\n6. In `LogicalModel`, `providePower` contains a sub-action `generateTorque`.\n7. In `LogicalModel`, there is a part `torqueGenerator`.\n8. `torqueGenerator` performs the action `providePower.generateTorque`.\n9. There is a subpackage `PhysicalModel`.\n10. In `PhysicalModel`, there is a part `powerTrain`.\n11. `powerTrain` contains a part `engine`.\n12. `engine` performs the action `providePower.generateTorque`.\n13. There is an allocation from `torqueGenerator` to `powerTrain`.\n14. There is an allocation from `torqueGenerator.generateTorque` to `powerTrain.engine.generateTorque`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n#### Generated Model (summary):\n\n- Packages: `PowerSystem`\n- Parts: `TorqueGenerator`, `Engine`, `Powertrain`, `PowerTransmissionSystem`\n- Ports: `TorquePort`, `PowerPort`\n- Items: `Torque`, `Power`\n- Connections between ports\n- No explicit actions or allocations\n\n#### Claim-by-claim analysis:\n\n| # | Reference Claim | Covered in Generated Model? | Reasoning |\n|---|----------------|----------------------------|-----------|\n| 1 | There is a package named `PowertrainFunctiontoComponentMapping`. | **No** | The generated model uses `PowerSystem` as the package name. Not equivalent. |\n| 2 | The package imports `LogicalModel::*`. | **No** | No such import in the generated model. |\n| 3 | The package imports `PhysicalModel::*`. | **No** | No such import in the generated model. |\n| 4 | There is a subpackage `LogicalModel`. | **No** | No subpackage structure in the generated model. |\n| 5 | In `LogicalModel`, there is an action `providePower`. | **No** | No actions defined in the generated model. |\n| 6 | `providePower` contains a sub-action `generateTorque`. | **No** | No actions defined in the generated model. |\n| 7 | In `LogicalModel`, there is a part `torqueGenerator`. | **Yes** | There is a part `TorqueGenerator` in the generated model. |\n| 8 | `torqueGenerator` performs the action `providePower.generateTorque`. | **No** | No actions or performs in the generated model. |\n| 9 | There is a subpackage `PhysicalModel`. | **No** | No subpackage structure in the generated model. |\n| 10 | In `PhysicalModel`, there is a part `powerTrain`. | **Yes** | There is a part `Powertrain` in the generated model. |\n| 11 | `powerTrain` contains a part `engine`. | **Yes** | `Powertrain` contains a part `engine : Engine`. |\n| 12 | `engine` performs the action `providePower.generateTorque`. | **No** | No actions or performs in the generated model. |\n| 13 | There is an allocation from `torqueGenerator` to `powerTrain`. | **No** | No allocations in the generated model. |\n| 14 | There is an allocation from `torqueGenerator.generateTorque` to `powerTrain.engine.generateTorque`. | **No** | No allocations in the generated model. |\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:** 7, 10, 11  \n**Total claims:** 14\n\n**Score:** 3/14\n\n---\n\n**Final Output:**\n\nScore: 3/14"
+  }
+}

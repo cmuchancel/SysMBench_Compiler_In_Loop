@@ -1,0 +1,85 @@
+{
+  "model_id": 137,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'AutomotiveComponents' {\n    private import SI::*;\n    private import USCustomaryUnits::*;\n    part def Vehicle_1 {\n        attribute mass: MassValue = 1200 [kg];\n        attribute length: LengthValue = 4.82 [m];\n        part leftFrontWheel : Wheel;\n        part rightFrontWheel : Wheel;\n    }\n    part def Wheel {\n    \tattribute hubDiameter: LengthValue = 18 ['in'];\n        attribute width: LengthValue = 245 [mm];\n        attribute outerDiameter: LengthValue = (hubDiameter + 2 * tire.height) [mm] {\n        }\n        part tire: Tire[1];\n    }\n    part def Tire {\n    }\n}\n\nGenerated Model:\npackage AutomotiveModel {\n    private import ScalarValues::*;\n\n    part def Vehicle {\n        attribute mass_kg : Real = 1200;\n        attribute mass_lb : Real = mass_kg * 2.20462;\n        attribute length_m : Real = 4.82;\n        attribute length_ft : Real = length_m * 3.28084;\n        part frontLeftWheel : Wheel;\n        part frontRightWheel : Wheel;\n    }\n\n    part def Wheel {\n        attribute hubDiameter_in : Real = 18;\n        attribute hubDiameter_mm : Real = hubDiameter_in * 25.4;\n        attribute width_mm : Real = 245;\n        attribute width_in : Real = width_mm / 25.4;\n        part tire : Tire;\n        attribute outerDiameter_mm : Real = hubDiameter_mm + 2 * tire.height_mm;\n        attribute outerDiameter_in : Real = outerDiameter_mm / 25.4;\n    }\n\n    part def Tire {\n        attribute height_mm : Real = 0;\n        attribute height_in : Real = height_mm / 25.4;\n    }\n\n    part vehicle : Vehicle;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/137/137_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/137/137.sysml",
+  "response": {
+    "id": "resp_05ac9176708f1586006998010e1b9881a2b617407e7cac92d9",
+    "created_at": 1771569422.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_05ac9176708f1586006998010ed11481a2a1a58780286cce74",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### **Package and Imports**\n1. There is a package named `AutomotiveComponents`.\n2. The package privately imports `SI::*`.\n3. The package privately imports `USCustomaryUnits::*`.\n\n#### **Part Definitions**\n\n##### **Vehicle_1**\n4. There is a part definition `Vehicle_1`.\n5. `Vehicle_1` has an attribute `mass` of type `MassValue` with value `1200 [kg]`.\n6. `Vehicle_1` has an attribute `length` of type `LengthValue` with value `4.82 [m]`.\n7. `Vehicle_1` has a part `leftFrontWheel` of type `Wheel`.\n8. `Vehicle_1` has a part `rightFrontWheel` of type `Wheel`.\n\n##### **Wheel**\n9. There is a part definition `Wheel`.\n10. `Wheel` has an attribute `hubDiameter` of type `LengthValue` with value `18 ['in']`.\n11. `Wheel` has an attribute `width` of type `LengthValue` with value `245 [mm]`.\n12. `Wheel` has an attribute `outerDiameter` of type `LengthValue` with value `(hubDiameter + 2 * tire.height) [mm]`.\n13. `Wheel` has a part `tire` of type `Tire` with multiplicity `[1]`.\n\n##### **Tire**\n14. There is a part definition `Tire`.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model\n\n#### **Package and Imports**\n1. **Package named `AutomotiveComponents`**  \n   - **Not covered** (Generated model uses `AutomotiveModel` instead; package name is different, but per instructions, naming differences can be ignored if structure/semantics match. However, the package name is the only identifier here, so it's not covered.)\n2. **Private import of `SI::*`**  \n   - **Not covered** (Generated model imports `ScalarValues::*` instead.)\n3. **Private import of `USCustomaryUnits::*`**  \n   - **Not covered** (Same as above.)\n\n#### **Part Definitions**\n\n##### **Vehicle_1**\n4. **Part definition `Vehicle_1`**  \n   - **Covered** (Generated model defines `Vehicle`; naming difference is ignored.)\n5. **Attribute `mass: MassValue = 1200 [kg]`**  \n   - **Covered** (Generated model: `mass_kg : Real = 1200;` — type and value match, unit is in the name.)\n6. **Attribute `length: LengthValue = 4.82 [m]`**  \n   - **Covered** (Generated model: `length_m : Real = 4.82;`)\n7. **Part `leftFrontWheel : Wheel`**  \n   - **Covered** (Generated model: `frontLeftWheel : Wheel;`)\n8. **Part `rightFrontWheel : Wheel`**  \n   - **Covered** (Generated model: `frontRightWheel : Wheel;`)\n\n##### **Wheel**\n9. **Part definition `Wheel`**  \n   - **Covered** (Exists in generated model.)\n10. **Attribute `hubDiameter: LengthValue = 18 ['in']`**  \n    - **Covered** (Generated model: `hubDiameter_in : Real = 18;`)\n11. **Attribute `width: LengthValue = 245 [mm]`**  \n    - **Covered** (Generated model: `width_mm : Real = 245;`)\n12. **Attribute `outerDiameter: LengthValue = (hubDiameter + 2 * tire.height) [mm]`**  \n    - **Covered** (Generated model: `outerDiameter_mm : Real = hubDiameter_mm + 2 * tire.height_mm;` — the formula and structure are equivalent.)\n13. **Part `tire: Tire[1]`**  \n    - **Covered** (Generated model: `part tire : Tire;` — multiplicity `[1]` is default.)\n\n##### **Tire**\n14. **Part definition `Tire`**  \n    - **Covered** (Exists in generated model.)\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:** 4–14 (11 claims)  \n**Not covered claims:** 1–3 (3 claims)\n\n**Score: 11/14**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 563,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 947,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1510
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569433,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### **Package and Imports**\n1. There is a package named `AutomotiveComponents`.\n2. The package privately imports `SI::*`.\n3. The package privately imports `USCustomaryUnits::*`.\n\n#### **Part Definitions**\n\n##### **Vehicle_1**\n4. There is a part definition `Vehicle_1`.\n5. `Vehicle_1` has an attribute `mass` of type `MassValue` with value `1200 [kg]`.\n6. `Vehicle_1` has an attribute `length` of type `LengthValue` with value `4.82 [m]`.\n7. `Vehicle_1` has a part `leftFrontWheel` of type `Wheel`.\n8. `Vehicle_1` has a part `rightFrontWheel` of type `Wheel`.\n\n##### **Wheel**\n9. There is a part definition `Wheel`.\n10. `Wheel` has an attribute `hubDiameter` of type `LengthValue` with value `18 ['in']`.\n11. `Wheel` has an attribute `width` of type `LengthValue` with value `245 [mm]`.\n12. `Wheel` has an attribute `outerDiameter` of type `LengthValue` with value `(hubDiameter + 2 * tire.height) [mm]`.\n13. `Wheel` has a part `tire` of type `Tire` with multiplicity `[1]`.\n\n##### **Tire**\n14. There is a part definition `Tire`.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model\n\n#### **Package and Imports**\n1. **Package named `AutomotiveComponents`**  \n   - **Not covered** (Generated model uses `AutomotiveModel` instead; package name is different, but per instructions, naming differences can be ignored if structure/semantics match. However, the package name is the only identifier here, so it's not covered.)\n2. **Private import of `SI::*`**  \n   - **Not covered** (Generated model imports `ScalarValues::*` instead.)\n3. **Private import of `USCustomaryUnits::*`**  \n   - **Not covered** (Same as above.)\n\n#### **Part Definitions**\n\n##### **Vehicle_1**\n4. **Part definition `Vehicle_1`**  \n   - **Covered** (Generated model defines `Vehicle`; naming difference is ignored.)\n5. **Attribute `mass: MassValue = 1200 [kg]`**  \n   - **Covered** (Generated model: `mass_kg : Real = 1200;` — type and value match, unit is in the name.)\n6. **Attribute `length: LengthValue = 4.82 [m]`**  \n   - **Covered** (Generated model: `length_m : Real = 4.82;`)\n7. **Part `leftFrontWheel : Wheel`**  \n   - **Covered** (Generated model: `frontLeftWheel : Wheel;`)\n8. **Part `rightFrontWheel : Wheel`**  \n   - **Covered** (Generated model: `frontRightWheel : Wheel;`)\n\n##### **Wheel**\n9. **Part definition `Wheel`**  \n   - **Covered** (Exists in generated model.)\n10. **Attribute `hubDiameter: LengthValue = 18 ['in']`**  \n    - **Covered** (Generated model: `hubDiameter_in : Real = 18;`)\n11. **Attribute `width: LengthValue = 245 [mm]`**  \n    - **Covered** (Generated model: `width_mm : Real = 245;`)\n12. **Attribute `outerDiameter: LengthValue = (hubDiameter + 2 * tire.height) [mm]`**  \n    - **Covered** (Generated model: `outerDiameter_mm : Real = hubDiameter_mm + 2 * tire.height_mm;` — the formula and structure are equivalent.)\n13. **Part `tire: Tire[1]`**  \n    - **Covered** (Generated model: `part tire : Tire;` — multiplicity `[1]` is default.)\n\n##### **Tire**\n14. **Part definition `Tire`**  \n    - **Covered** (Exists in generated model.)\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:** 4–14 (11 claims)  \n**Not covered claims:** 1–3 (3 claims)\n\n**Score: 11/14**"
+  }
+}

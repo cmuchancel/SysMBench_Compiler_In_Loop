@@ -1,0 +1,85 @@
+{
+  "model_id": 55,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleMassAggregation' {\n\tprivate import ScalarValues::*;\n\tprivate import NumericalFunctions::*;\n\tpart def MassedThing {\n\t\tattribute simpleMass :> ISQ::mass; \n\t\tattribute totalMass :> ISQ::mass default simpleMass;\n\t}\n\tpart compositeThing : MassedThing {\n\t\tpart subcomponents: MassedThing[*];\t\t\n\t\tattribute :>> totalMass default\n\t\t\tsimpleMass + sum(subcomponents.totalMass); \n\t}\n\tpart filteredMassThing :> compositeThing {\n\t\tattribute minMass :> ISQ::mass;\t\t\n\t\tattribute :>> totalMass =\n\t\t\tsimpleMass + sum(subcomponents.totalMass.?{in p:>ISQ::mass; p >= minMass});\n\t}\n\tpart def CarPart :> MassedThing {\t\t\t\n\t\tattribute serialNumber: String;\n\t}\n\tpart car: CarPart :> compositeThing {\t\n\t\tattribute vin :>> serialNumber;\n\t\tpart carParts: CarPart[*] :>> subcomponents;\n\t\tpart engine :> carParts {\n\t\t\t//...\n\t\t}\n\t\tpart transmission :> carParts {\n\t\t\t//...\n\t\t}\n\t}\n\tprivate import SI::kg;\n\tpart c :> car {\n\t\tattribute :>> simpleMass = 1000[kg];\n\t\tpart :>> engine {\n\t\t\tattribute :>> simpleMass = 100[kg];\n\t\t}\n\t\tpart redefines transmission {\n\t\t\tattribute :>> simpleMass = 50[kg];\n\t\t}\t\n\t}\n\t// c::totalMass --> 1150.0[kg]\n}\n\nGenerated Model:\npackage VehicleMassManagement {\n  private import ScalarValues::*;\n\n  part def Component {\n    attribute serialNumber : String;\n    attribute ownMass : Real;\n    attribute massThreshold : Real;\n    attribute totalMass : Real;\n    part subcomponents : Component[*];\n  }\n\n  part def Engine specializes Component {\n  }\n\n  part def Transmission specializes Component {\n  }\n\n  part def Vehicle {\n    attribute vin : String;\n    attribute ownMass : Real;\n    attribute massThreshold : Real;\n    attribute totalMass : Real;\n    part engine : Engine;\n    part transmission : Transmission;\n    part components : Component[*];\n  }\n\n  part vehicle : Vehicle;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/55/55_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/55/55.sysml",
+  "response": {
+    "id": "resp_03d2a8bdf170f750006997ffb55794819592d171c59152dc4b",
+    "created_at": 1771569077.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_03d2a8bdf170f750006997ffb5b280819590bbfb128f07956e",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. **List all atomic modeling claims in the reference system model**\n\n**Imports:**\n1. The package imports `ScalarValues::*`.\n2. The package imports `NumericalFunctions::*`.\n3. The package imports `SI::kg`.\n\n**Parts and Attributes:**\n4. Definition of part `MassedThing`.\n5. `MassedThing` has attribute `simpleMass` of type `ISQ::mass`.\n6. `MassedThing` has attribute `totalMass` of type `ISQ::mass`, defaulting to `simpleMass`.\n\n7. Definition of part `compositeThing` as a subtype of `MassedThing`.\n8. `compositeThing` has part `subcomponents` of type `MassedThing[*]`.\n9. `compositeThing` redefines attribute `totalMass` to be `simpleMass + sum(subcomponents.totalMass)`.\n\n10. Definition of part `filteredMassThing` as a subtype of `compositeThing`.\n11. `filteredMassThing` has attribute `minMass` of type `ISQ::mass`.\n12. `filteredMassThing` redefines attribute `totalMass` to be `simpleMass + sum(subcomponents.totalMass.?{in p:>ISQ::mass; p >= minMass})`.\n\n13. Definition of part `CarPart` as a subtype of `MassedThing`.\n14. `CarPart` has attribute `serialNumber` of type `String`.\n\n15. Definition of part `car` as a `CarPart` and a subtype of `compositeThing`.\n16. `car` has attribute `vin` mapped to `serialNumber`.\n17. `car` has part `carParts` of type `CarPart[*]`, mapped to `subcomponents`.\n18. `car` has part `engine` as a subtype of `carParts`.\n19. `car` has part `transmission` as a subtype of `carParts`.\n\n20. Definition of part `c` as a subtype of `car`.\n21. `c` redefines attribute `simpleMass` to `1000[kg]`.\n22. `c` has part `engine` with `simpleMass = 100[kg]`.\n23. `c` redefines part `transmission` with `simpleMass = 50[kg]`.\n\n---\n\n### 2. **Determine coverage of each atomic claim in the generated model**\n\n**Imports:**\n1. `ScalarValues::*` — **Covered** (present).\n2. `NumericalFunctions::*` — **Not covered** (not present).\n3. `SI::kg` — **Not covered** (not present).\n\n**Parts and Attributes:**\n4. `MassedThing` — **Partially covered** (analogous to `Component`, but not named the same and not explicitly declared as a base class).\n5. `simpleMass : ISQ::mass` — **Partially covered** (`ownMass : Real` is similar, but type is not ISQ::mass).\n6. `totalMass : ISQ::mass default simpleMass` — **Partially covered** (`totalMass : Real` exists, but no default).\n\n7. `compositeThing : MassedThing` — **Partially covered** (`Component` has `subcomponents`, but no explicit inheritance).\n8. `subcomponents: MassedThing[*]` — **Covered** (`subcomponents : Component[*]`).\n9. `totalMass = simpleMass + sum(subcomponents.totalMass)` — **Not covered** (no such constraint or formula).\n\n10. `filteredMassThing :> compositeThing` — **Not covered** (no equivalent).\n11. `minMass : ISQ::mass` — **Partially covered** (`massThreshold : Real` exists, but not same semantics or type).\n12. `totalMass = simpleMass + sum(subcomponents.totalMass.?{in p:>ISQ::mass; p >= minMass})` — **Not covered**.\n\n13. `CarPart :> MassedThing` — **Partially covered** (`Component` has `serialNumber`, but no explicit inheritance).\n14. `serialNumber: String` — **Covered**.\n\n15. `car: CarPart :> compositeThing` — **Partially covered** (`Vehicle` is a part, but not explicitly inheriting from `Component` or `CarPart`).\n16. `vin :>> serialNumber` — **Not covered** (no mapping from `vin` to `serialNumber`).\n17. `carParts: CarPart[*] :>> subcomponents` — **Partially covered** (`components : Component[*]`, but not mapped).\n18. `engine :> carParts` — **Partially covered** (`engine : Engine` exists, but not as a subtype of `carParts`).\n19. `transmission :> carParts` — **Partially covered** (`transmission : Transmission` exists, but not as a subtype of `carParts`).\n\n20. `c :> car` — **Not covered** (no instance of `Vehicle` with specific values).\n21. `simpleMass = 1000[kg]` for `c` — **Not covered**.\n22. `engine` with `simpleMass = 100[kg]` — **Not covered**.\n23. `transmission` with `simpleMass = 50[kg]` — **Not covered**.\n\n---\n\n### 3. **Summarize the results**\n\nLet's count the number of claims that are **covered** (including partial coverage where the core structure/semantics is present, even if not all details are matched):\n\n- **Covered**: 1, 4, 8, 14\n- **Partially covered**: 5, 6, 7, 11, 13, 15, 17, 18, 19\n- **Not covered**: 2, 3, 9, 10, 12, 16, 20, 21, 22, 23\n\nIf we count **fully covered** and **partially covered** as \"covered\" for recall (since the structure/semantics is present), that's:\n\n- Covered/Partially covered: 1, 4, 5, 6, 7, 8, 11, 13, 14, 15, 17, 18, 19 (**13 claims**)\n- Not covered: 2, 3, 9, 10, 12, 16, 20, 21, 22, 23 (**10 claims**)\n\n**Total claims:** 23\n\n---\n\n## **Score: 13/23**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 648,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1405,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2053
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569096,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. **List all atomic modeling claims in the reference system model**\n\n**Imports:**\n1. The package imports `ScalarValues::*`.\n2. The package imports `NumericalFunctions::*`.\n3. The package imports `SI::kg`.\n\n**Parts and Attributes:**\n4. Definition of part `MassedThing`.\n5. `MassedThing` has attribute `simpleMass` of type `ISQ::mass`.\n6. `MassedThing` has attribute `totalMass` of type `ISQ::mass`, defaulting to `simpleMass`.\n\n7. Definition of part `compositeThing` as a subtype of `MassedThing`.\n8. `compositeThing` has part `subcomponents` of type `MassedThing[*]`.\n9. `compositeThing` redefines attribute `totalMass` to be `simpleMass + sum(subcomponents.totalMass)`.\n\n10. Definition of part `filteredMassThing` as a subtype of `compositeThing`.\n11. `filteredMassThing` has attribute `minMass` of type `ISQ::mass`.\n12. `filteredMassThing` redefines attribute `totalMass` to be `simpleMass + sum(subcomponents.totalMass.?{in p:>ISQ::mass; p >= minMass})`.\n\n13. Definition of part `CarPart` as a subtype of `MassedThing`.\n14. `CarPart` has attribute `serialNumber` of type `String`.\n\n15. Definition of part `car` as a `CarPart` and a subtype of `compositeThing`.\n16. `car` has attribute `vin` mapped to `serialNumber`.\n17. `car` has part `carParts` of type `CarPart[*]`, mapped to `subcomponents`.\n18. `car` has part `engine` as a subtype of `carParts`.\n19. `car` has part `transmission` as a subtype of `carParts`.\n\n20. Definition of part `c` as a subtype of `car`.\n21. `c` redefines attribute `simpleMass` to `1000[kg]`.\n22. `c` has part `engine` with `simpleMass = 100[kg]`.\n23. `c` redefines part `transmission` with `simpleMass = 50[kg]`.\n\n---\n\n### 2. **Determine coverage of each atomic claim in the generated model**\n\n**Imports:**\n1. `ScalarValues::*` — **Covered** (present).\n2. `NumericalFunctions::*` — **Not covered** (not present).\n3. `SI::kg` — **Not covered** (not present).\n\n**Parts and Attributes:**\n4. `MassedThing` — **Partially covered** (analogous to `Component`, but not named the same and not explicitly declared as a base class).\n5. `simpleMass : ISQ::mass` — **Partially covered** (`ownMass : Real` is similar, but type is not ISQ::mass).\n6. `totalMass : ISQ::mass default simpleMass` — **Partially covered** (`totalMass : Real` exists, but no default).\n\n7. `compositeThing : MassedThing` — **Partially covered** (`Component` has `subcomponents`, but no explicit inheritance).\n8. `subcomponents: MassedThing[*]` — **Covered** (`subcomponents : Component[*]`).\n9. `totalMass = simpleMass + sum(subcomponents.totalMass)` — **Not covered** (no such constraint or formula).\n\n10. `filteredMassThing :> compositeThing` — **Not covered** (no equivalent).\n11. `minMass : ISQ::mass` — **Partially covered** (`massThreshold : Real` exists, but not same semantics or type).\n12. `totalMass = simpleMass + sum(subcomponents.totalMass.?{in p:>ISQ::mass; p >= minMass})` — **Not covered**.\n\n13. `CarPart :> MassedThing` — **Partially covered** (`Component` has `serialNumber`, but no explicit inheritance).\n14. `serialNumber: String` — **Covered**.\n\n15. `car: CarPart :> compositeThing` — **Partially covered** (`Vehicle` is a part, but not explicitly inheriting from `Component` or `CarPart`).\n16. `vin :>> serialNumber` — **Not covered** (no mapping from `vin` to `serialNumber`).\n17. `carParts: CarPart[*] :>> subcomponents` — **Partially covered** (`components : Component[*]`, but not mapped).\n18. `engine :> carParts` — **Partially covered** (`engine : Engine` exists, but not as a subtype of `carParts`).\n19. `transmission :> carParts` — **Partially covered** (`transmission : Transmission` exists, but not as a subtype of `carParts`).\n\n20. `c :> car` — **Not covered** (no instance of `Vehicle` with specific values).\n21. `simpleMass = 1000[kg]` for `c` — **Not covered**.\n22. `engine` with `simpleMass = 100[kg]` — **Not covered**.\n23. `transmission` with `simpleMass = 50[kg]` — **Not covered**.\n\n---\n\n### 3. **Summarize the results**\n\nLet's count the number of claims that are **covered** (including partial coverage where the core structure/semantics is present, even if not all details are matched):\n\n- **Covered**: 1, 4, 8, 14\n- **Partially covered**: 5, 6, 7, 11, 13, 15, 17, 18, 19\n- **Not covered**: 2, 3, 9, 10, 12, 16, 20, 21, 22, 23\n\nIf we count **fully covered** and **partially covered** as \"covered\" for recall (since the structure/semantics is present), that's:\n\n- Covered/Partially covered: 1, 4, 5, 6, 7, 8, 11, 13, 14, 15, 17, 18, 19 (**13 claims**)\n- Not covered: 2, 3, 9, 10, 12, 16, 20, 21, 22, 23 (**10 claims**)\n\n**Total claims:** 23\n\n---\n\n## **Score: 13/23**"
+  }
+}

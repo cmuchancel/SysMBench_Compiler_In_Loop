@@ -1,0 +1,85 @@
+{
+  "model_id": 97,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDefinition' {\n\tpart def Vehicle;\t\n\tpart def Engine;\t\n\tpart def Cylinder;\n\tpart vehicle : Vehicle {\n\t\tpart eng : Engine {\n\t\t\tpart cyl : Cylinder[4..6];\n\t\t}\n\t}\n\tpart smallVehicle :> vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[4];\n\t\t}\n\t}\n\tpart bigVehicle :> vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[6];\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage VehicleModel {\n  private import ScalarValues::*;\n\n  enum def VehicleSize {\n    enum small;\n    enum standardSize;\n    enum large;\n  }\n\n  part def Engine {\n    attribute cylinderCount : Integer;\n  }\n\n  part def Engine4 {\n    attribute cylinderCount : Integer = 4;\n  }\n\n  part def Engine6 {\n    attribute cylinderCount : Integer = 6;\n  }\n\n  part def Vehicle {\n    attribute size : VehicleSize;\n    part engine : Engine;\n  }\n\n  part def SmallVehicle {\n    attribute size : VehicleSize = VehicleSize::small;\n    part engine : Engine4;\n  }\n\n  part def LargeVehicle {\n    attribute size : VehicleSize = VehicleSize::large;\n    part engine : Engine6;\n  }\n\n  part def StandardVehicle4 {\n    attribute size : VehicleSize = VehicleSize::standardSize;\n    part engine : Engine4;\n  }\n\n  part def StandardVehicle6 {\n    attribute size : VehicleSize = VehicleSize::standardSize;\n    part engine : Engine6;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/97/97_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/97/97.sysml",
+  "response": {
+    "id": "resp_074919c97cdafbbe00699801206ed081a190ae9cbb05dc62e4",
+    "created_at": 1771569440.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_074919c97cdafbbe0069980120c52881a1b1340df79ba6513f",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage 'VehicleDefinition' {\n\tpart def Vehicle;\t\n\tpart def Engine;\t\n\tpart def Cylinder;\n\tpart vehicle : Vehicle {\n\t\tpart eng : Engine {\n\t\t\tpart cyl : Cylinder[4..6];\n\t\t}\n\t}\n\tpart smallVehicle :> vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[4];\n\t\t}\n\t}\n\tpart bigVehicle :> vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[6];\n\t\t}\n\t}\n}\n```\n\n**Atomic Claims:**\n\n1. There is a package named 'VehicleDefinition'.\n2. There is a part definition named 'Vehicle'.\n3. There is a part definition named 'Engine'.\n4. There is a part definition named 'Cylinder'.\n5. There is a part named 'vehicle' of type 'Vehicle'.\n6. 'vehicle' contains a part 'eng' of type 'Engine'.\n7. 'eng' contains a part 'cyl' of type 'Cylinder' with multiplicity [4..6].\n8. There is a part named 'smallVehicle' that specializes 'vehicle'.\n9. 'smallVehicle' redefines 'eng'.\n10. In 'smallVehicle', 'eng' redefines 'cyl' with multiplicity [4].\n11. There is a part named 'bigVehicle' that specializes 'vehicle'.\n12. 'bigVehicle' redefines 'eng'.\n13. In 'bigVehicle', 'eng' redefines 'cyl' with multiplicity [6].\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**Generated Model:**\n```plaintext\npackage VehicleModel {\n  private import ScalarValues::*;\n\n  enum def VehicleSize {\n    enum small;\n    enum standardSize;\n    enum large;\n  }\n\n  part def Engine {\n    attribute cylinderCount : Integer;\n  }\n\n  part def Engine4 {\n    attribute cylinderCount : Integer = 4;\n  }\n\n  part def Engine6 {\n    attribute cylinderCount : Integer = 6;\n  }\n\n  part def Vehicle {\n    attribute size : VehicleSize;\n    part engine : Engine;\n  }\n\n  part def SmallVehicle {\n    attribute size : VehicleSize = VehicleSize::small;\n    part engine : Engine4;\n  }\n\n  part def LargeVehicle {\n    attribute size : VehicleSize = VehicleSize::large;\n    part engine : Engine6;\n  }\n\n  part def StandardVehicle4 {\n    attribute size : VehicleSize = VehicleSize::standardSize;\n    part engine : Engine4;\n  }\n\n  part def StandardVehicle6 {\n    attribute size : VehicleSize = VehicleSize::standardSize;\n    part engine : Engine6;\n  }\n}\n```\n\n**Coverage Analysis:**\n\n| # | Reference Claim | Covered? | Reasoning |\n|---|-----------------|----------|-----------|\n| 1 | Package named 'VehicleDefinition' | **Yes** (ignore naming) | Package exists, naming difference ignored. |\n| 2 | Part def 'Vehicle' | **Yes** | 'part def Vehicle' exists. |\n| 3 | Part def 'Engine' | **Yes** | 'part def Engine' exists. |\n| 4 | Part def 'Cylinder' | **No** | No 'Cylinder' part definition in generated model. |\n| 5 | Part 'vehicle' : Vehicle | **Yes** | 'part def Vehicle' is present; instance naming is ignored. |\n| 6 | 'vehicle' contains 'eng' : Engine | **Yes** | 'Vehicle' contains 'engine' : Engine (naming difference ignored). |\n| 7 | 'eng' contains 'cyl' : Cylinder[4..6] | **Partial/No** | No 'cyl' part or equivalent; only 'cylinderCount' attribute in Engine. |\n| 8 | Part 'smallVehicle' :> vehicle | **Yes** | 'SmallVehicle' specializes 'Vehicle' (by structure and semantics). |\n| 9 | 'smallVehicle' redefines 'eng' | **Yes** | 'SmallVehicle' has 'engine' of type 'Engine4', which is a specialization. |\n| 10 | 'eng' in 'smallVehicle' redefines 'cyl[4]' | **Partial/No** | No explicit 'cyl' part; 'Engine4' has 'cylinderCount = 4', but not as a part. |\n| 11 | Part 'bigVehicle' :> vehicle | **Yes** | 'LargeVehicle' specializes 'Vehicle'. |\n| 12 | 'bigVehicle' redefines 'eng' | **Yes** | 'LargeVehicle' has 'engine' of type 'Engine6'. |\n| 13 | 'eng' in 'bigVehicle' redefines 'cyl[6]' | **Partial/No** | No explicit 'cyl' part; 'Engine6' has 'cylinderCount = 6', but not as a part. |\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n1. Package exists (naming ignored)\n2. Vehicle part definition\n3. Engine part definition\n5. Vehicle part instance\n6. Vehicle contains Engine\n8. SmallVehicle specialization\n9. SmallVehicle redefines Engine (via type)\n11. LargeVehicle specialization\n12. LargeVehicle redefines Engine (via type)\n\n**Not Covered:**\n4. Cylinder part definition\n7. Engine contains Cylinder[4..6]\n10. SmallVehicle's Engine redefines Cylinder[4]\n13. LargeVehicle's Engine redefines Cylinder[6]\n\n**Total claims:** 13  \n**Covered claims:** 9\n\n---\n\n**Score: 9/13**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 500,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1198,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1698
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569454,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage 'VehicleDefinition' {\n\tpart def Vehicle;\t\n\tpart def Engine;\t\n\tpart def Cylinder;\n\tpart vehicle : Vehicle {\n\t\tpart eng : Engine {\n\t\t\tpart cyl : Cylinder[4..6];\n\t\t}\n\t}\n\tpart smallVehicle :> vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[4];\n\t\t}\n\t}\n\tpart bigVehicle :> vehicle {\n\t\tpart redefines eng {\n\t\t\tpart redefines cyl[6];\n\t\t}\n\t}\n}\n```\n\n**Atomic Claims:**\n\n1. There is a package named 'VehicleDefinition'.\n2. There is a part definition named 'Vehicle'.\n3. There is a part definition named 'Engine'.\n4. There is a part definition named 'Cylinder'.\n5. There is a part named 'vehicle' of type 'Vehicle'.\n6. 'vehicle' contains a part 'eng' of type 'Engine'.\n7. 'eng' contains a part 'cyl' of type 'Cylinder' with multiplicity [4..6].\n8. There is a part named 'smallVehicle' that specializes 'vehicle'.\n9. 'smallVehicle' redefines 'eng'.\n10. In 'smallVehicle', 'eng' redefines 'cyl' with multiplicity [4].\n11. There is a part named 'bigVehicle' that specializes 'vehicle'.\n12. 'bigVehicle' redefines 'eng'.\n13. In 'bigVehicle', 'eng' redefines 'cyl' with multiplicity [6].\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**Generated Model:**\n```plaintext\npackage VehicleModel {\n  private import ScalarValues::*;\n\n  enum def VehicleSize {\n    enum small;\n    enum standardSize;\n    enum large;\n  }\n\n  part def Engine {\n    attribute cylinderCount : Integer;\n  }\n\n  part def Engine4 {\n    attribute cylinderCount : Integer = 4;\n  }\n\n  part def Engine6 {\n    attribute cylinderCount : Integer = 6;\n  }\n\n  part def Vehicle {\n    attribute size : VehicleSize;\n    part engine : Engine;\n  }\n\n  part def SmallVehicle {\n    attribute size : VehicleSize = VehicleSize::small;\n    part engine : Engine4;\n  }\n\n  part def LargeVehicle {\n    attribute size : VehicleSize = VehicleSize::large;\n    part engine : Engine6;\n  }\n\n  part def StandardVehicle4 {\n    attribute size : VehicleSize = VehicleSize::standardSize;\n    part engine : Engine4;\n  }\n\n  part def StandardVehicle6 {\n    attribute size : VehicleSize = VehicleSize::standardSize;\n    part engine : Engine6;\n  }\n}\n```\n\n**Coverage Analysis:**\n\n| # | Reference Claim | Covered? | Reasoning |\n|---|-----------------|----------|-----------|\n| 1 | Package named 'VehicleDefinition' | **Yes** (ignore naming) | Package exists, naming difference ignored. |\n| 2 | Part def 'Vehicle' | **Yes** | 'part def Vehicle' exists. |\n| 3 | Part def 'Engine' | **Yes** | 'part def Engine' exists. |\n| 4 | Part def 'Cylinder' | **No** | No 'Cylinder' part definition in generated model. |\n| 5 | Part 'vehicle' : Vehicle | **Yes** | 'part def Vehicle' is present; instance naming is ignored. |\n| 6 | 'vehicle' contains 'eng' : Engine | **Yes** | 'Vehicle' contains 'engine' : Engine (naming difference ignored). |\n| 7 | 'eng' contains 'cyl' : Cylinder[4..6] | **Partial/No** | No 'cyl' part or equivalent; only 'cylinderCount' attribute in Engine. |\n| 8 | Part 'smallVehicle' :> vehicle | **Yes** | 'SmallVehicle' specializes 'Vehicle' (by structure and semantics). |\n| 9 | 'smallVehicle' redefines 'eng' | **Yes** | 'SmallVehicle' has 'engine' of type 'Engine4', which is a specialization. |\n| 10 | 'eng' in 'smallVehicle' redefines 'cyl[4]' | **Partial/No** | No explicit 'cyl' part; 'Engine4' has 'cylinderCount = 4', but not as a part. |\n| 11 | Part 'bigVehicle' :> vehicle | **Yes** | 'LargeVehicle' specializes 'Vehicle'. |\n| 12 | 'bigVehicle' redefines 'eng' | **Yes** | 'LargeVehicle' has 'engine' of type 'Engine6'. |\n| 13 | 'eng' in 'bigVehicle' redefines 'cyl[6]' | **Partial/No** | No explicit 'cyl' part; 'Engine6' has 'cylinderCount = 6', but not as a part. |\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n1. Package exists (naming ignored)\n2. Vehicle part definition\n3. Engine part definition\n5. Vehicle part instance\n6. Vehicle contains Engine\n8. SmallVehicle specialization\n9. SmallVehicle redefines Engine (via type)\n11. LargeVehicle specialization\n12. LargeVehicle redefines Engine (via type)\n\n**Not Covered:**\n4. Cylinder part definition\n7. Engine contains Cylinder[4..6]\n10. SmallVehicle's Engine redefines Cylinder[4]\n13. LargeVehicle's Engine redefines Cylinder[6]\n\n**Total claims:** 13  \n**Covered claims:** 9\n\n---\n\n**Score: 9/13**"
+  }
+}

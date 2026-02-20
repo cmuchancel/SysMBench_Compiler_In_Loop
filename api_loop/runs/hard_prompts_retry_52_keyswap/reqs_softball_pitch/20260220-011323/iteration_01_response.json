@@ -1,0 +1,82 @@
+{
+  "id": "resp_07ae00311ef76202006997fb8459d8819eb95c509347453351",
+  "created_at": 1771568004.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-5.2-codex",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_07ae00311ef76202006997fb84dda4819e87fa22597aa3edcd",
+      "summary": [],
+      "type": "reasoning",
+      "content": null,
+      "encrypted_content": null,
+      "status": null
+    },
+    {
+      "id": "msg_07ae00311ef76202006997fb8c6f10819ebfe21169099c7750",
+      "content": [
+        {
+          "annotations": [],
+          "text": "package SoftTossMachine {\n  private import ScalarValues::*;\n\n  enum def TossVariationMode {\n    enum Consistent;\n    enum Varied;\n  }\n\n  item def Ball { }\n  item def Power { }\n  item def ControlSignal { }\n  item def StatusSignal { }\n\n  port def BallPort { }\n  port def PowerPort { }\n  port def ControlPort { }\n  port def StatusPort { }\n\n  part def BallHandlingSubsystem {\n    port outBall : BallPort;\n    attribute storageCapacity : Integer;\n    attribute singleBallPresent : Boolean;\n    attribute jamPreventionEnabled : Boolean;\n  }\n\n  part def BallFeedSubsystem {\n    port inBall : BallPort;\n    port outBall : BallPort;\n    port controlIn : ControlPort;\n    attribute consistentFeed : Boolean;\n    attribute feedIntervalSeconds : Real;\n  }\n\n  part def BallDeliverySubsystem {\n    port inBall : BallPort;\n    port controlIn : ControlPort;\n    attribute tossSpeed : Real;\n    attribute tossHeight : Real;\n    attribute usableRange : Real;\n    attribute consistentOutcome : Boolean;\n  }\n\n  part def AimingDirectionControlSubsystem {\n    port controlIn : ControlPort;\n    attribute directionAngle : Real;\n    attribute targetRegionDefined : Boolean;\n    attribute repeatableReference : Boolean;\n  }\n\n  part def TimingControlSubsystem {\n    port controlOut : ControlPort;\n    port statusOut : StatusPort;\n    attribute userDefinedInterval : Boolean;\n    attribute intervalAdjustableDuringPractice : Boolean;\n    attribute faultDetectionEnabled : Boolean;\n    attribute safeStateCommand : Boolean;\n  }\n\n  part def PowerElectricalProtectionSubsystem {\n    port powerOut : PowerPort;\n    attribute suitableForIndoorOutdoor : Boolean;\n    attribute electricalProtectionEnabled : Boolean;\n    attribute safePowerUpDown : Boolean;\n  }\n\n  part def StructureEnclosureSubsystem {\n    attribute stableBase : Boolean;\n    attribute protectiveEnclosure : Boolean;\n    attribute dustWeatherTolerance : Boolean;\n    attribute portabilityEnabled : Boolean;\n  }\n\n  part def UserInterfaceSafetySubsystem {\n    port controlOut : ControlPort;\n    port statusOut : StatusPort;\n    attribute emergencyStop : Boolean;\n    attribute guardingEnabled : Boolean;\n    attribute userFeedbackReadyActiveFault : Boolean;\n    attribute easySetup : Boolean;\n  }\n\n  part def SoftTossTrainingMachine {\n    part ballHandling : BallHandlingSubsystem;\n    part ballFeed : BallFeedSubsystem;\n    part ballDelivery : BallDeliverySubsystem;\n    part aimingControl : AimingDirectionControlSubsystem;\n    part timingControl : TimingControlSubsystem;\n    part powerProtection : PowerElectricalProtectionSubsystem;\n    part structureEnclosure : StructureEnclosureSubsystem;\n    part userInterfaceSafety : UserInterfaceSafetySubsystem;\n\n    attribute deliversSoftTossBall : Boolean = true;\n    attribute variedTossHeight : Boolean = true;\n    attribute variedTossSpeed : Boolean = true;\n    attribute variedTossDirection : Boolean = true;\n    attribute targetRegionAdjustable : Boolean = true;\n    attribute consistencyModeSupported : Boolean = true;\n    attribute misfirePrevention : Boolean = true;\n\n    attribute repeatabilityTolerance : Real;\n    attribute operatingDistanceMin : Real;\n    attribute operatingDistanceMax : Real;\n    attribute cycleRateSustained : Boolean;\n\n    attribute portabilitySinglePerson : Boolean = true;\n    attribute costTargetMinUSD : Real = 150.0;\n    attribute costTargetMaxUSD : Real = 300.0;\n    attribute manufacturableLowCost : Boolean = true;\n    attribute serviceLifeLong : Boolean = true;\n\n    attribute userControlsEnableDisable : Boolean = true;\n    attribute userControlsTiming : Boolean = true;\n    attribute userControlsVariation : Boolean = true;\n    attribute userFeedbackProvided : Boolean = true;\n    attribute powerSourceReliable : Boolean = true;\n    attribute transportStorageConvenient : Boolean = true;\n\n    attribute emergencyStopProvided : Boolean = true;\n    attribute safeFaultResponse : Boolean = true;\n    attribute impactResistance : Boolean = true;\n\n    attribute practiceSessionReliability : Boolean = true;\n    attribute maintenanceAccessible : Boolean = true;\n    attribute wearControlled : Boolean = true;\n\n    attribute verificationAccuracyPossible : Boolean = true;\n    attribute verificationRepeatabilityPossible : Boolean = true;\n    attribute verificationVariationPossible : Boolean = true;\n    attribute verificationEnvironmentalPossible : Boolean = true;\n    attribute verificationPortabilityPossible : Boolean = true;\n\n    connect ballHandling.outBall to ballFeed.inBall;\n    connect ballFeed.outBall to ballDelivery.inBall;\n    connect timingControl.controlOut to ballFeed.controlIn;\n    connect timingControl.controlOut to ballDelivery.controlIn;\n    connect timingControl.controlOut to aimingControl.controlIn;\n    connect userInterfaceSafety.controlOut to timingControl.controlOut;\n    connect timingControl.statusOut to userInterfaceSafety.statusOut;\n    connect powerProtection.powerOut to timingControl.controlOut;\n  }\n}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1771568025.0,
+  "conversation": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "generate_summary": null,
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1963,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 1377,
+    "output_tokens_details": {
+      "reasoning_tokens": 320
+    },
+    "total_tokens": 3340
+  },
+  "user": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": true
+}

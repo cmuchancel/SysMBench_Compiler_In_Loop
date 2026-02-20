@@ -1,0 +1,85 @@
+{
+  "model_id": 74,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'EngineSelectionTradeStudy' {\n\tprivate import ScalarValues::Real;\n\tprivate import TradeStudies::*;\n\tpart def Engine;\n\tpart engine4cyl : Engine;\n\tpart engine6cyl : Engine;\n\tcalc def PowerRollup { in engine : Engine; return : ISQ::PowerValue; }\n\tcalc def MassRollup { in engine : Engine; return : ISQ::MassValue; }\n\tcalc def EfficiencyRollup { in engine : Engine; return : Real; }\n\tcalc def CostRollup { in engine : Engine; return : Real; }\n\tcalc def EngineEvaluation { \n\t\tin power : ISQ::PowerValue;\n\t\tin mass : ISQ::MassValue;\n\t\tin efficiency : Real;\n\t\tin cost : Real;\n\t\treturn evaluation : Real;\n\t\t// Compute evaluation...\n\t}\n\tanalysis engineTradeStudy : TradeStudy {\n\t\tsubject : Engine = (engine4cyl, engine6cyl);\n\t\tobjective : MaximizeObjective;\n\t\tcalc :>> evaluationFunction {\n\t\t\tin part anEngine :>> alternative : Engine;\n\t\t\tcalc powerRollup: PowerRollup { in engine = anEngine; return power; }\n\t\t\tcalc massRollup: MassRollup { in engine = anEngine; return mass; }\n\t\t\tcalc efficiencyRollup: EfficiencyRollup { in engine = anEngine; return efficiency; }\n\t\t\tcalc costRollup: CostRollup { in engine = anEngine; return cost; }\n\t\t\treturn :>> result : Real = EngineEvaluation(\n\t\t\t\tpowerRollup.power, massRollup.mass, efficiencyRollup.efficiency, costRollup.cost\n\t\t\t);\n\t\t}\n\t\treturn part :>> selectedAlternative : Engine;\n\t}\n}\n\nGenerated Model:\npackage EngineSelectionAnalysis {\n  private import ScalarValues::*;\n\n  enum def EngineType { fourCylinder; sixCylinder; }\n\n  part def Engine {\n    attribute type : EngineType;\n    attribute power : Real;\n    attribute mass : Real;\n    attribute efficiency : Real;\n    attribute cost : Real;\n  }\n\n  part def EngineCandidate {\n    part engine : Engine;\n    attribute aggregatedPower : Real;\n    attribute aggregatedMass : Real;\n    attribute aggregatedEfficiency : Real;\n    attribute aggregatedCost : Real;\n    attribute overallScore : Real;\n  }\n\n  part def SelectionSystem {\n    part fourCylinderCandidate : EngineCandidate;\n    part sixCylinderCandidate : EngineCandidate;\n    attribute recommendedType : EngineType;\n    attribute bestScore : Real;\n  }\n\n  part selectionSystem : SelectionSystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/74/74_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/74/74.sysml",
+  "response": {
+    "id": "resp_0660a8627cd9c5600069980254cbac8195ae304a1f9607d2d6",
+    "created_at": 1771569748.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0660a8627cd9c560006998025537108195b56093987522213d",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Atomic Claims:**\n\n1. The model is in a package named 'EngineSelectionTradeStudy'.\n2. The model imports `ScalarValues::Real`.\n3. The model imports `TradeStudies::*`.\n4. There is a part definition `Engine`.\n5. There is a part `engine4cyl` of type `Engine`.\n6. There is a part `engine6cyl` of type `Engine`.\n7. There is a calculation definition `PowerRollup` with input `engine: Engine` and return type `ISQ::PowerValue`.\n8. There is a calculation definition `MassRollup` with input `engine: Engine` and return type `ISQ::MassValue`.\n9. There is a calculation definition `EfficiencyRollup` with input `engine: Engine` and return type `Real`.\n10. There is a calculation definition `CostRollup` with input `engine: Engine` and return type `Real`.\n11. There is a calculation definition `EngineEvaluation` with inputs: `power: ISQ::PowerValue`, `mass: ISQ::MassValue`, `efficiency: Real`, `cost: Real`, and return `evaluation: Real`.\n12. There is an analysis `engineTradeStudy` of type `TradeStudy`.\n13. The analysis `engineTradeStudy` has a subject of type `Engine` with values `(engine4cyl, engine6cyl)`.\n14. The analysis `engineTradeStudy` has an objective of type `MaximizeObjective`.\n15. The analysis `engineTradeStudy` has a calculation `evaluationFunction`.\n16. The calculation `evaluationFunction` takes an input part `anEngine` (alternative) of type `Engine`.\n17. The calculation `evaluationFunction` includes a calculation `powerRollup` of type `PowerRollup` with input `engine = anEngine`, returning `power`.\n18. The calculation `evaluationFunction` includes a calculation `massRollup` of type `MassRollup` with input `engine = anEngine`, returning `mass`.\n19. The calculation `evaluationFunction` includes a calculation `efficiencyRollup` of type `EfficiencyRollup` with input `engine = anEngine`, returning `efficiency`.\n20. The calculation `evaluationFunction` includes a calculation `costRollup` of type `CostRollup` with input `engine = anEngine`, returning `cost`.\n21. The calculation `evaluationFunction` returns a result `Real` by calling `EngineEvaluation` with the four calculated values.\n22. The analysis returns a part `selectedAlternative` of type `Engine`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n**1. Package name 'EngineSelectionTradeStudy'**  \n**Not covered** (Generated model uses a different package name; ignore naming, but the package structure is present.)\n\n**2. Import of `ScalarValues::Real`**  \n**Covered** (Generated model imports `ScalarValues::*`, which includes `Real`.)\n\n**3. Import of `TradeStudies::*`**  \n**Not covered** (No import of `TradeStudies` in generated model.)\n\n**4. Part definition `Engine`**  \n**Covered** (Exists in generated model.)\n\n**5. Part `engine4cyl : Engine`**  \n**Partially covered** (Generated model has `fourCylinderCandidate : EngineCandidate` and an `Engine` part inside, but not a direct part named `engine4cyl : Engine`.)\n\n**6. Part `engine6cyl : Engine`**  \n**Partially covered** (Same as above with `sixCylinderCandidate`.)\n\n**7. Calc def `PowerRollup` (input: engine: Engine, return: ISQ::PowerValue)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**8. Calc def `MassRollup` (input: engine: Engine, return: ISQ::MassValue)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**9. Calc def `EfficiencyRollup` (input: engine: Engine, return: Real)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**10. Calc def `CostRollup` (input: engine: Engine, return: Real)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**11. Calc def `EngineEvaluation` (inputs: power, mass, efficiency, cost; return: evaluation: Real)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**12. Analysis `engineTradeStudy : TradeStudy`**  \n**Not covered** (No analysis or equivalent structure.)\n\n**13. Analysis subject: Engine = (engine4cyl, engine6cyl)**  \n**Partially covered** (Candidates for four and six cylinder engines exist, but not as analysis subjects.)\n\n**14. Analysis objective: MaximizeObjective**  \n**Not covered** (No explicit objective.)\n\n**15. Analysis calc: evaluationFunction**  \n**Not covered** (No calculation function.)\n\n**16. evaluationFunction input part anEngine : Engine**  \n**Not covered** (No such function.)\n\n**17. evaluationFunction includes powerRollup**  \n**Not covered** (No such calculation.)\n\n**18. evaluationFunction includes massRollup**  \n**Not covered** (No such calculation.)\n\n**19. evaluationFunction includes efficiencyRollup**  \n**Not covered** (No such calculation.)\n\n**20. evaluationFunction includes costRollup**  \n**Not covered** (No such calculation.)\n\n**21. evaluationFunction returns result = EngineEvaluation(...)**  \n**Not covered** (No such calculation.)\n\n**22. Analysis returns part selectedAlternative : Engine**  \n**Partially covered** (Generated model has `recommendedType : EngineType` and `bestScore : Real`, but not a selected alternative as a part of type `Engine`.)\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Covered:** 2, 4\n- **Partially covered:** 5, 6, 13, 22\n\nFor recall, only fully covered claims count as \"covered\".\n\n**Score: 2/22**\n\n---\n\n**Final Output:**\n\nScore: 2/22",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 708,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1316,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2024
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569762,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Atomic Claims:**\n\n1. The model is in a package named 'EngineSelectionTradeStudy'.\n2. The model imports `ScalarValues::Real`.\n3. The model imports `TradeStudies::*`.\n4. There is a part definition `Engine`.\n5. There is a part `engine4cyl` of type `Engine`.\n6. There is a part `engine6cyl` of type `Engine`.\n7. There is a calculation definition `PowerRollup` with input `engine: Engine` and return type `ISQ::PowerValue`.\n8. There is a calculation definition `MassRollup` with input `engine: Engine` and return type `ISQ::MassValue`.\n9. There is a calculation definition `EfficiencyRollup` with input `engine: Engine` and return type `Real`.\n10. There is a calculation definition `CostRollup` with input `engine: Engine` and return type `Real`.\n11. There is a calculation definition `EngineEvaluation` with inputs: `power: ISQ::PowerValue`, `mass: ISQ::MassValue`, `efficiency: Real`, `cost: Real`, and return `evaluation: Real`.\n12. There is an analysis `engineTradeStudy` of type `TradeStudy`.\n13. The analysis `engineTradeStudy` has a subject of type `Engine` with values `(engine4cyl, engine6cyl)`.\n14. The analysis `engineTradeStudy` has an objective of type `MaximizeObjective`.\n15. The analysis `engineTradeStudy` has a calculation `evaluationFunction`.\n16. The calculation `evaluationFunction` takes an input part `anEngine` (alternative) of type `Engine`.\n17. The calculation `evaluationFunction` includes a calculation `powerRollup` of type `PowerRollup` with input `engine = anEngine`, returning `power`.\n18. The calculation `evaluationFunction` includes a calculation `massRollup` of type `MassRollup` with input `engine = anEngine`, returning `mass`.\n19. The calculation `evaluationFunction` includes a calculation `efficiencyRollup` of type `EfficiencyRollup` with input `engine = anEngine`, returning `efficiency`.\n20. The calculation `evaluationFunction` includes a calculation `costRollup` of type `CostRollup` with input `engine = anEngine`, returning `cost`.\n21. The calculation `evaluationFunction` returns a result `Real` by calling `EngineEvaluation` with the four calculated values.\n22. The analysis returns a part `selectedAlternative` of type `Engine`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n**1. Package name 'EngineSelectionTradeStudy'**  \n**Not covered** (Generated model uses a different package name; ignore naming, but the package structure is present.)\n\n**2. Import of `ScalarValues::Real`**  \n**Covered** (Generated model imports `ScalarValues::*`, which includes `Real`.)\n\n**3. Import of `TradeStudies::*`**  \n**Not covered** (No import of `TradeStudies` in generated model.)\n\n**4. Part definition `Engine`**  \n**Covered** (Exists in generated model.)\n\n**5. Part `engine4cyl : Engine`**  \n**Partially covered** (Generated model has `fourCylinderCandidate : EngineCandidate` and an `Engine` part inside, but not a direct part named `engine4cyl : Engine`.)\n\n**6. Part `engine6cyl : Engine`**  \n**Partially covered** (Same as above with `sixCylinderCandidate`.)\n\n**7. Calc def `PowerRollup` (input: engine: Engine, return: ISQ::PowerValue)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**8. Calc def `MassRollup` (input: engine: Engine, return: ISQ::MassValue)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**9. Calc def `EfficiencyRollup` (input: engine: Engine, return: Real)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**10. Calc def `CostRollup` (input: engine: Engine, return: Real)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**11. Calc def `EngineEvaluation` (inputs: power, mass, efficiency, cost; return: evaluation: Real)**  \n**Not covered** (No calculation definitions in generated model.)\n\n**12. Analysis `engineTradeStudy : TradeStudy`**  \n**Not covered** (No analysis or equivalent structure.)\n\n**13. Analysis subject: Engine = (engine4cyl, engine6cyl)**  \n**Partially covered** (Candidates for four and six cylinder engines exist, but not as analysis subjects.)\n\n**14. Analysis objective: MaximizeObjective**  \n**Not covered** (No explicit objective.)\n\n**15. Analysis calc: evaluationFunction**  \n**Not covered** (No calculation function.)\n\n**16. evaluationFunction input part anEngine : Engine**  \n**Not covered** (No such function.)\n\n**17. evaluationFunction includes powerRollup**  \n**Not covered** (No such calculation.)\n\n**18. evaluationFunction includes massRollup**  \n**Not covered** (No such calculation.)\n\n**19. evaluationFunction includes efficiencyRollup**  \n**Not covered** (No such calculation.)\n\n**20. evaluationFunction includes costRollup**  \n**Not covered** (No such calculation.)\n\n**21. evaluationFunction returns result = EngineEvaluation(...)**  \n**Not covered** (No such calculation.)\n\n**22. Analysis returns part selectedAlternative : Engine**  \n**Partially covered** (Generated model has `recommendedType : EngineType` and `bestScore : Real`, but not a selected alternative as a part of type `Engine`.)\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Covered:** 2, 4\n- **Partially covered:** 5, 6, 13, 22\n\nFor recall, only fully covered claims count as \"covered\".\n\n**Score: 2/22**\n\n---\n\n**Final Output:**\n\nScore: 2/22"
+  }
+}

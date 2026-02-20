@@ -1,0 +1,85 @@
+{
+  "model_id": 96,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'ImportPackageExercise' {\n\tpublic import ISQ::TorqueValue;\n\tprivate import ScalarValues::*;\n\tprivate part def Automobile;\n\tpublic alias Car for Automobile;\t                         \n\talias Torque for ISQ::TorqueValue;\n}\n\nGenerated Model:\npackage AutomobileModel {\n    private import ScalarValues::*;\n\n    item def TorqueValue;\n    item def Torque specializes TorqueValue;\n\n    part def Automobile {\n        attribute torque : TorqueValue;\n    }\n\n    part def Car specializes Automobile { }\n\n    part def AutomobileSystem {\n        part vehicle : Automobile;\n        part car : Car;\n        attribute maxTorque : Torque;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/96/96_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/96/96.sysml",
+  "response": {
+    "id": "resp_02c35559d0b59775006998010cb1cc8191a39114eed00a1f28",
+    "created_at": 1771569420.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_02c35559d0b59775006998010d0ba881918765d63e25f328a3",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Claims:**\n\n1. There is a package defined (named 'ImportPackageExercise').\n2. The package publicly imports `ISQ::TorqueValue`.\n3. The package privately imports `ScalarValues::*`.\n4. There is a part definition for `Automobile`.\n5. There is a public alias `Car` for `Automobile`.\n6. There is an alias `Torque` for `ISQ::TorqueValue`.\n\n---\n\n### 2. For each atomic claim, determine if it is covered by the generated model.\n\n**Claim 1: There is a package defined.**  \n- **Covered:** Yes, the generated model defines a package (name difference is ignored).\n\n**Claim 2: The package publicly imports `ISQ::TorqueValue`.**  \n- **Covered:** **No.** The generated model does not import `ISQ::TorqueValue` (or equivalent).\n\n**Claim 3: The package privately imports `ScalarValues::*`.**  \n- **Covered:** Yes, the generated model has `private import ScalarValues::*;`.\n\n**Claim 4: There is a part definition for `Automobile`.**  \n- **Covered:** Yes, the generated model defines `part def Automobile`.\n\n**Claim 5: There is a public alias `Car` for `Automobile`.**  \n- **Covered:** Yes, the generated model defines `part def Car specializes Automobile`, which is equivalent to an alias.\n\n**Claim 6: There is an alias `Torque` for `ISQ::TorqueValue`.**  \n- **Covered:** **Partially.** The generated model defines `item def TorqueValue` and `item def Torque specializes TorqueValue`, which is structurally equivalent to an alias for `TorqueValue`, but does not explicitly reference `ISQ::TorqueValue`. Since the reference to the external type is missing, this is **not fully covered**.\n\n---\n\n### 3. Summarize the results.\n\n**Covered Claims:**\n1. Package defined\n2. Private import of `ScalarValues::*`\n3. Part definition for `Automobile`\n4. Alias `Car` for `Automobile` (via specialization)\n\n**Not Covered Claims:**\n1. Public import of `ISQ::TorqueValue`\n2. Alias `Torque` for `ISQ::TorqueValue` (since the external reference is missing)\n\n**Score:** 4/6",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 305,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 510,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 815
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771569426,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Claims:**\n\n1. There is a package defined (named 'ImportPackageExercise').\n2. The package publicly imports `ISQ::TorqueValue`.\n3. The package privately imports `ScalarValues::*`.\n4. There is a part definition for `Automobile`.\n5. There is a public alias `Car` for `Automobile`.\n6. There is an alias `Torque` for `ISQ::TorqueValue`.\n\n---\n\n### 2. For each atomic claim, determine if it is covered by the generated model.\n\n**Claim 1: There is a package defined.**  \n- **Covered:** Yes, the generated model defines a package (name difference is ignored).\n\n**Claim 2: The package publicly imports `ISQ::TorqueValue`.**  \n- **Covered:** **No.** The generated model does not import `ISQ::TorqueValue` (or equivalent).\n\n**Claim 3: The package privately imports `ScalarValues::*`.**  \n- **Covered:** Yes, the generated model has `private import ScalarValues::*;`.\n\n**Claim 4: There is a part definition for `Automobile`.**  \n- **Covered:** Yes, the generated model defines `part def Automobile`.\n\n**Claim 5: There is a public alias `Car` for `Automobile`.**  \n- **Covered:** Yes, the generated model defines `part def Car specializes Automobile`, which is equivalent to an alias.\n\n**Claim 6: There is an alias `Torque` for `ISQ::TorqueValue`.**  \n- **Covered:** **Partially.** The generated model defines `item def TorqueValue` and `item def Torque specializes TorqueValue`, which is structurally equivalent to an alias for `TorqueValue`, but does not explicitly reference `ISQ::TorqueValue`. Since the reference to the external type is missing, this is **not fully covered**.\n\n---\n\n### 3. Summarize the results.\n\n**Covered Claims:**\n1. Package defined\n2. Private import of `ScalarValues::*`\n3. Part definition for `Automobile`\n4. Alias `Car` for `Automobile` (via specialization)\n\n**Not Covered Claims:**\n1. Public import of `ISQ::TorqueValue`\n2. Alias `Torque` for `ISQ::TorqueValue` (since the external reference is missing)\n\n**Score:** 4/6"
+  }
+}

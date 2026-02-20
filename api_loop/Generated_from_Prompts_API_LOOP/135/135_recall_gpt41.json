@@ -1,0 +1,85 @@
+{
+  "model_id": 135,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'ScientificReferenceConstants' {\n    private import MeasurementReferences::*;\n    private import SI::*;\n    private import RealFunctions::*;\n    package 'Mathematical Constants' {\n        attribute e: Real {\n        \tassert constraint { round(e * 1E20) == 271828182845904523536.0 }\n        }\n        attribute pi: Real {\n        \tassert constraint { round(pi * 1E20) == 314159265358979323846.0 }\n        }\n    }\n    package 'Fundamental Physical Constants' {    \n        attribute 'fine structure constant'      : DimensionOneValue = 7.2973525693E-3[one];  \n        attribute 'electron to proton mass ratio': DimensionOneValue = 5.44617021487E-4[one]; \n        attribute 'speed of light in vacuum'     : SpeedValue = 299792458[m/s];    \n    }\n    package 'Global Context' {\n        attribute 'nominal earth gravitational acceleration': AccelerationValue = 9.80665['m/s²'];\n    }\n    package 'Model X Context' {\n        attribute 'amplifier gain': DimensionOneValue = 3.5[one];\n    }\n}\n\n\nGenerated Model:\npackage ScientificConstants {\n  private import ScalarValues::*;\n\n  part def ConstantSet {\n    attribute pi : Real = 3.14159265358979323846;\n    attribute e : Real = 2.71828182845904523536;\n    attribute speedOfLight_m_per_s : Real = 299792458.0;\n    attribute fineStructureConstant : Real = 0.00729735256930000000;\n    attribute electronToProtonMassRatio : Real = 0.00054461702148600000;\n    attribute standardGravity_m_per_s2 : Real = 9.80665;\n    attribute amplifierGain_ModelX : Real = 12.5;\n  }\n\n  part systemConstants : ConstantSet;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/135/135_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/135/135.sysml",
+  "response": {
+    "id": "resp_0dd95cf7804abf8000699800e6293c8192ac573e71f04f6625",
+    "created_at": 1771569382.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0dd95cf7804abf8000699800e6bc7c81929167fcd2fce93f94",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n#### Imports\n1. The model imports `MeasurementReferences::*`.\n2. The model imports `SI::*`.\n3. The model imports `RealFunctions::*`.\n\n#### Mathematical Constants\n4. Attribute `e` of type `Real` is defined.\n5. Attribute `e` has a constraint: `round(e * 1E20) == 271828182845904523536.0`.\n6. Attribute `pi` of type `Real` is defined.\n7. Attribute `pi` has a constraint: `round(pi * 1E20) == 314159265358979323846.0`.\n\n#### Fundamental Physical Constants\n8. Attribute `'fine structure constant'` of type `DimensionOneValue` is defined, value = 7.2973525693E-3 [one].\n9. Attribute `'electron to proton mass ratio'` of type `DimensionOneValue` is defined, value = 5.44617021487E-4 [one].\n10. Attribute `'speed of light in vacuum'` of type `SpeedValue` is defined, value = 299792458 [m/s].\n\n#### Global Context\n11. Attribute `'nominal earth gravitational acceleration'` of type `AccelerationValue` is defined, value = 9.80665 ['m/s²'].\n\n#### Model X Context\n12. Attribute `'amplifier gain'` of type `DimensionOneValue` is defined, value = 3.5 [one].\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### Imports\n1. **NOT COVERED**: The generated model imports `ScalarValues::*`, not the same as the three reference imports.\n2. **NOT COVERED**: See above.\n3. **NOT COVERED**: See above.\n\n#### Mathematical Constants\n4. **COVERED**: Attribute `e` of type `Real` is defined in `ConstantSet`.\n5. **NOT COVERED**: The constraint on `e` is not present.\n6. **COVERED**: Attribute `pi` of type `Real` is defined in `ConstantSet`.\n7. **NOT COVERED**: The constraint on `pi` is not present.\n\n#### Fundamental Physical Constants\n8. **COVERED**: Attribute `fineStructureConstant` (name and type differ, but value and semantics match).\n9. **COVERED**: Attribute `electronToProtonMassRatio` (name and type differ, but value and semantics match).\n10. **COVERED**: Attribute `speedOfLight_m_per_s` (name and type differ, but value and semantics match).\n\n#### Global Context\n11. **COVERED**: Attribute `standardGravity_m_per_s2` (name and type differ, but value and semantics match).\n\n#### Model X Context\n12. **NOT COVERED**: Attribute `amplifierGain_ModelX` exists, but its value is `12.5` instead of `3.5` as in the reference model.\n\n---\n\n### 3. Summarize the results.\n\n**Covered claims:**\n- 4. Attribute `e` of type `Real`\n- 6. Attribute `pi` of type `Real`\n- 8. Attribute `'fine structure constant'`\n- 9. Attribute `'electron to proton mass ratio'`\n- 10. Attribute `'speed of light in vacuum'`\n- 11. Attribute `'nominal earth gravitational acceleration'`\n\n**Total covered:** 6\n\n**Total claims:** 12\n\n---\n\n**Score: 6/12**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 587,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 778,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1365
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569391,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n#### Imports\n1. The model imports `MeasurementReferences::*`.\n2. The model imports `SI::*`.\n3. The model imports `RealFunctions::*`.\n\n#### Mathematical Constants\n4. Attribute `e` of type `Real` is defined.\n5. Attribute `e` has a constraint: `round(e * 1E20) == 271828182845904523536.0`.\n6. Attribute `pi` of type `Real` is defined.\n7. Attribute `pi` has a constraint: `round(pi * 1E20) == 314159265358979323846.0`.\n\n#### Fundamental Physical Constants\n8. Attribute `'fine structure constant'` of type `DimensionOneValue` is defined, value = 7.2973525693E-3 [one].\n9. Attribute `'electron to proton mass ratio'` of type `DimensionOneValue` is defined, value = 5.44617021487E-4 [one].\n10. Attribute `'speed of light in vacuum'` of type `SpeedValue` is defined, value = 299792458 [m/s].\n\n#### Global Context\n11. Attribute `'nominal earth gravitational acceleration'` of type `AccelerationValue` is defined, value = 9.80665 ['m/s²'].\n\n#### Model X Context\n12. Attribute `'amplifier gain'` of type `DimensionOneValue` is defined, value = 3.5 [one].\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### Imports\n1. **NOT COVERED**: The generated model imports `ScalarValues::*`, not the same as the three reference imports.\n2. **NOT COVERED**: See above.\n3. **NOT COVERED**: See above.\n\n#### Mathematical Constants\n4. **COVERED**: Attribute `e` of type `Real` is defined in `ConstantSet`.\n5. **NOT COVERED**: The constraint on `e` is not present.\n6. **COVERED**: Attribute `pi` of type `Real` is defined in `ConstantSet`.\n7. **NOT COVERED**: The constraint on `pi` is not present.\n\n#### Fundamental Physical Constants\n8. **COVERED**: Attribute `fineStructureConstant` (name and type differ, but value and semantics match).\n9. **COVERED**: Attribute `electronToProtonMassRatio` (name and type differ, but value and semantics match).\n10. **COVERED**: Attribute `speedOfLight_m_per_s` (name and type differ, but value and semantics match).\n\n#### Global Context\n11. **COVERED**: Attribute `standardGravity_m_per_s2` (name and type differ, but value and semantics match).\n\n#### Model X Context\n12. **NOT COVERED**: Attribute `amplifierGain_ModelX` exists, but its value is `12.5` instead of `3.5` as in the reference model.\n\n---\n\n### 3. Summarize the results.\n\n**Covered claims:**\n- 4. Attribute `e` of type `Real`\n- 6. Attribute `pi` of type `Real`\n- 8. Attribute `'fine structure constant'`\n- 9. Attribute `'electron to proton mass ratio'`\n- 10. Attribute `'speed of light in vacuum'`\n- 11. Attribute `'nominal earth gravitational acceleration'`\n\n**Total covered:** 6\n\n**Total claims:** 12\n\n---\n\n**Score: 6/12**"
+  }
+}

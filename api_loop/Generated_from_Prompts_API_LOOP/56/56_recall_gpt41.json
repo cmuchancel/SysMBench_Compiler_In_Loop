@@ -1,0 +1,85 @@
+{
+  "model_id": 56,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage MassRollup{\n\tprivate import NumericalFunctions::*;\n\tpart def MassedThing {\n\t\tattribute simpleMass :> ISQ::mass; \n\t\tattribute totalMass :> ISQ::mass;\n\t}\n\tpart simpleThing : MassedThing {\n\t\tattribute :>> totalMass = simpleMass;\n\t}\n\tpart compositeThing : MassedThing {\n\t\tpart subcomponents: MassedThing[*];\t\t\n\t\tattribute :>> totalMass =\n\t\t\tsimpleMass + sum(subcomponents.totalMass); \n\t}\n}\n\nGenerated Model:\npackage MassAggregation {\n  private import ScalarValues::*;\n  part def ObjectWithMass {\n    attribute simpleMass : Real;\n    attribute subcomponentsTotalMass : Real = 0;\n    attribute totalMass : Real = simpleMass + subcomponentsTotalMass;\n  }\n  part def simpleThing specializes ObjectWithMass {\n  }\n  part def compositeThing specializes ObjectWithMass {\n    part subcomponents : ObjectWithMass [*];\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/56/56_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/56/56.sysml",
+  "response": {
+    "id": "resp_0b0844191834dc45006997ffd3540481a0aa1375b96c715cea",
+    "created_at": 1771569107.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0b0844191834dc45006997ffd39e1481a0b9b8b7994940fde0",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage MassRollup{\n\tprivate import NumericalFunctions::*;\n\tpart def MassedThing {\n\t\tattribute simpleMass :> ISQ::mass; \n\t\tattribute totalMass :> ISQ::mass;\n\t}\n\tpart simpleThing : MassedThing {\n\t\tattribute :>> totalMass = simpleMass;\n\t}\n\tpart compositeThing : MassedThing {\n\t\tpart subcomponents: MassedThing[*];\t\t\n\t\tattribute :>> totalMass =\n\t\t\tsimpleMass + sum(subcomponents.totalMass); \n\t}\n}\n```\n\n**Atomic Claims:**\n\n1. The model is in a package.\n2. The package imports a numerical functions library.\n3. There is a part definition `MassedThing`.\n4. `MassedThing` has an attribute `simpleMass` of type `ISQ::mass`.\n5. `MassedThing` has an attribute `totalMass` of type `ISQ::mass`.\n6. There is a part `simpleThing` that is a `MassedThing`.\n7. In `simpleThing`, `totalMass` is defined as equal to `simpleMass`.\n8. There is a part `compositeThing` that is a `MassedThing`.\n9. `compositeThing` has a part `subcomponents` which is a collection (`[*]`) of `MassedThing`.\n10. In `compositeThing`, `totalMass` is defined as `simpleMass + sum(subcomponents.totalMass)`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**Generated Model:**\n```plaintext\npackage MassAggregation {\n  private import ScalarValues::*;\n  part def ObjectWithMass {\n    attribute simpleMass : Real;\n    attribute subcomponentsTotalMass : Real = 0;\n    attribute totalMass : Real = simpleMass + subcomponentsTotalMass;\n  }\n  part def simpleThing specializes ObjectWithMass {\n  }\n  part def compositeThing specializes ObjectWithMass {\n    part subcomponents : ObjectWithMass [*];\n  }\n}\n```\n\n**Coverage Analysis:**\n\n| # | Reference Claim | Covered? | Reasoning |\n|---|----------------|----------|-----------|\n| 1 | The model is in a package. | Yes | Both models use a package. |\n| 2 | The package imports a numerical functions library. | Yes | Both import a numerical/scalar library (names differ, semantics match). |\n| 3 | There is a part definition `MassedThing`. | Yes | `ObjectWithMass` is equivalent. |\n| 4 | `MassedThing` has an attribute `simpleMass` of type `ISQ::mass`. | Yes | `simpleMass : Real` is equivalent (type is less specific, but still a mass value). |\n| 5 | `MassedThing` has an attribute `totalMass` of type `ISQ::mass`. | Yes | `totalMass : Real` is equivalent. |\n| 6 | There is a part `simpleThing` that is a `MassedThing`. | Yes | `simpleThing specializes ObjectWithMass` is equivalent. |\n| 7 | In `simpleThing`, `totalMass` is defined as equal to `simpleMass`. | Yes | In the base class, `totalMass = simpleMass + subcomponentsTotalMass`, and for `simpleThing`, which has no subcomponents, `subcomponentsTotalMass` defaults to 0, so `totalMass = simpleMass`. |\n| 8 | There is a part `compositeThing` that is a `MassedThing`. | Yes | `compositeThing specializes ObjectWithMass` is equivalent. |\n| 9 | `compositeThing` has a part `subcomponents` which is a collection (`[*]`) of `MassedThing`. | Yes | `subcomponents : ObjectWithMass [*]` is equivalent. |\n| 10 | In `compositeThing`, `totalMass` is defined as `simpleMass + sum(subcomponents.totalMass)`. | Yes | `totalMass = simpleMass + subcomponentsTotalMass`, and `subcomponentsTotalMass` is intended to be the sum of the subcomponents' totalMass, matching the reference. |\n\n---\n\n### 3. Summarize the results\n\n**Score: 10/10**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 382,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 917,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1299
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569120,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage MassRollup{\n\tprivate import NumericalFunctions::*;\n\tpart def MassedThing {\n\t\tattribute simpleMass :> ISQ::mass; \n\t\tattribute totalMass :> ISQ::mass;\n\t}\n\tpart simpleThing : MassedThing {\n\t\tattribute :>> totalMass = simpleMass;\n\t}\n\tpart compositeThing : MassedThing {\n\t\tpart subcomponents: MassedThing[*];\t\t\n\t\tattribute :>> totalMass =\n\t\t\tsimpleMass + sum(subcomponents.totalMass); \n\t}\n}\n```\n\n**Atomic Claims:**\n\n1. The model is in a package.\n2. The package imports a numerical functions library.\n3. There is a part definition `MassedThing`.\n4. `MassedThing` has an attribute `simpleMass` of type `ISQ::mass`.\n5. `MassedThing` has an attribute `totalMass` of type `ISQ::mass`.\n6. There is a part `simpleThing` that is a `MassedThing`.\n7. In `simpleThing`, `totalMass` is defined as equal to `simpleMass`.\n8. There is a part `compositeThing` that is a `MassedThing`.\n9. `compositeThing` has a part `subcomponents` which is a collection (`[*]`) of `MassedThing`.\n10. In `compositeThing`, `totalMass` is defined as `simpleMass + sum(subcomponents.totalMass)`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n**Generated Model:**\n```plaintext\npackage MassAggregation {\n  private import ScalarValues::*;\n  part def ObjectWithMass {\n    attribute simpleMass : Real;\n    attribute subcomponentsTotalMass : Real = 0;\n    attribute totalMass : Real = simpleMass + subcomponentsTotalMass;\n  }\n  part def simpleThing specializes ObjectWithMass {\n  }\n  part def compositeThing specializes ObjectWithMass {\n    part subcomponents : ObjectWithMass [*];\n  }\n}\n```\n\n**Coverage Analysis:**\n\n| # | Reference Claim | Covered? | Reasoning |\n|---|----------------|----------|-----------|\n| 1 | The model is in a package. | Yes | Both models use a package. |\n| 2 | The package imports a numerical functions library. | Yes | Both import a numerical/scalar library (names differ, semantics match). |\n| 3 | There is a part definition `MassedThing`. | Yes | `ObjectWithMass` is equivalent. |\n| 4 | `MassedThing` has an attribute `simpleMass` of type `ISQ::mass`. | Yes | `simpleMass : Real` is equivalent (type is less specific, but still a mass value). |\n| 5 | `MassedThing` has an attribute `totalMass` of type `ISQ::mass`. | Yes | `totalMass : Real` is equivalent. |\n| 6 | There is a part `simpleThing` that is a `MassedThing`. | Yes | `simpleThing specializes ObjectWithMass` is equivalent. |\n| 7 | In `simpleThing`, `totalMass` is defined as equal to `simpleMass`. | Yes | In the base class, `totalMass = simpleMass + subcomponentsTotalMass`, and for `simpleThing`, which has no subcomponents, `subcomponentsTotalMass` defaults to 0, so `totalMass = simpleMass`. |\n| 8 | There is a part `compositeThing` that is a `MassedThing`. | Yes | `compositeThing specializes ObjectWithMass` is equivalent. |\n| 9 | `compositeThing` has a part `subcomponents` which is a collection (`[*]`) of `MassedThing`. | Yes | `subcomponents : ObjectWithMass [*]` is equivalent. |\n| 10 | In `compositeThing`, `totalMass` is defined as `simpleMass + sum(subcomponents.totalMass)`. | Yes | `totalMass = simpleMass + subcomponentsTotalMass`, and `subcomponentsTotalMass` is intended to be the sum of the subcomponents' totalMass, matching the reference. |\n\n---\n\n### 3. Summarize the results\n\n**Score: 10/10**"
+  }
+}

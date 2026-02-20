@@ -1,0 +1,21 @@
+[
+  {
+    "iteration": 1,
+    "iteration_start": "2026-02-20T06:10:43.577350Z",
+    "iteration_end": "2026-02-20T06:11:07.318443Z",
+    "iteration_duration_seconds": 23.74150158399425,
+    "sysml_path": "api_loop/runs/hard_prompts_retry/reqs_bench_assist_52_keyswap/20260220-011043/iteration_01.sysml",
+    "prompt_path": "api_loop/runs/hard_prompts_retry/reqs_bench_assist_52_keyswap/20260220-011043/iteration_01_prompt.txt",
+    "response_path": "api_loop/runs/hard_prompts_retry/reqs_bench_assist_52_keyswap/20260220-011043/iteration_01_response.json",
+    "success": true,
+    "compiler_stdout": "",
+    "compiler_stderr": "1 out of 1 files formatted.",
+    "return_code": 0,
+    "tokens_used_this_iter": {
+      "input_tokens": 2301,
+      "output_tokens": 1773,
+      "total_tokens": 4074
+    },
+    "tokens_used_total": 4074
+  }
+]

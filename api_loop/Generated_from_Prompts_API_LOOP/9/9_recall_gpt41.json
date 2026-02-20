@@ -1,0 +1,85 @@
+{
+  "model_id": 9,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'WheelAssemblyStructure' {\n\tpart def WheelHubAssembly;\n\tpart def WheelAssembly;\n\tpart def Tire;\n\tpart def TireBead;\n\tpart def Wheel;\n\tpart def TireMountingRim;\n\tpart def LugBoltMountingHole;\n\tpart def Hub;\n\tpart def LugBoltThreadableHole;\n\tpart def LugBoltJoint;\n\tconnection def PressureSeat {\n\t\tend bead : TireBead[1];\n\t\tend mountingRim : TireMountingRim[1];\n\t}\n\tpart wheelHubAssembly : WheelHubAssembly {\n\t\t\n\t\tpart wheel : WheelAssembly[1] {\n\t\t\tpart t : Tire[1] {\n\t\t\t\tpart bead : TireBead[2];\t\t\t\n\t\t\t}\n\t\t\tpart w: Wheel[1] {\n\t\t\t\tpart rim : TireMountingRim[2];\n\t\t\t\tpart mountingHoles : LugBoltMountingHole[5];\n\t\t\t}\t\t\t\t\t\t\n\t\t\tconnection : PressureSeat \n\t\t\t\tconnect bead references t.bead \n\t\t\t\tto mountingRim references w.rim;\t\t\n\t\t}\n\t\tpart lugBoltJoints : LugBoltJoint[0..5];\n\t\tpart hub : Hub[1] {\n\t\t\tpart h : LugBoltThreadableHole[5];\n\t\t}\n\t\tconnect lugBoltJoints[0..1] to wheel.w.mountingHoles[1];\n\t\tconnect lugBoltJoints[0..1] to hub.h[1];\n\t}\n}\n\nGenerated Model:\npackage WheelAssemblyModel {\n  private import ScalarValues::*;\n\n  part def WheelBearingUnit { }\n  part def Bead { }\n  part def Tire {\n    part bead1 : Bead;\n    part bead2 : Bead;\n  }\n  part def Bolt { }\n  part def BoltMountingHole { }\n  part def ThreadedHole { }\n  part def Rim {\n    part boltMountingHole1 : BoltMountingHole;\n    part boltMountingHole2 : BoltMountingHole;\n  }\n  part def Hub {\n    part threadedHole1 : ThreadedHole;\n    part threadedHole2 : ThreadedHole;\n  }\n\n  part def WheelAssembly {\n    part bearingUnit : WheelBearingUnit;\n    part hub : Hub;\n    part rimA : Rim;\n    part rimB : Rim;\n    part tire : Tire;\n    part bolt1 : Bolt;\n    part bolt2 : Bolt;\n\n    connect bearingUnit to hub;\n    connect tire.bead1 to rimA;\n    connect tire.bead2 to rimB;\n    connect rimA.boltMountingHole1 to bolt1;\n    connect hub.threadedHole1 to bolt1;\n    connect rimA.boltMountingHole2 to bolt2;\n    connect hub.threadedHole2 to bolt2;\n  }\n\n  part wheelAssembly : WheelAssembly;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/9/9_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/9/9.sysml",
+  "response": {
+    "id": "resp_065ec78d5109b12f006997fe1389d081959cc0b9c230dac0f2",
+    "created_at": 1771568659.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_065ec78d5109b12f006997fe13eb1881958f5275eb3349db02",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### Part Definitions\n1. There is a part definition: WheelHubAssembly.\n2. There is a part definition: WheelAssembly.\n3. There is a part definition: Tire.\n4. There is a part definition: TireBead.\n5. There is a part definition: Wheel.\n6. There is a part definition: TireMountingRim.\n7. There is a part definition: LugBoltMountingHole.\n8. There is a part definition: Hub.\n9. There is a part definition: LugBoltThreadableHole.\n10. There is a part definition: LugBoltJoint.\n\n#### Connection Definition\n11. There is a connection definition: PressureSeat with ends:\n    - bead : TireBead[1]\n    - mountingRim : TireMountingRim[1]\n\n#### Top-level Part Structure\n12. There is a part: wheelHubAssembly of type WheelHubAssembly.\n\n##### wheelHubAssembly structure:\n13. wheelHubAssembly has a part: wheel of type WheelAssembly[1].\n\n###### wheel structure:\n14. wheel has a part: t of type Tire[1].\n15. t has a part: bead of type TireBead[2].\n16. wheel has a part: w of type Wheel[1].\n17. w has a part: rim of type TireMountingRim[2].\n18. w has a part: mountingHoles of type LugBoltMountingHole[5].\n19. wheel has a connection: PressureSeat connecting t.bead to w.rim.\n\n13. wheelHubAssembly has a part: lugBoltJoints of type LugBoltJoint[0..5].\n14. wheelHubAssembly has a part: hub of type Hub[1].\n\n###### hub structure:\n15. hub has a part: h of type LugBoltThreadableHole[5].\n\n#### Connections\n16. Connect lugBoltJoints[0..1] to wheel.w.mountingHoles[1].\n17. Connect lugBoltJoints[0..1] to hub.h[1].\n\n---\n\n### 2. For each atomic claim, determine coverage by the generated model\n\n#### Part Definitions\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | WheelHubAssembly | ❌ | Not present. |\n| 2 | WheelAssembly | ✅ | Present. |\n| 3 | Tire | ✅ | Present. |\n| 4 | TireBead | ✅ | As \"Bead\". Naming difference only. |\n| 5 | Wheel | ❌ | Not present. |\n| 6 | TireMountingRim | ✅ | As \"Rim\". Naming difference only. |\n| 7 | LugBoltMountingHole | ✅ | As \"BoltMountingHole\". Naming difference only. |\n| 8 | Hub | ✅ | Present. |\n| 9 | LugBoltThreadableHole | ✅ | As \"ThreadedHole\". Naming difference only. |\n|10 | LugBoltJoint | ✅ | As \"Bolt\". Naming difference only. |\n\n#### Connection Definition\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|11 | PressureSeat (TireBead ↔ TireMountingRim) | ✅ | tire.bead1/bead2 connected to rimA/rimB. |\n\n#### Top-level Part Structure\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|12 | wheelHubAssembly : WheelHubAssembly | ❌ | No such part; only \"wheelAssembly : WheelAssembly\" exists. |\n\n##### wheelHubAssembly structure\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|13 | wheel : WheelAssembly[1] | ✅ | \"wheelAssembly\" is present. |\n|14 | t : Tire[1] | ✅ | \"tire\" part in WheelAssembly. |\n|15 | bead : TireBead[2] | ✅ | \"bead1\" and \"bead2\" in Tire. |\n|16 | w : Wheel[1] | ❌ | No \"Wheel\" part in WheelAssembly. |\n|17 | rim : TireMountingRim[2] | ✅ | \"rimA\" and \"rimB\" in WheelAssembly. |\n|18 | mountingHoles : LugBoltMountingHole[5] | ❌ | Only 2 BoltMountingHoles per Rim, not 5. |\n|19 | PressureSeat connection (t.bead ↔ w.rim) | ✅ | tire.bead1/bead2 connected to rimA/rimB. |\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|20 | lugBoltJoints : LugBoltJoint[0..5] | ✅ | bolt1 and bolt2 in WheelAssembly. (Partial, but at least present.) |\n|21 | hub : Hub[1] | ✅ | \"hub\" part in WheelAssembly. |\n\n###### hub structure\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|22 | h : LugBoltThreadableHole[5] | ❌ | Only 2 ThreadedHoles in Hub. |\n\n#### Connections\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|23 | Connect lugBoltJoints[0..1] to wheel.w.mountingHoles[1] | ✅ | bolt1/bolt2 connected to rimA.boltMountingHole1/2. |\n|24 | Connect lugBoltJoints[0..1] to hub.h[1] | ✅ | bolt1/bolt2 connected to hub.threadedHole1/2. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the number of claims and covered claims.\n\n#### Claims and Coverage\n\n- Total atomic claims: 24\n- Covered claims: 17\n\n#### **Score**\n\n**Score: 17/24**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 749,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1283,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2032
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568678,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### Part Definitions\n1. There is a part definition: WheelHubAssembly.\n2. There is a part definition: WheelAssembly.\n3. There is a part definition: Tire.\n4. There is a part definition: TireBead.\n5. There is a part definition: Wheel.\n6. There is a part definition: TireMountingRim.\n7. There is a part definition: LugBoltMountingHole.\n8. There is a part definition: Hub.\n9. There is a part definition: LugBoltThreadableHole.\n10. There is a part definition: LugBoltJoint.\n\n#### Connection Definition\n11. There is a connection definition: PressureSeat with ends:\n    - bead : TireBead[1]\n    - mountingRim : TireMountingRim[1]\n\n#### Top-level Part Structure\n12. There is a part: wheelHubAssembly of type WheelHubAssembly.\n\n##### wheelHubAssembly structure:\n13. wheelHubAssembly has a part: wheel of type WheelAssembly[1].\n\n###### wheel structure:\n14. wheel has a part: t of type Tire[1].\n15. t has a part: bead of type TireBead[2].\n16. wheel has a part: w of type Wheel[1].\n17. w has a part: rim of type TireMountingRim[2].\n18. w has a part: mountingHoles of type LugBoltMountingHole[5].\n19. wheel has a connection: PressureSeat connecting t.bead to w.rim.\n\n13. wheelHubAssembly has a part: lugBoltJoints of type LugBoltJoint[0..5].\n14. wheelHubAssembly has a part: hub of type Hub[1].\n\n###### hub structure:\n15. hub has a part: h of type LugBoltThreadableHole[5].\n\n#### Connections\n16. Connect lugBoltJoints[0..1] to wheel.w.mountingHoles[1].\n17. Connect lugBoltJoints[0..1] to hub.h[1].\n\n---\n\n### 2. For each atomic claim, determine coverage by the generated model\n\n#### Part Definitions\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | WheelHubAssembly | ❌ | Not present. |\n| 2 | WheelAssembly | ✅ | Present. |\n| 3 | Tire | ✅ | Present. |\n| 4 | TireBead | ✅ | As \"Bead\". Naming difference only. |\n| 5 | Wheel | ❌ | Not present. |\n| 6 | TireMountingRim | ✅ | As \"Rim\". Naming difference only. |\n| 7 | LugBoltMountingHole | ✅ | As \"BoltMountingHole\". Naming difference only. |\n| 8 | Hub | ✅ | Present. |\n| 9 | LugBoltThreadableHole | ✅ | As \"ThreadedHole\". Naming difference only. |\n|10 | LugBoltJoint | ✅ | As \"Bolt\". Naming difference only. |\n\n#### Connection Definition\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|11 | PressureSeat (TireBead ↔ TireMountingRim) | ✅ | tire.bead1/bead2 connected to rimA/rimB. |\n\n#### Top-level Part Structure\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|12 | wheelHubAssembly : WheelHubAssembly | ❌ | No such part; only \"wheelAssembly : WheelAssembly\" exists. |\n\n##### wheelHubAssembly structure\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|13 | wheel : WheelAssembly[1] | ✅ | \"wheelAssembly\" is present. |\n|14 | t : Tire[1] | ✅ | \"tire\" part in WheelAssembly. |\n|15 | bead : TireBead[2] | ✅ | \"bead1\" and \"bead2\" in Tire. |\n|16 | w : Wheel[1] | ❌ | No \"Wheel\" part in WheelAssembly. |\n|17 | rim : TireMountingRim[2] | ✅ | \"rimA\" and \"rimB\" in WheelAssembly. |\n|18 | mountingHoles : LugBoltMountingHole[5] | ❌ | Only 2 BoltMountingHoles per Rim, not 5. |\n|19 | PressureSeat connection (t.bead ↔ w.rim) | ✅ | tire.bead1/bead2 connected to rimA/rimB. |\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|20 | lugBoltJoints : LugBoltJoint[0..5] | ✅ | bolt1 and bolt2 in WheelAssembly. (Partial, but at least present.) |\n|21 | hub : Hub[1] | ✅ | \"hub\" part in WheelAssembly. |\n\n###### hub structure\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|22 | h : LugBoltThreadableHole[5] | ❌ | Only 2 ThreadedHoles in Hub. |\n\n#### Connections\n\n| # | Reference Claim | Covered? | Notes |\n|---|-----------------|----------|-------|\n|23 | Connect lugBoltJoints[0..1] to wheel.w.mountingHoles[1] | ✅ | bolt1/bolt2 connected to rimA.boltMountingHole1/2. |\n|24 | Connect lugBoltJoints[0..1] to hub.h[1] | ✅ | bolt1/bolt2 connected to hub.threadedHole1/2. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the number of claims and covered claims.\n\n#### Claims and Coverage\n\n- Total atomic claims: 24\n- Covered claims: 17\n\n#### **Score**\n\n**Score: 17/24**"
+  }
+}

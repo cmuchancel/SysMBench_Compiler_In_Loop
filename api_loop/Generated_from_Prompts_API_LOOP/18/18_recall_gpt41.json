@@ -1,0 +1,85 @@
+{
+  "model_id": 18,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PhotographyWorkflow' {\n\titem def Scene;\n\titem def Image;\n\titem def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\n\taction def TakePicture { in scene : Scene; out picture : Picture;\n\t\tbind focus.scene = scene;\n\t\taction focus: Focus { in scene; out image; }\n\t\tflow from focus.image to shoot.image;\n\t\taction shoot: Shoot { in image; out picture; }\n\t\tbind shoot.picture = picture;\n\t}\n}\n\nGenerated Model:\npackage PhotoAcquisitionSystem {\n   private import ScalarValues::*;\n\n   item def Scene;\n   item def Image;\n   item def Photo;\n\n   port def SceneSelectionPort {\n      attribute scene : Scene;\n   }\n\n   port def ImagePort {\n      attribute image : Image;\n   }\n\n   port def PhotoPort {\n      attribute photo : Photo;\n   }\n\n   part def User {\n      port selectionOut : SceneSelectionPort;\n      port photoIn : PhotoPort;\n   }\n\n   part def FocusingModule {\n      port sceneIn : SceneSelectionPort;\n      port focusedImageOut : ImagePort;\n   }\n\n   part def CaptureModule {\n      port focusedImageIn : ImagePort;\n      port photoOut : PhotoPort;\n   }\n\n   part def CameraSystem {\n      part focusing : FocusingModule;\n      part capture : CaptureModule;\n      port sceneIn : SceneSelectionPort;\n      port photoOut : PhotoPort;\n      attribute focusedImage : Image;\n      attribute finalPhoto : Photo;\n\n      connect sceneIn to focusing.sceneIn;\n      connect focusing.focusedImageOut to capture.focusedImageIn;\n      connect capture.photoOut to photoOut;\n   }\n\n   part def PhotoService {\n      part user : User;\n      part camera : CameraSystem;\n\n      connect user.selectionOut to camera.sceneIn;\n      connect camera.photoOut to user.photoIn;\n   }\n\n   part system : PhotoService;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/18/18_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/18/18.sysml",
+  "response": {
+    "id": "resp_0a1a3eff1bb89ce7006997ff8f1d0081a1a7dc7f4fc00d0cce",
+    "created_at": 1771569039.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0a1a3eff1bb89ce7006997ff8f90a481a1bf5998bda60ccd1c",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage 'PhotographyWorkflow' {\n\titem def Scene;\n\titem def Image;\n\titem def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\n\taction def TakePicture { in scene : Scene; out picture : Picture;\n\t\tbind focus.scene = scene;\n\t\taction focus: Focus { in scene; out image; }\n\t\tflow from focus.image to shoot.image;\n\t\taction shoot: Shoot { in image; out picture; }\n\t\tbind shoot.picture = picture;\n\t}\n}\n```\n\n**Atomic Claims:**\n1. Definition of item `Scene`.\n2. Definition of item `Image`.\n3. Definition of item `Picture`.\n4. Definition of action `Focus` with input `scene: Scene` and output `image: Image`.\n5. Definition of action `Shoot` with input `image: Image` and output `picture: Picture`.\n6. Definition of action `TakePicture` with input `scene: Scene` and output `picture: Picture`.\n7. Within `TakePicture`, binding `focus.scene = scene`.\n8. Within `TakePicture`, usage/instantiation of action `focus: Focus` with input `scene` and output `image`.\n9. Within `TakePicture`, flow from `focus.image` to `shoot.image`.\n10. Within `TakePicture`, usage/instantiation of action `shoot: Shoot` with input `image` and output `picture`.\n11. Within `TakePicture`, binding `shoot.picture = picture`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim against the generated model.\n\n#### 1. Definition of item `Scene`.\n- **Generated model:** `item def Scene;`\n- **Covered:** Yes\n\n#### 2. Definition of item `Image`.\n- **Generated model:** `item def Image;`\n- **Covered:** Yes\n\n#### 3. Definition of item `Picture`.\n- **Generated model:** `item def Photo;`\n- **Note:** \"Picture\" in reference vs \"Photo\" in generated. Since naming differences are to be ignored if semantics match, and \"Photo\" is used in the same structural role as \"Picture\", this is considered equivalent.\n- **Covered:** Yes\n\n#### 4. Definition of action `Focus` with input `scene: Scene` and output `image: Image`.\n- **Generated model:** There is no explicit \"action\" called \"Focus\", but there is a `FocusingModule` part with:\n  - `port sceneIn : SceneSelectionPort` (which has attribute `scene : Scene`)\n  - `port focusedImageOut : ImagePort` (which has attribute `image : Image`)\n- The structure matches: a module that takes a scene and produces an image.\n- **Covered:** Yes (semantically equivalent, though not named \"action\")\n\n#### 5. Definition of action `Shoot` with input `image: Image` and output `picture: Picture`.\n- **Generated model:** `CaptureModule` part with:\n  - `port focusedImageIn : ImagePort` (with `image : Image`)\n  - `port photoOut : PhotoPort` (with `photo : Photo`)\n- This module takes an image and produces a photo (picture).\n- **Covered:** Yes\n\n#### 6. Definition of action `TakePicture` with input `scene: Scene` and output `picture: Picture`.\n- **Generated model:** The overall process in `CameraSystem` and `PhotoService` connects user selection (scene) to a final photo output, via the focusing and capture modules.\n- The composition of modules and connections implements the same process as \"TakePicture\".\n- **Covered:** Yes\n\n#### 7. Within `TakePicture`, binding `focus.scene = scene`.\n- **Generated model:** `CameraSystem` connects `sceneIn` to `focusing.sceneIn`, and `SceneSelectionPort` carries a `scene : Scene` attribute.\n- This is equivalent to binding the scene input to the focusing module.\n- **Covered:** Yes\n\n#### 8. Within `TakePicture`, usage/instantiation of action `focus: Focus` with input `scene` and output `image`.\n- **Generated model:** `CameraSystem` has a part `focusing : FocusingModule`, which receives the scene and outputs the image.\n- **Covered:** Yes\n\n#### 9. Within `TakePicture`, flow from `focus.image` to `shoot.image`.\n- **Generated model:** `CameraSystem` connects `focusing.focusedImageOut` to `capture.focusedImageIn`, which is the flow of image from focusing to capture.\n- **Covered:** Yes\n\n#### 10. Within `TakePicture`, usage/instantiation of action `shoot: Shoot` with input `image` and output `picture`.\n- **Generated model:** `CameraSystem` has a part `capture : CaptureModule`, which receives the image and outputs the photo.\n- **Covered:** Yes\n\n#### 11. Within `TakePicture`, binding `shoot.picture = picture`.\n- **Generated model:** `CameraSystem` connects `capture.photoOut` to `photoOut`, and `PhotoService` connects `camera.photoOut` to `user.photoIn`.\n- This is equivalent to binding the output of the shoot/capture module to the final picture output.\n- **Covered:** Yes\n\n---\n\n### 3. Summarize the results\n\n**Score:** 11/11\n\n---\n\n**Final Output:**\n\nScore: 11/11",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 587,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1181,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1768
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569056,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage 'PhotographyWorkflow' {\n\titem def Scene;\n\titem def Image;\n\titem def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\n\taction def TakePicture { in scene : Scene; out picture : Picture;\n\t\tbind focus.scene = scene;\n\t\taction focus: Focus { in scene; out image; }\n\t\tflow from focus.image to shoot.image;\n\t\taction shoot: Shoot { in image; out picture; }\n\t\tbind shoot.picture = picture;\n\t}\n}\n```\n\n**Atomic Claims:**\n1. Definition of item `Scene`.\n2. Definition of item `Image`.\n3. Definition of item `Picture`.\n4. Definition of action `Focus` with input `scene: Scene` and output `image: Image`.\n5. Definition of action `Shoot` with input `image: Image` and output `picture: Picture`.\n6. Definition of action `TakePicture` with input `scene: Scene` and output `picture: Picture`.\n7. Within `TakePicture`, binding `focus.scene = scene`.\n8. Within `TakePicture`, usage/instantiation of action `focus: Focus` with input `scene` and output `image`.\n9. Within `TakePicture`, flow from `focus.image` to `shoot.image`.\n10. Within `TakePicture`, usage/instantiation of action `shoot: Shoot` with input `image` and output `picture`.\n11. Within `TakePicture`, binding `shoot.picture = picture`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim against the generated model.\n\n#### 1. Definition of item `Scene`.\n- **Generated model:** `item def Scene;`\n- **Covered:** Yes\n\n#### 2. Definition of item `Image`.\n- **Generated model:** `item def Image;`\n- **Covered:** Yes\n\n#### 3. Definition of item `Picture`.\n- **Generated model:** `item def Photo;`\n- **Note:** \"Picture\" in reference vs \"Photo\" in generated. Since naming differences are to be ignored if semantics match, and \"Photo\" is used in the same structural role as \"Picture\", this is considered equivalent.\n- **Covered:** Yes\n\n#### 4. Definition of action `Focus` with input `scene: Scene` and output `image: Image`.\n- **Generated model:** There is no explicit \"action\" called \"Focus\", but there is a `FocusingModule` part with:\n  - `port sceneIn : SceneSelectionPort` (which has attribute `scene : Scene`)\n  - `port focusedImageOut : ImagePort` (which has attribute `image : Image`)\n- The structure matches: a module that takes a scene and produces an image.\n- **Covered:** Yes (semantically equivalent, though not named \"action\")\n\n#### 5. Definition of action `Shoot` with input `image: Image` and output `picture: Picture`.\n- **Generated model:** `CaptureModule` part with:\n  - `port focusedImageIn : ImagePort` (with `image : Image`)\n  - `port photoOut : PhotoPort` (with `photo : Photo`)\n- This module takes an image and produces a photo (picture).\n- **Covered:** Yes\n\n#### 6. Definition of action `TakePicture` with input `scene: Scene` and output `picture: Picture`.\n- **Generated model:** The overall process in `CameraSystem` and `PhotoService` connects user selection (scene) to a final photo output, via the focusing and capture modules.\n- The composition of modules and connections implements the same process as \"TakePicture\".\n- **Covered:** Yes\n\n#### 7. Within `TakePicture`, binding `focus.scene = scene`.\n- **Generated model:** `CameraSystem` connects `sceneIn` to `focusing.sceneIn`, and `SceneSelectionPort` carries a `scene : Scene` attribute.\n- This is equivalent to binding the scene input to the focusing module.\n- **Covered:** Yes\n\n#### 8. Within `TakePicture`, usage/instantiation of action `focus: Focus` with input `scene` and output `image`.\n- **Generated model:** `CameraSystem` has a part `focusing : FocusingModule`, which receives the scene and outputs the image.\n- **Covered:** Yes\n\n#### 9. Within `TakePicture`, flow from `focus.image` to `shoot.image`.\n- **Generated model:** `CameraSystem` connects `focusing.focusedImageOut` to `capture.focusedImageIn`, which is the flow of image from focusing to capture.\n- **Covered:** Yes\n\n#### 10. Within `TakePicture`, usage/instantiation of action `shoot: Shoot` with input `image` and output `picture`.\n- **Generated model:** `CameraSystem` has a part `capture : CaptureModule`, which receives the image and outputs the photo.\n- **Covered:** Yes\n\n#### 11. Within `TakePicture`, binding `shoot.picture = picture`.\n- **Generated model:** `CameraSystem` connects `capture.photoOut` to `photoOut`, and `PhotoService` connects `camera.photoOut` to `user.photoIn`.\n- This is equivalent to binding the output of the shoot/capture module to the final picture output.\n- **Covered:** Yes\n\n---\n\n### 3. Summarize the results\n\n**Score:** 11/11\n\n---\n\n**Final Output:**\n\nScore: 11/11"
+  }
+}

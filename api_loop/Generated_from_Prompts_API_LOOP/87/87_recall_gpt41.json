@@ -1,0 +1,85 @@
+{
+  "model_id": 87,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleSafetyCompliance' {\n\tprivate import ScalarValues::Boolean;\n\tmetadata def Safety {\n\t\tattribute isMandatory : Boolean;\n\t}\n\tpart vehicle {\n\t\tpart interior {\n\t\t\tpart alarm;\n\t\t\tpart seatBelt[2] {@Safety{isMandatory = true;}}\n\t\t\tpart frontSeat[2];\n\t\t\tpart driverAirBag {@Safety{isMandatory = false;}}\n\t\t}\n\t\tpart bodyAssy {\n\t\t\tpart body;\n\t\t\tpart bumper {@Safety{isMandatory = true;}}\n\t\t\tpart keylessEntry;\n\t\t}\n\t\tpart wheelAssy {\n\t\t\tpart wheel[2];\n\t\t\tpart antilockBrakes[2] {@Safety{isMandatory = false;}}\n\t\t}\n\t}\n\tpackage 'Safety Features' {\n\t\t/* Parts that contribute to safety. */\t\t\n\t\tprivate import vehicle::**;\n\t\tfilter @Safety;\n\t}\n\tpackage 'Mandatory Safety Features' {\n\t\t/* Parts that contribute to safety AND are mandatory. */\n\t\tprivate import vehicle::**;\n\t\tfilter @Safety and Safety::isMandatory;\n\t}\n}\n\nGenerated Model:\npackage CarSafetyCompliance {\n   private import ScalarValues::*;\n\n   part def SeatBelt {\n      attribute isSafety : Boolean = true;\n      attribute isMandatory : Boolean = true;\n   }\n\n   part def Airbag {\n      attribute isSafety : Boolean = true;\n      attribute isMandatory : Boolean = false;\n   }\n\n   part def Bumper {\n      attribute isSafety : Boolean = true;\n      attribute isMandatory : Boolean = true;\n   }\n\n   part def KeylessEntry {\n      attribute isSafety : Boolean = false;\n      attribute isMandatory : Boolean = false;\n   }\n\n   part def Wheel {\n      attribute isSafety : Boolean = true;\n      attribute isMandatory : Boolean = true;\n   }\n\n   part def ABS {\n      attribute isSafety : Boolean = true;\n      attribute isMandatory : Boolean = false;\n   }\n\n   part def Car {\n      part seatBelt : SeatBelt [2];\n      part airbag : Airbag [0..1];\n      part bumper : Bumper;\n      part keylessEntry : KeylessEntry [0..1];\n      part wheel : Wheel [2];\n      part abs : ABS [0..1];\n   }\n\n   package SafetyFeatures {\n      part seatBelt : SeatBelt;\n      part airbag : Airbag;\n      part bumper : Bumper;\n      part wheel : Wheel;\n      part abs : ABS;\n   }\n\n   package MandatorySafetyFeatures {\n      part seatBelt : SeatBelt;\n      part bumper : Bumper;\n      part wheel : Wheel;\n   }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/87/87_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/87/87.sysml",
+  "response": {
+    "id": "resp_02e9a3934e6bcd18006997fe99625481928d77a09ffdfa839b",
+    "created_at": 1771568793.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_02e9a3934e6bcd18006997fe99c0a8819294c02a38e210993b",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. The model is in a package named 'VehicleSafetyCompliance'.\n2. There is a private import of ScalarValues::Boolean.\n3. There is a metadata definition named 'Safety'.\n4. The 'Safety' metadata has an attribute 'isMandatory' of type Boolean.\n5. There is a part named 'vehicle'.\n6. 'vehicle' contains a part named 'interior'.\n7. 'interior' contains a part named 'alarm'.\n8. 'interior' contains a part named 'seatBelt' (multiplicity 2), annotated with @Safety{isMandatory = true;}\n9. 'interior' contains a part named 'frontSeat' (multiplicity 2).\n10. 'interior' contains a part named 'driverAirBag', annotated with @Safety{isMandatory = false;}\n11. 'vehicle' contains a part named 'bodyAssy'.\n12. 'bodyAssy' contains a part named 'body'.\n13. 'bodyAssy' contains a part named 'bumper', annotated with @Safety{isMandatory = true;}\n14. 'bodyAssy' contains a part named 'keylessEntry'.\n15. 'vehicle' contains a part named 'wheelAssy'.\n16. 'wheelAssy' contains a part named 'wheel' (multiplicity 2).\n17. 'wheelAssy' contains a part named 'antilockBrakes' (multiplicity 2), annotated with @Safety{isMandatory = false;}\n18. There is a package 'Safety Features'.\n19. 'Safety Features' privately imports all parts from vehicle.\n20. 'Safety Features' applies a filter for @Safety.\n21. There is a package 'Mandatory Safety Features'.\n22. 'Mandatory Safety Features' privately imports all parts from vehicle.\n23. 'Mandatory Safety Features' applies a filter for @Safety and Safety::isMandatory.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model.\n\n**Coverage Analysis:**\n\n1. **Package name:** Reference: 'VehicleSafetyCompliance', Generated: 'CarSafetyCompliance'  \n   - **Covered** (naming difference ignored)\n2. **Private import of ScalarValues::Boolean:** Generated imports ScalarValues::*, which includes Boolean.  \n   - **Covered**\n3. **Metadata definition 'Safety':** No explicit metadata in generated model, but equivalent attributes exist in parts.  \n   - **Covered** (structure/semantics present via attributes)\n4. **'Safety' metadata has attribute 'isMandatory' of type Boolean:**  \n   - **Covered** (as part attribute)\n5. **Part 'vehicle':** Generated model has 'Car' as the main part.  \n   - **Covered** (naming difference ignored)\n6. **'vehicle' contains 'interior':**  \n   - **Not covered** (no 'interior' part in generated model)\n7. **'interior' contains 'alarm':**  \n   - **Not covered** (no 'alarm' part in generated model)\n8. **'interior' contains 'seatBelt' [2], @Safety{isMandatory = true}:**  \n   - **Covered** (Car has seatBelt: SeatBelt[2], with isMandatory = true)\n9. **'interior' contains 'frontSeat' [2]:**  \n   - **Not covered** (no 'frontSeat' in generated model)\n10. **'interior' contains 'driverAirBag', @Safety{isMandatory = false}:**  \n    - **Covered** (Car has airbag: Airbag[0..1], with isMandatory = false)\n11. **'vehicle' contains 'bodyAssy':**  \n    - **Not covered** (no 'bodyAssy' part in generated model)\n12. **'bodyAssy' contains 'body':**  \n    - **Not covered** (no 'body' part in generated model)\n13. **'bodyAssy' contains 'bumper', @Safety{isMandatory = true}:**  \n    - **Covered** (Car has bumper: Bumper, with isMandatory = true)\n14. **'bodyAssy' contains 'keylessEntry':**  \n    - **Covered** (Car has keylessEntry: KeylessEntry[0..1])\n15. **'vehicle' contains 'wheelAssy':**  \n    - **Not covered** (no 'wheelAssy' part in generated model)\n16. **'wheelAssy' contains 'wheel' [2]:**  \n    - **Covered** (Car has wheel: Wheel[2])\n17. **'wheelAssy' contains 'antilockBrakes' [2], @Safety{isMandatory = false}:**  \n    - **Covered** (Car has abs: ABS[0..1], with isMandatory = false; multiplicity not exact, but functionally equivalent)\n18. **Package 'Safety Features':**  \n    - **Covered** (package SafetyFeatures in generated model)\n19. **'Safety Features' privately imports all parts from vehicle:**  \n    - **Covered** (SafetyFeatures contains relevant parts)\n20. **'Safety Features' applies filter @Safety:**  \n    - **Covered** (SafetyFeatures contains only safety-related parts)\n21. **Package 'Mandatory Safety Features':**  \n    - **Covered** (package MandatorySafetyFeatures in generated model)\n22. **'Mandatory Safety Features' privately imports all parts from vehicle:**  \n    - **Covered** (MandatorySafetyFeatures contains relevant parts)\n23. **'Mandatory Safety Features' applies filter @Safety and Safety::isMandatory:**  \n    - **Covered** (MandatorySafetyFeatures contains only mandatory safety parts)\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**  \n1, 2, 3, 4, 5, 8, 10, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23  \n**Not Covered Claims:**  \n6, 7, 9, 11, 12, 15\n\n**Score:** 17/23\n\n---\n\n**Final Output:**\n\nScore: 17/23",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 721,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1322,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2043
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568808,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. The model is in a package named 'VehicleSafetyCompliance'.\n2. There is a private import of ScalarValues::Boolean.\n3. There is a metadata definition named 'Safety'.\n4. The 'Safety' metadata has an attribute 'isMandatory' of type Boolean.\n5. There is a part named 'vehicle'.\n6. 'vehicle' contains a part named 'interior'.\n7. 'interior' contains a part named 'alarm'.\n8. 'interior' contains a part named 'seatBelt' (multiplicity 2), annotated with @Safety{isMandatory = true;}\n9. 'interior' contains a part named 'frontSeat' (multiplicity 2).\n10. 'interior' contains a part named 'driverAirBag', annotated with @Safety{isMandatory = false;}\n11. 'vehicle' contains a part named 'bodyAssy'.\n12. 'bodyAssy' contains a part named 'body'.\n13. 'bodyAssy' contains a part named 'bumper', annotated with @Safety{isMandatory = true;}\n14. 'bodyAssy' contains a part named 'keylessEntry'.\n15. 'vehicle' contains a part named 'wheelAssy'.\n16. 'wheelAssy' contains a part named 'wheel' (multiplicity 2).\n17. 'wheelAssy' contains a part named 'antilockBrakes' (multiplicity 2), annotated with @Safety{isMandatory = false;}\n18. There is a package 'Safety Features'.\n19. 'Safety Features' privately imports all parts from vehicle.\n20. 'Safety Features' applies a filter for @Safety.\n21. There is a package 'Mandatory Safety Features'.\n22. 'Mandatory Safety Features' privately imports all parts from vehicle.\n23. 'Mandatory Safety Features' applies a filter for @Safety and Safety::isMandatory.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model.\n\n**Coverage Analysis:**\n\n1. **Package name:** Reference: 'VehicleSafetyCompliance', Generated: 'CarSafetyCompliance'  \n   - **Covered** (naming difference ignored)\n2. **Private import of ScalarValues::Boolean:** Generated imports ScalarValues::*, which includes Boolean.  \n   - **Covered**\n3. **Metadata definition 'Safety':** No explicit metadata in generated model, but equivalent attributes exist in parts.  \n   - **Covered** (structure/semantics present via attributes)\n4. **'Safety' metadata has attribute 'isMandatory' of type Boolean:**  \n   - **Covered** (as part attribute)\n5. **Part 'vehicle':** Generated model has 'Car' as the main part.  \n   - **Covered** (naming difference ignored)\n6. **'vehicle' contains 'interior':**  \n   - **Not covered** (no 'interior' part in generated model)\n7. **'interior' contains 'alarm':**  \n   - **Not covered** (no 'alarm' part in generated model)\n8. **'interior' contains 'seatBelt' [2], @Safety{isMandatory = true}:**  \n   - **Covered** (Car has seatBelt: SeatBelt[2], with isMandatory = true)\n9. **'interior' contains 'frontSeat' [2]:**  \n   - **Not covered** (no 'frontSeat' in generated model)\n10. **'interior' contains 'driverAirBag', @Safety{isMandatory = false}:**  \n    - **Covered** (Car has airbag: Airbag[0..1], with isMandatory = false)\n11. **'vehicle' contains 'bodyAssy':**  \n    - **Not covered** (no 'bodyAssy' part in generated model)\n12. **'bodyAssy' contains 'body':**  \n    - **Not covered** (no 'body' part in generated model)\n13. **'bodyAssy' contains 'bumper', @Safety{isMandatory = true}:**  \n    - **Covered** (Car has bumper: Bumper, with isMandatory = true)\n14. **'bodyAssy' contains 'keylessEntry':**  \n    - **Covered** (Car has keylessEntry: KeylessEntry[0..1])\n15. **'vehicle' contains 'wheelAssy':**  \n    - **Not covered** (no 'wheelAssy' part in generated model)\n16. **'wheelAssy' contains 'wheel' [2]:**  \n    - **Covered** (Car has wheel: Wheel[2])\n17. **'wheelAssy' contains 'antilockBrakes' [2], @Safety{isMandatory = false}:**  \n    - **Covered** (Car has abs: ABS[0..1], with isMandatory = false; multiplicity not exact, but functionally equivalent)\n18. **Package 'Safety Features':**  \n    - **Covered** (package SafetyFeatures in generated model)\n19. **'Safety Features' privately imports all parts from vehicle:**  \n    - **Covered** (SafetyFeatures contains relevant parts)\n20. **'Safety Features' applies filter @Safety:**  \n    - **Covered** (SafetyFeatures contains only safety-related parts)\n21. **Package 'Mandatory Safety Features':**  \n    - **Covered** (package MandatorySafetyFeatures in generated model)\n22. **'Mandatory Safety Features' privately imports all parts from vehicle:**  \n    - **Covered** (MandatorySafetyFeatures contains relevant parts)\n23. **'Mandatory Safety Features' applies filter @Safety and Safety::isMandatory:**  \n    - **Covered** (MandatorySafetyFeatures contains only mandatory safety parts)\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**  \n1, 2, 3, 4, 5, 8, 10, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23  \n**Not Covered Claims:**  \n6, 7, 9, 11, 12, 15\n\n**Score:** 17/23\n\n---\n\n**Final Output:**\n\nScore: 17/23"
+  }
+}

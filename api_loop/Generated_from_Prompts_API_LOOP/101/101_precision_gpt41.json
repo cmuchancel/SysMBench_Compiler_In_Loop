@@ -1,0 +1,85 @@
+{
+  "model_id": 101,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleTrailerCouplingSystemModeling' {\n\tpackage Definitions {\n\t\tpart def Vehicle;\n\t\tpart def Trailer;\n\t\tpart def TrailerHitch;\n\t\tpart def HitchBall;\n\t\tpart def TrailerCoupler;\n\t}\n\tpackage Usages {\n\t\tprivate import Definitions::*;\n\t\tpart vehicle_trailer_system {\n\t\t\tpart vehicle1_c1: Vehicle {\n\t\t\t\tref hitchBall : HitchBall {\n\t\t\t\t\t/*\n\t\t\t\t\t * 'vehicle1_c1'::'hitchBall' is a reference property that\n\t\t\t\t\t * references a hitch ball that is not part of this vehicle. \n\t\t\t\t\t * If 'vehicle1_c1' is removed or destroyed, this does not\n\t\t\t\t\t * effect the hitchBall referenced here.\n\t\t\t\t\t */\n\t\t\t\t}\n\t\t\t}\n\t\t\tbind vehicle1_c1.hitchBall = trailerHitch.hitchBall {\n\t\t\t\t/*\n\t\t\t\t * This is a binding connector between the 'hitchBall' in 'vehicle1_c1'\n\t\t\t\t * and the 'hitchBall' in 'trailerHitch'.\n\t\t\t\t */\t\t\t\n\t\t\t}\n\t\t\tpart trailerHitch: TrailerHitch {\t\t\t\t\n\t\t\t\tpart hitchBall: HitchBall;\n\t\t\t\tpart trailerCoupler: TrailerCoupler;\n\t\t\t}\n\t\t\tpart trailer1: Trailer {\n\t\t\t\tref trailerCoupler : TrailerCoupler = trailerHitch.trailerCoupler {\n\t\t\t\t\t/*\n\t\t\t\t\t * This is a shorthand for a binding connector between the\n\t\t\t\t\t * 'trailerCoupler' here and the 'trailerCoupler' in 'trailerHitch'.\n\t\t\t\t\t * The binding connector is now contained within the 'trailer1'\n\t\t\t\t\t * part, though, rather than being at the system level. \n\t\t\t\t\t */\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage CouplingSystemModel {\n    private import ScalarValues::*;\n\n    port def CouplingPort;\n\n    part def Ball;\n\n    part def Hitch {\n        part ball: Ball;\n        port couplingPort: CouplingPort;\n    }\n\n    part def Vehicle {\n        port hitchPort: CouplingPort;\n    }\n\n    part def Trailer {\n        port couplingPort: CouplingPort;\n    }\n\n    part def CouplingSystem {\n        part vehicle: Vehicle;\n        part trailer: Trailer;\n        part hitch: Hitch;\n        connect vehicle.hitchPort to hitch.couplingPort;\n        connect trailer.couplingPort to hitch.couplingPort;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/101/101_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/101/101.sysml",
+  "response": {
+    "id": "resp_03ac964036b40f1f006998019377648194a5d211c6470e2a74",
+    "created_at": 1771569555.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_03ac964036b40f1f0069980193cfb48194afd134987155477d",
+        "content": [
+          {
+            "annotations": [],
+            "text": "**Step 1: List all atomic modeling claims made by the generated system model.**\n\n1. There is a package named CouplingSystemModel.\n2. The package imports ScalarValues::* privately.\n3. There is a port definition named CouplingPort.\n4. There is a part definition named Ball.\n5. There is a part definition named Hitch.\n6. The Hitch part contains a part named ball of type Ball.\n7. The Hitch part contains a port named couplingPort of type CouplingPort.\n8. There is a part definition named Vehicle.\n9. The Vehicle part contains a port named hitchPort of type CouplingPort.\n10. There is a part definition named Trailer.\n11. The Trailer part contains a port named couplingPort of type CouplingPort.\n12. There is a part definition named CouplingSystem.\n13. The CouplingSystem part contains a part named vehicle of type Vehicle.\n14. The CouplingSystem part contains a part named trailer of type Trailer.\n15. The CouplingSystem part contains a part named hitch of type Hitch.\n16. The CouplingSystem part connects vehicle.hitchPort to hitch.couplingPort.\n17. The CouplingSystem part connects trailer.couplingPort to hitch.couplingPort.\n\n**Step 2: For each atomic claim, determine whether it is supported by the reference model.**\n\n1. **There is a package named CouplingSystemModel.**  \n   **Not supported.** The reference model's top-level package is 'VehicleTrailerCouplingSystemModeling'.\n\n2. **The package imports ScalarValues::* privately.**  \n   **Not supported.** The reference model imports 'Definitions::*' privately; 'ScalarValues::*' is not present.\n\n3. **There is a port definition named CouplingPort.**  \n   **Not supported.** The reference model does not define any ports.\n\n4. **There is a part definition named Ball.**  \n   **Partially supported.** The reference model defines 'HitchBall', which is semantically equivalent to 'Ball'. **Supported.**\n\n5. **There is a part definition named Hitch.**  \n   **Supported.** The reference model defines 'TrailerHitch', which is semantically equivalent to 'Hitch'.\n\n6. **The Hitch part contains a part named ball of type Ball.**  \n   **Supported.** The reference model's 'TrailerHitch' contains 'hitchBall' of type 'HitchBall'.\n\n7. **The Hitch part contains a port named couplingPort of type CouplingPort.**  \n   **Not supported.** The reference model does not define ports.\n\n8. **There is a part definition named Vehicle.**  \n   **Supported.** The reference model defines 'Vehicle'.\n\n9. **The Vehicle part contains a port named hitchPort of type CouplingPort.**  \n   **Not supported.** The reference model does not define ports.\n\n10. **There is a part definition named Trailer.**  \n    **Supported.** The reference model defines 'Trailer'.\n\n11. **The Trailer part contains a port named couplingPort of type CouplingPort.**  \n    **Not supported.** The reference model does not define ports.\n\n12. **There is a part definition named CouplingSystem.**  \n    **Partially supported.** The reference model defines a system part 'vehicle_trailer_system', which is semantically equivalent. **Supported.**\n\n13. **The CouplingSystem part contains a part named vehicle of type Vehicle.**  \n    **Supported.** The reference model's system contains 'vehicle1_c1: Vehicle'.\n\n14. **The CouplingSystem part contains a part named trailer of type Trailer.**  \n    **Supported.** The reference model's system contains 'trailer1: Trailer'.\n\n15. **The CouplingSystem part contains a part named hitch of type Hitch.**  \n    **Supported.** The reference model's system contains 'trailerHitch: TrailerHitch'.\n\n16. **The CouplingSystem part connects vehicle.hitchPort to hitch.couplingPort.**  \n    **Not supported.** The reference model uses reference properties and binding connectors, not ports or port connections.\n\n17. **The CouplingSystem part connects trailer.couplingPort to hitch.couplingPort.**  \n    **Not supported.** Same as above.\n\n**Step 3: Summarize the results.**\n\n**Supported claims:** 4, 5, 6, 8, 10, 12, 13, 14, 15  \n**Total supported:** 9\n\n**Total claims:** 17\n\n---\n\n**Score: 9/17**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 676,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 962,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1638
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569563,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "**Step 1: List all atomic modeling claims made by the generated system model.**\n\n1. There is a package named CouplingSystemModel.\n2. The package imports ScalarValues::* privately.\n3. There is a port definition named CouplingPort.\n4. There is a part definition named Ball.\n5. There is a part definition named Hitch.\n6. The Hitch part contains a part named ball of type Ball.\n7. The Hitch part contains a port named couplingPort of type CouplingPort.\n8. There is a part definition named Vehicle.\n9. The Vehicle part contains a port named hitchPort of type CouplingPort.\n10. There is a part definition named Trailer.\n11. The Trailer part contains a port named couplingPort of type CouplingPort.\n12. There is a part definition named CouplingSystem.\n13. The CouplingSystem part contains a part named vehicle of type Vehicle.\n14. The CouplingSystem part contains a part named trailer of type Trailer.\n15. The CouplingSystem part contains a part named hitch of type Hitch.\n16. The CouplingSystem part connects vehicle.hitchPort to hitch.couplingPort.\n17. The CouplingSystem part connects trailer.couplingPort to hitch.couplingPort.\n\n**Step 2: For each atomic claim, determine whether it is supported by the reference model.**\n\n1. **There is a package named CouplingSystemModel.**  \n   **Not supported.** The reference model's top-level package is 'VehicleTrailerCouplingSystemModeling'.\n\n2. **The package imports ScalarValues::* privately.**  \n   **Not supported.** The reference model imports 'Definitions::*' privately; 'ScalarValues::*' is not present.\n\n3. **There is a port definition named CouplingPort.**  \n   **Not supported.** The reference model does not define any ports.\n\n4. **There is a part definition named Ball.**  \n   **Partially supported.** The reference model defines 'HitchBall', which is semantically equivalent to 'Ball'. **Supported.**\n\n5. **There is a part definition named Hitch.**  \n   **Supported.** The reference model defines 'TrailerHitch', which is semantically equivalent to 'Hitch'.\n\n6. **The Hitch part contains a part named ball of type Ball.**  \n   **Supported.** The reference model's 'TrailerHitch' contains 'hitchBall' of type 'HitchBall'.\n\n7. **The Hitch part contains a port named couplingPort of type CouplingPort.**  \n   **Not supported.** The reference model does not define ports.\n\n8. **There is a part definition named Vehicle.**  \n   **Supported.** The reference model defines 'Vehicle'.\n\n9. **The Vehicle part contains a port named hitchPort of type CouplingPort.**  \n   **Not supported.** The reference model does not define ports.\n\n10. **There is a part definition named Trailer.**  \n    **Supported.** The reference model defines 'Trailer'.\n\n11. **The Trailer part contains a port named couplingPort of type CouplingPort.**  \n    **Not supported.** The reference model does not define ports.\n\n12. **There is a part definition named CouplingSystem.**  \n    **Partially supported.** The reference model defines a system part 'vehicle_trailer_system', which is semantically equivalent. **Supported.**\n\n13. **The CouplingSystem part contains a part named vehicle of type Vehicle.**  \n    **Supported.** The reference model's system contains 'vehicle1_c1: Vehicle'.\n\n14. **The CouplingSystem part contains a part named trailer of type Trailer.**  \n    **Supported.** The reference model's system contains 'trailer1: Trailer'.\n\n15. **The CouplingSystem part contains a part named hitch of type Hitch.**  \n    **Supported.** The reference model's system contains 'trailerHitch: TrailerHitch'.\n\n16. **The CouplingSystem part connects vehicle.hitchPort to hitch.couplingPort.**  \n    **Not supported.** The reference model uses reference properties and binding connectors, not ports or port connections.\n\n17. **The CouplingSystem part connects trailer.couplingPort to hitch.couplingPort.**  \n    **Not supported.** Same as above.\n\n**Step 3: Summarize the results.**\n\n**Supported claims:** 4, 5, 6, 8, 10, 12, 13, 14, 15  \n**Total supported:** 9\n\n**Total claims:** 17\n\n---\n\n**Score: 9/17**"
+  }
+}

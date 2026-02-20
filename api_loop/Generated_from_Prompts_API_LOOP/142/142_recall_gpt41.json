@@ -1,0 +1,85 @@
+{
+  "model_id": 142,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'AutomotiveParameterValidation' {\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\t private import MeasurementReferences::*;\n    private import SI::*;\n    private import RealFunctions::*;\n    package 'Mathematical Constants' {\n\t    doc\n\t    /*\n\t     * Standard mathematical constants\n\t     * \n\t     * Irrational constants cannot be represented exactly with finite precision.\n\t     * However, they can be required to be implemented with a attribute that is accurate\n\t     * to at least a certain precision.\n\t     * \n\t     * (The decimal literals here should be interpreted as being fixed point and exact.)\n\t     */\n        attribute e: Real {\n        \tassert constraint { round(e * 1E20) == 271828182845904523536.0 }\n        }\n        attribute pi: Real {\n        \tassert constraint { round(pi * 1E20) == 314159265358979323846.0 }\n        }\n    }\n\tpart def HeadLightsTiltKnob {\n\t\tattribute headLightsTile : LightBeamTiltAngleValue[1];\n\t}\n\tattribute def LightBeamTiltAngleValue :> PlaneAngleValue {\n\t\tattribute angle: LightBeamTiltAngleValue :>> self {\n\t\t}\n\t\tassert constraint { angle >= 50 ['°'] and angle <= 80 ['°'] }\n\t}\n}\n\nGenerated Model:\npackage HeadlampTiltAdjustment {\n    private import ScalarValues::*;\n    \n    part def HeadlampTiltAdjustmentSystem {\n        attribute tiltAngle : Real;\n        attribute minTiltAngle : Real = 50.0;\n        attribute maxTiltAngle : Real = 80.0;\n        attribute piConst : Real = 3.141592653589793;\n        attribute eConst : Real = 2.718281828459045;\n        attribute withinRange : Boolean = (tiltAngle >= minTiltAngle) and (tiltAngle <= maxTiltAngle);\n    }\n    \n    part headlampTiltAdjustmentSystem : HeadlampTiltAdjustmentSystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/142/142_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/142/142.sysml",
+  "response": {
+    "id": "resp_0e39f4b81d3c8c09006998016cfff88191a50685223b1a8a19",
+    "created_at": 1771569517.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0e39f4b81d3c8c09006998016d56f881919d03967a4cc8f263",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The existence of a package 'AutomotiveParameterValidation'.\n2. The import of ISQ.\n3. The import of SI.\n4. The import of MeasurementReferences.\n5. The import of RealFunctions.\n6. The existence of a subpackage 'Mathematical Constants'.\n7. The definition of attribute 'e' of type Real in 'Mathematical Constants'.\n8. The definition of attribute 'pi' of type Real in 'Mathematical Constants'.\n9. The assertion constraint on 'e' regarding its value (round(e * 1E20) == 271828182845904523536.0).\n10. The assertion constraint on 'pi' regarding its value (round(pi * 1E20) == 314159265358979323846.0).\n11. The definition of part 'HeadLightsTiltKnob'.\n12. The attribute 'headLightsTile' of type LightBeamTiltAngleValue[1] in 'HeadLightsTiltKnob'.\n13. The definition of attribute type 'LightBeamTiltAngleValue' as a subtype of PlaneAngleValue.\n14. The definition of attribute 'angle' of type LightBeamTiltAngleValue in 'LightBeamTiltAngleValue'.\n15. The assertion constraint on 'angle' (angle >= 50 ['°'] and angle <= 80 ['°']).\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | Package 'AutomotiveParameterValidation' | ❌ | Package exists, but with a different name ('HeadlampTiltAdjustment'). Not equivalent in scope. |\n| 2 | Import ISQ | ❌ | Not present. |\n| 3 | Import SI | ❌ | Not present. |\n| 4 | Import MeasurementReferences | ❌ | Not present. |\n| 5 | Import RealFunctions | ❌ | Not present. |\n| 6 | Subpackage 'Mathematical Constants' | ❌ | No subpackage, but constants are present as attributes. Structure not preserved. |\n| 7 | Attribute 'e' of type Real | ✅ | Present as 'eConst : Real'. |\n| 8 | Attribute 'pi' of type Real | ✅ | Present as 'piConst : Real'. |\n| 9 | Assertion constraint on 'e' value | ❌ | Value is assigned, but no constraint/assertion. |\n| 10 | Assertion constraint on 'pi' value | ❌ | Value is assigned, but no constraint/assertion. |\n| 11 | Part 'HeadLightsTiltKnob' | ❌ | Not present. |\n| 12 | Attribute 'headLightsTile' of type LightBeamTiltAngleValue[1] in 'HeadLightsTiltKnob' | ❌ | Not present. |\n| 13 | Attribute type 'LightBeamTiltAngleValue' as subtype of PlaneAngleValue | ❌ | Not present. |\n| 14 | Attribute 'angle' of type LightBeamTiltAngleValue in 'LightBeamTiltAngleValue' | ❌ | Not present. |\n| 15 | Assertion constraint on 'angle' (angle >= 50 ['°'] and angle <= 80 ['°']) | ✅ | Equivalent constraint is present: 'withinRange : Boolean = (tiltAngle >= minTiltAngle) and (tiltAngle <= maxTiltAngle);' (ignoring naming and structure differences). |\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n- 7: Attribute 'e' of type Real\n- 8: Attribute 'pi' of type Real\n- 15: Assertion constraint on 'angle' (as a range constraint on tilt angle)\n\n**Total Claims:** 15  \n**Covered Claims:** 3\n\n---\n\n**Score: 3/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 582,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 843,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1425
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569525,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The existence of a package 'AutomotiveParameterValidation'.\n2. The import of ISQ.\n3. The import of SI.\n4. The import of MeasurementReferences.\n5. The import of RealFunctions.\n6. The existence of a subpackage 'Mathematical Constants'.\n7. The definition of attribute 'e' of type Real in 'Mathematical Constants'.\n8. The definition of attribute 'pi' of type Real in 'Mathematical Constants'.\n9. The assertion constraint on 'e' regarding its value (round(e * 1E20) == 271828182845904523536.0).\n10. The assertion constraint on 'pi' regarding its value (round(pi * 1E20) == 314159265358979323846.0).\n11. The definition of part 'HeadLightsTiltKnob'.\n12. The attribute 'headLightsTile' of type LightBeamTiltAngleValue[1] in 'HeadLightsTiltKnob'.\n13. The definition of attribute type 'LightBeamTiltAngleValue' as a subtype of PlaneAngleValue.\n14. The definition of attribute 'angle' of type LightBeamTiltAngleValue in 'LightBeamTiltAngleValue'.\n15. The assertion constraint on 'angle' (angle >= 50 ['°'] and angle <= 80 ['°']).\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | Package 'AutomotiveParameterValidation' | ❌ | Package exists, but with a different name ('HeadlampTiltAdjustment'). Not equivalent in scope. |\n| 2 | Import ISQ | ❌ | Not present. |\n| 3 | Import SI | ❌ | Not present. |\n| 4 | Import MeasurementReferences | ❌ | Not present. |\n| 5 | Import RealFunctions | ❌ | Not present. |\n| 6 | Subpackage 'Mathematical Constants' | ❌ | No subpackage, but constants are present as attributes. Structure not preserved. |\n| 7 | Attribute 'e' of type Real | ✅ | Present as 'eConst : Real'. |\n| 8 | Attribute 'pi' of type Real | ✅ | Present as 'piConst : Real'. |\n| 9 | Assertion constraint on 'e' value | ❌ | Value is assigned, but no constraint/assertion. |\n| 10 | Assertion constraint on 'pi' value | ❌ | Value is assigned, but no constraint/assertion. |\n| 11 | Part 'HeadLightsTiltKnob' | ❌ | Not present. |\n| 12 | Attribute 'headLightsTile' of type LightBeamTiltAngleValue[1] in 'HeadLightsTiltKnob' | ❌ | Not present. |\n| 13 | Attribute type 'LightBeamTiltAngleValue' as subtype of PlaneAngleValue | ❌ | Not present. |\n| 14 | Attribute 'angle' of type LightBeamTiltAngleValue in 'LightBeamTiltAngleValue' | ❌ | Not present. |\n| 15 | Assertion constraint on 'angle' (angle >= 50 ['°'] and angle <= 80 ['°']) | ✅ | Equivalent constraint is present: 'withinRange : Boolean = (tiltAngle >= minTiltAngle) and (tiltAngle <= maxTiltAngle);' (ignoring naming and structure differences). |\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n- 7: Attribute 'e' of type Real\n- 8: Attribute 'pi' of type Real\n- 15: Assertion constraint on 'angle' (as a range constraint on tilt angle)\n\n**Total Claims:** 15  \n**Covered Claims:** 3\n\n---\n\n**Score: 3/15**"
+  }
+}

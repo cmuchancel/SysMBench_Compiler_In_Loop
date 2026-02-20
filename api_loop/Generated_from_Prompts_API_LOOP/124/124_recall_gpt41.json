@@ -1,0 +1,85 @@
+{
+  "model_id": 124,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleArchitectureStructuralViewpoint' {\n\tpackage SystemModel {\n\t\tprivate import SI::*;\n\t\tpart def Vehicle;\n\t\tpart def AxleAssembly;\n\t\tpart def Axle;\n\t\tpart def Wheel;\n\t\tpart vehicle : Vehicle {\n\t\t\tattribute mass :> ISQ::mass = 2500[SI::kg];\n\t\t\tpart frontAxleAssembly : AxleAssembly[1] {\n\t\t\t\tattribute mass :> ISQ::mass = 150[kg];\n\t\t\t\tpart frontWheel : Wheel[2];\n\t\t\t\tpart frontAxle : Axle[1] {\n\t\t\t\t\tattribute mass;\n\t\t\t\t\tattribute steeringAngle;\n\t\t\t\t}\n\t\t\t}\n\t\t\tpart rearAxleAssembly : AxleAssembly[1] {\n\t\t\t\tattribute mass :> ISQ::mass = 250[kg];\n\t\t\t\tpart rearWheel : Wheel[2];\n\t\t\t\tpart rearAxle : Axle[1] {\n\t\t\t\t\tattribute mass;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\tpackage ViewModel {\n\t\tprivate import Views::*;\n\t\tpart 'systems engineer';\n\t\tconcern 'system breakdown' {\n\t\t\tstakeholder :>> 'systems engineer';\n\t\t}\n\t\tviewpoint 'system structure perspective' {\t\t\n\t\t\tframe 'system breakdown';\n\t\t}\n\t\tview 'system structure generation' {\n\t\t\tsatisfy 'system structure perspective';\n\t\t\texpose SystemModel::vehicle::**[@SysML::PartUsage];\n\t\t\trender asElementTable {\n\t\t\t\tview :>> columnView[1] {\n\t\t\t\t\trender asTextualNotation;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage VehicleSystemModel {\n  private import ScalarValues::*;\n\n  part def Wheel {\n  }\n\n  part def FrontAxle {\n    attribute mass : Real;\n    attribute steeringAngle : Real;\n  }\n\n  part def RearAxle {\n    attribute mass : Real;\n  }\n\n  part def FrontAxleAssembly {\n    attribute mass : Real = 150;\n    part frontLeftWheel : Wheel;\n    part frontRightWheel : Wheel;\n    part frontAxle : FrontAxle;\n  }\n\n  part def RearAxleAssembly {\n    attribute mass : Real = 250;\n    part rearLeftWheel : Wheel;\n    part rearRightWheel : Wheel;\n    part rearAxle : RearAxle;\n  }\n\n  part def Car {\n    attribute totalMass : Real = 2500;\n    part frontAxleAssembly : FrontAxleAssembly;\n    part rearAxleAssembly : RearAxleAssembly;\n  }\n\n  part car : Car;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/124/124_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/124/124.sysml",
+  "response": {
+    "id": "resp_00d33ca33a462039006997ff2c7ca48197b5412792b9f1e55a",
+    "created_at": 1771568940.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_00d33ca33a462039006997ff2cb5ec8197afb21baa5ca8a7c0",
+        "content": [
+          {
+            "annotations": [],
+            "text": "**Step 1: List all atomic modeling claims made by the reference system model**\n\nLet's enumerate all minimal, meaningful modeling elements in the reference model (focusing on the SystemModel package, as the ViewModel is not present in the generated model):\n\n### Part Definitions\n1. Definition of part type `Vehicle`\n2. Definition of part type `AxleAssembly`\n3. Definition of part type `Axle`\n4. Definition of part type `Wheel`\n\n### Top-level Part\n5. Declaration of part `vehicle` of type `Vehicle`\n\n### Attributes and Structure of `vehicle`\n6. `vehicle` has attribute `mass` of type `ISQ::mass` with value `2500[SI::kg]`\n7. `vehicle` has part `frontAxleAssembly` of type `AxleAssembly` (multiplicity 1)\n8. `vehicle` has part `rearAxleAssembly` of type `AxleAssembly` (multiplicity 1)\n\n#### Structure of `frontAxleAssembly`\n9. `frontAxleAssembly` has attribute `mass` of type `ISQ::mass` with value `150[kg]`\n10. `frontAxleAssembly` has part `frontWheel` of type `Wheel` (multiplicity 2)\n11. `frontAxleAssembly` has part `frontAxle` of type `Axle` (multiplicity 1)\n\n##### Structure of `frontAxle`\n12. `frontAxle` has attribute `mass`\n13. `frontAxle` has attribute `steeringAngle`\n\n#### Structure of `rearAxleAssembly`\n14. `rearAxleAssembly` has attribute `mass` of type `ISQ::mass` with value `250[kg]`\n15. `rearAxleAssembly` has part `rearWheel` of type `Wheel` (multiplicity 2)\n16. `rearAxleAssembly` has part `rearAxle` of type `Axle` (multiplicity 1)\n\n##### Structure of `rearAxle`\n17. `rearAxle` has attribute `mass`\n\n---\n\n**Step 2: For each atomic claim, determine if it is covered by the generated model**\n\nLet's check each claim:\n\n| # | Reference Claim | Covered by Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Definition of part type `Vehicle` | **Yes** (as `Car`) | Naming difference, but structure matches |\n| 2 | Definition of part type `AxleAssembly` | **Yes** (as `FrontAxleAssembly` and `RearAxleAssembly`) | Split into two, but both present |\n| 3 | Definition of part type `Axle` | **Yes** (as `FrontAxle` and `RearAxle`) | Split into two, but both present |\n| 4 | Definition of part type `Wheel` | **Yes** |  |\n| 5 | Declaration of part `vehicle` of type `Vehicle` | **Yes** (as `car : Car`) | Naming difference |\n| 6 | `vehicle` has attribute `mass` of type `ISQ::mass` with value `2500[SI::kg]` | **Yes** (as `totalMass : Real = 2500`) | Type and unit not preserved, but value and intent match |\n| 7 | `vehicle` has part `frontAxleAssembly` of type `AxleAssembly` (1) | **Yes** |  |\n| 8 | `vehicle` has part `rearAxleAssembly` of type `AxleAssembly` (1) | **Yes** |  |\n| 9 | `frontAxleAssembly` has attribute `mass` of type `ISQ::mass` with value `150[kg]` | **Yes** (as `mass : Real = 150`) | Type/unit not preserved, but value and intent match |\n| 10 | `frontAxleAssembly` has part `frontWheel` of type `Wheel` (2) | **Yes** (as `frontLeftWheel`, `frontRightWheel`) | Multiplicity split into two named parts |\n| 11 | `frontAxleAssembly` has part `frontAxle` of type `Axle` (1) | **Yes** |  |\n| 12 | `frontAxle` has attribute `mass` | **Yes** |  |\n| 13 | `frontAxle` has attribute `steeringAngle` | **Yes** |  |\n| 14 | `rearAxleAssembly` has attribute `mass` of type `ISQ::mass` with value `250[kg]` | **Yes** (as `mass : Real = 250`) | Type/unit not preserved, but value and intent match |\n| 15 | `rearAxleAssembly` has part `rearWheel` of type `Wheel` (2) | **Yes** (as `rearLeftWheel`, `rearRightWheel`) | Multiplicity split into two named parts |\n| 16 | `rearAxleAssembly` has part `rearAxle` of type `Axle` (1) | **Yes** |  |\n| 17 | `rearAxle` has attribute `mass` | **Yes** |  |\n\n---\n\n**Step 3: Summarize the results**\n\nAll 17 atomic claims from the reference model are covered in the generated model, despite naming and minor structural differences (e.g., splitting multiplicity into separate parts, or using `Real` instead of `ISQ::mass`).\n\n**Score: 17/17**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 708,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1174,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1882
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568956,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "**Step 1: List all atomic modeling claims made by the reference system model**\n\nLet's enumerate all minimal, meaningful modeling elements in the reference model (focusing on the SystemModel package, as the ViewModel is not present in the generated model):\n\n### Part Definitions\n1. Definition of part type `Vehicle`\n2. Definition of part type `AxleAssembly`\n3. Definition of part type `Axle`\n4. Definition of part type `Wheel`\n\n### Top-level Part\n5. Declaration of part `vehicle` of type `Vehicle`\n\n### Attributes and Structure of `vehicle`\n6. `vehicle` has attribute `mass` of type `ISQ::mass` with value `2500[SI::kg]`\n7. `vehicle` has part `frontAxleAssembly` of type `AxleAssembly` (multiplicity 1)\n8. `vehicle` has part `rearAxleAssembly` of type `AxleAssembly` (multiplicity 1)\n\n#### Structure of `frontAxleAssembly`\n9. `frontAxleAssembly` has attribute `mass` of type `ISQ::mass` with value `150[kg]`\n10. `frontAxleAssembly` has part `frontWheel` of type `Wheel` (multiplicity 2)\n11. `frontAxleAssembly` has part `frontAxle` of type `Axle` (multiplicity 1)\n\n##### Structure of `frontAxle`\n12. `frontAxle` has attribute `mass`\n13. `frontAxle` has attribute `steeringAngle`\n\n#### Structure of `rearAxleAssembly`\n14. `rearAxleAssembly` has attribute `mass` of type `ISQ::mass` with value `250[kg]`\n15. `rearAxleAssembly` has part `rearWheel` of type `Wheel` (multiplicity 2)\n16. `rearAxleAssembly` has part `rearAxle` of type `Axle` (multiplicity 1)\n\n##### Structure of `rearAxle`\n17. `rearAxle` has attribute `mass`\n\n---\n\n**Step 2: For each atomic claim, determine if it is covered by the generated model**\n\nLet's check each claim:\n\n| # | Reference Claim | Covered by Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Definition of part type `Vehicle` | **Yes** (as `Car`) | Naming difference, but structure matches |\n| 2 | Definition of part type `AxleAssembly` | **Yes** (as `FrontAxleAssembly` and `RearAxleAssembly`) | Split into two, but both present |\n| 3 | Definition of part type `Axle` | **Yes** (as `FrontAxle` and `RearAxle`) | Split into two, but both present |\n| 4 | Definition of part type `Wheel` | **Yes** |  |\n| 5 | Declaration of part `vehicle` of type `Vehicle` | **Yes** (as `car : Car`) | Naming difference |\n| 6 | `vehicle` has attribute `mass` of type `ISQ::mass` with value `2500[SI::kg]` | **Yes** (as `totalMass : Real = 2500`) | Type and unit not preserved, but value and intent match |\n| 7 | `vehicle` has part `frontAxleAssembly` of type `AxleAssembly` (1) | **Yes** |  |\n| 8 | `vehicle` has part `rearAxleAssembly` of type `AxleAssembly` (1) | **Yes** |  |\n| 9 | `frontAxleAssembly` has attribute `mass` of type `ISQ::mass` with value `150[kg]` | **Yes** (as `mass : Real = 150`) | Type/unit not preserved, but value and intent match |\n| 10 | `frontAxleAssembly` has part `frontWheel` of type `Wheel` (2) | **Yes** (as `frontLeftWheel`, `frontRightWheel`) | Multiplicity split into two named parts |\n| 11 | `frontAxleAssembly` has part `frontAxle` of type `Axle` (1) | **Yes** |  |\n| 12 | `frontAxle` has attribute `mass` | **Yes** |  |\n| 13 | `frontAxle` has attribute `steeringAngle` | **Yes** |  |\n| 14 | `rearAxleAssembly` has attribute `mass` of type `ISQ::mass` with value `250[kg]` | **Yes** (as `mass : Real = 250`) | Type/unit not preserved, but value and intent match |\n| 15 | `rearAxleAssembly` has part `rearWheel` of type `Wheel` (2) | **Yes** (as `rearLeftWheel`, `rearRightWheel`) | Multiplicity split into two named parts |\n| 16 | `rearAxleAssembly` has part `rearAxle` of type `Axle` (1) | **Yes** |  |\n| 17 | `rearAxle` has attribute `mass` | **Yes** |  |\n\n---\n\n**Step 3: Summarize the results**\n\nAll 17 atomic claims from the reference model are covered in the generated model, despite naming and minor structural differences (e.g., splitting multiplicity into separate parts, or using `Real` instead of `ISQ::mass`).\n\n**Score: 17/17**"
+  }
+}

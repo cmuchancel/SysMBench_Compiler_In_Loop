@@ -1,0 +1,85 @@
+{
+  "model_id": 80,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'EngineConfigurationVariants' {\n\tprivate import ScalarValues::Real;\n\tprivate import SI::mm;\n\tattribute def Diameter :> ISQ::LengthValue;\n    part def Cylinder {\n        attribute diameter : Diameter[1];\n    }\n    part def Engine {\n    \tpart cylinder : Cylinder[2..*];\n    }\n    part '4cylEngine' : Engine {\n    \tpart redefines cylinder[4];\n    }\n    part '6cylEngine' : Engine {\n    \tpart redefines cylinder[6];\n    }\n\tvariation attribute def DiameterChoices :> Diameter {\n\t\tvariant attribute diameterSmall = 70[mm];\n\t\tvariant attribute diameterLarge = 100[mm];\n\t}\n\tvariation part def EngineChoices :> Engine {\n\t\tvariant '4cylEngine';\n\t\tvariant '6cylEngine';\t\t\n\t}\t\n}\n\nGenerated Model:\npackage EngineConfig {\n  private import ScalarValues::*;\n\n  enum def CylinderDiameter { d70; d100; }\n  enum def CylinderCount { four; six; }\n\n  part def Cylinder {\n    attribute diameter : CylinderDiameter;\n  }\n\n  part def ConfigurableEngine {\n    attribute cylinderCount : CylinderCount;\n    attribute cylinderDiameter : CylinderDiameter;\n  }\n\n  part def FourCylinderEngine {\n    part cyl1 : Cylinder;\n    part cyl2 : Cylinder;\n    part cyl3 : Cylinder;\n    part cyl4 : Cylinder;\n    attribute cylinderCount : CylinderCount = CylinderCount::four;\n    attribute cylinderDiameter : CylinderDiameter;\n  }\n\n  part def SixCylinderEngine {\n    part cyl1 : Cylinder;\n    part cyl2 : Cylinder;\n    part cyl3 : Cylinder;\n    part cyl4 : Cylinder;\n    part cyl5 : Cylinder;\n    part cyl6 : Cylinder;\n    attribute cylinderCount : CylinderCount = CylinderCount::six;\n    attribute cylinderDiameter : CylinderDiameter;\n  }\n\n  part configurableEngine : ConfigurableEngine;\n  part fourCylinderEngine : FourCylinderEngine;\n  part sixCylinderEngine : SixCylinderEngine;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/80/80_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/80/80.sysml",
+  "response": {
+    "id": "resp_08a02aa929035a3f006997fdb25000819c80ad7172ab254bae",
+    "created_at": 1771568562.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_08a02aa929035a3f006997fdb2a3a4819cb629d43b75302730",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package `EngineConfigurationVariants` is defined.\n2. Private import of `ScalarValues::Real`.\n3. Private import of `SI::mm`.\n4. Attribute type `Diameter` is defined as a subtype of `ISQ::LengthValue`.\n5. Part definition `Cylinder` exists.\n6. `Cylinder` has an attribute `diameter` of type `Diameter` (multiplicity [1]).\n7. Part definition `Engine` exists.\n8. `Engine` has a part `cylinder` of type `Cylinder` with multiplicity [2..*].\n9. Part `'4cylEngine'` is defined as a specialization of `Engine`.\n10. `'4cylEngine'` redefines part `cylinder` with multiplicity [4].\n11. Part `'6cylEngine'` is defined as a specialization of `Engine`.\n12. `'6cylEngine'` redefines part `cylinder` with multiplicity [6].\n13. Variation attribute type `DiameterChoices` is defined as a subtype of `Diameter`.\n14. `DiameterChoices` has a variant attribute `diameterSmall` with value `70[mm]`.\n15. `DiameterChoices` has a variant attribute `diameterLarge` with value `100[mm]`.\n16. Variation part type `EngineChoices` is defined as a subtype of `Engine`.\n17. `EngineChoices` has a variant `'4cylEngine'`.\n18. `EngineChoices` has a variant `'6cylEngine'`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | Package defined | Yes | `EngineConfig` instead of `EngineConfigurationVariants`, but equivalent. |\n| 2 | Private import of ScalarValues::Real | Yes | `private import ScalarValues::*;` covers this. |\n| 3 | Private import of SI::mm | No | No import of SI::mm or equivalent. |\n| 4 | Attribute type Diameter as subtype of ISQ::LengthValue | Partial | `CylinderDiameter` enum is used instead; not a subtype of ISQ::LengthValue, but serves as a type for diameter. Not equivalent in type system. |\n| 5 | Part def Cylinder | Yes | Present. |\n| 6 | Cylinder has attribute diameter : Diameter[1] | Partial | Attribute exists, but type is `CylinderDiameter` (enum), not `Diameter` (value type). Multiplicity [1] is implicit. |\n| 7 | Part def Engine | Partial | `ConfigurableEngine` is similar, but not a direct match. |\n| 8 | Engine has part cylinder : Cylinder[2..*] | Partial | `ConfigurableEngine` does not have parts, but `FourCylinderEngine` and `SixCylinderEngine` have explicit parts. No general [2..*] multiplicity. |\n| 9 | Part '4cylEngine' : Engine | Yes | `FourCylinderEngine` defined. |\n| 10 | '4cylEngine' redefines cylinder[4] | Yes | `FourCylinderEngine` has 4 cylinder parts. |\n| 11 | Part '6cylEngine' : Engine | Yes | `SixCylinderEngine` defined. |\n| 12 | '6cylEngine' redefines cylinder[6] | Yes | `SixCylinderEngine` has 6 cylinder parts. |\n| 13 | Variation attribute def DiameterChoices :> Diameter | Partial | `CylinderDiameter` enum serves as a set of choices, but not a variation attribute type or a subtype of `Diameter`. |\n| 14 | DiameterChoices.variant diameterSmall = 70[mm] | Partial | `CylinderDiameter::d70` exists, but not tied to value 70[mm]. |\n| 15 | DiameterChoices.variant diameterLarge = 100[mm] | Partial | `CylinderDiameter::d100` exists, but not tied to value 100[mm]. |\n| 16 | Variation part def EngineChoices :> Engine | Partial | No explicit variation part type, but `ConfigurableEngine` and the two engine variants exist. |\n| 17 | EngineChoices.variant '4cylEngine' | Yes | `fourCylinderEngine` part exists. |\n| 18 | EngineChoices.variant '6cylEngine' | Yes | `sixCylinderEngine` part exists. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the claims that are **fully covered** (not just partial):\n\n- 1. Package defined (Yes)\n- 2. Private import of ScalarValues::Real (Yes)\n- 5. Part def Cylinder (Yes)\n- 9. Part '4cylEngine' : Engine (Yes)\n- 10. '4cylEngine' redefines cylinder[4] (Yes)\n- 11. Part '6cylEngine' : Engine (Yes)\n- 12. '6cylEngine' redefines cylinder[6] (Yes)\n- 17. EngineChoices.variant '4cylEngine' (Yes)\n- 18. EngineChoices.variant '6cylEngine' (Yes)\n\n**Total fully covered claims: 9**\n\n**Total claims in reference model: 18**\n\n---\n\n**Score: 9/18**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 595,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1155,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1750
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568575,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package `EngineConfigurationVariants` is defined.\n2. Private import of `ScalarValues::Real`.\n3. Private import of `SI::mm`.\n4. Attribute type `Diameter` is defined as a subtype of `ISQ::LengthValue`.\n5. Part definition `Cylinder` exists.\n6. `Cylinder` has an attribute `diameter` of type `Diameter` (multiplicity [1]).\n7. Part definition `Engine` exists.\n8. `Engine` has a part `cylinder` of type `Cylinder` with multiplicity [2..*].\n9. Part `'4cylEngine'` is defined as a specialization of `Engine`.\n10. `'4cylEngine'` redefines part `cylinder` with multiplicity [4].\n11. Part `'6cylEngine'` is defined as a specialization of `Engine`.\n12. `'6cylEngine'` redefines part `cylinder` with multiplicity [6].\n13. Variation attribute type `DiameterChoices` is defined as a subtype of `Diameter`.\n14. `DiameterChoices` has a variant attribute `diameterSmall` with value `70[mm]`.\n15. `DiameterChoices` has a variant attribute `diameterLarge` with value `100[mm]`.\n16. Variation part type `EngineChoices` is defined as a subtype of `Engine`.\n17. `EngineChoices` has a variant `'4cylEngine'`.\n18. `EngineChoices` has a variant `'6cylEngine'`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | Package defined | Yes | `EngineConfig` instead of `EngineConfigurationVariants`, but equivalent. |\n| 2 | Private import of ScalarValues::Real | Yes | `private import ScalarValues::*;` covers this. |\n| 3 | Private import of SI::mm | No | No import of SI::mm or equivalent. |\n| 4 | Attribute type Diameter as subtype of ISQ::LengthValue | Partial | `CylinderDiameter` enum is used instead; not a subtype of ISQ::LengthValue, but serves as a type for diameter. Not equivalent in type system. |\n| 5 | Part def Cylinder | Yes | Present. |\n| 6 | Cylinder has attribute diameter : Diameter[1] | Partial | Attribute exists, but type is `CylinderDiameter` (enum), not `Diameter` (value type). Multiplicity [1] is implicit. |\n| 7 | Part def Engine | Partial | `ConfigurableEngine` is similar, but not a direct match. |\n| 8 | Engine has part cylinder : Cylinder[2..*] | Partial | `ConfigurableEngine` does not have parts, but `FourCylinderEngine` and `SixCylinderEngine` have explicit parts. No general [2..*] multiplicity. |\n| 9 | Part '4cylEngine' : Engine | Yes | `FourCylinderEngine` defined. |\n| 10 | '4cylEngine' redefines cylinder[4] | Yes | `FourCylinderEngine` has 4 cylinder parts. |\n| 11 | Part '6cylEngine' : Engine | Yes | `SixCylinderEngine` defined. |\n| 12 | '6cylEngine' redefines cylinder[6] | Yes | `SixCylinderEngine` has 6 cylinder parts. |\n| 13 | Variation attribute def DiameterChoices :> Diameter | Partial | `CylinderDiameter` enum serves as a set of choices, but not a variation attribute type or a subtype of `Diameter`. |\n| 14 | DiameterChoices.variant diameterSmall = 70[mm] | Partial | `CylinderDiameter::d70` exists, but not tied to value 70[mm]. |\n| 15 | DiameterChoices.variant diameterLarge = 100[mm] | Partial | `CylinderDiameter::d100` exists, but not tied to value 100[mm]. |\n| 16 | Variation part def EngineChoices :> Engine | Partial | No explicit variation part type, but `ConfigurableEngine` and the two engine variants exist. |\n| 17 | EngineChoices.variant '4cylEngine' | Yes | `fourCylinderEngine` part exists. |\n| 18 | EngineChoices.variant '6cylEngine' | Yes | `sixCylinderEngine` part exists. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the claims that are **fully covered** (not just partial):\n\n- 1. Package defined (Yes)\n- 2. Private import of ScalarValues::Real (Yes)\n- 5. Part def Cylinder (Yes)\n- 9. Part '4cylEngine' : Engine (Yes)\n- 10. '4cylEngine' redefines cylinder[4] (Yes)\n- 11. Part '6cylEngine' : Engine (Yes)\n- 12. '6cylEngine' redefines cylinder[6] (Yes)\n- 17. EngineChoices.variant '4cylEngine' (Yes)\n- 18. EngineChoices.variant '6cylEngine' (Yes)\n\n**Total fully covered claims: 9**\n\n**Total claims in reference model: 18**\n\n---\n\n**Score: 9/18**"
+  }
+}

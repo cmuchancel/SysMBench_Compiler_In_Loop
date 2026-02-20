@@ -1,0 +1,85 @@
+{
+  "model_id": 141,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'UnitSystemsStandard' {\n    private import ISQ::*;\n    private import USCustomaryUnits::*;\n}\n\nGenerated Model:\npackage UnitSystemLibrary {\n    private import ScalarValues::*;\n\n    enum def UnitSystemKind { \n        ISQ;\n        USCustomary;\n    }\n\n    enum def QuantityKind {\n        Length;\n        Mass;\n        Time;\n        Temperature;\n        Area;\n        Volume;\n        Force;\n        Energy;\n        Power;\n        Pressure;\n    }\n\n    item def Unit {\n        attribute name : String;\n        attribute symbol : String;\n        attribute system : UnitSystemKind;\n        attribute quantity : QuantityKind;\n        attribute toBaseFactor : Real;\n    }\n\n    item def UnitConversion {\n        attribute fromUnit : String;\n        attribute toUnit : String;\n        attribute factor : Real;\n        attribute offset : Real;\n    }\n\n    part def UnitCatalog {\n        attribute name : String;\n        part units : Unit[0..*];\n        part conversions : UnitConversion[0..*];\n    }\n\n    part def UnitLibrary {\n        part catalog : UnitCatalog;\n        attribute version : String;\n    }\n\n    part def UnitSystemService {\n        part unitLibrary : UnitLibrary;\n    }\n\n    part unitLibrary : UnitLibrary;\n    part service : UnitSystemService;\n    connect unitLibrary to service.unitLibrary;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/141/141_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/141/141.sysml",
+  "response": {
+    "id": "resp_04e539ac74e38069006998047719c88194955e73153b20e316",
+    "created_at": 1771570295.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_04e539ac74e3806900699804774e648194b8147fcd49ff192d",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model.\n\nReference Model:\n```plaintext\npackage 'UnitSystemsStandard' {\n    private import ISQ::*;\n    private import USCustomaryUnits::*;\n}\n```\n\nAtomic claims:\n1. There is a package named 'UnitSystemsStandard'.\n2. The package makes a private import of 'ISQ::*'.\n3. The package makes a private import of 'USCustomaryUnits::*'.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\nLet's check each claim:\n\n#### Claim 1: There is a package named 'UnitSystemsStandard'.\n- **Generated model** has a package, but it is named 'UnitSystemLibrary', not 'UnitSystemsStandard'.\n- **Coverage:** Not covered (since the package is a different conceptually named entity).\n\n#### Claim 2: The package makes a private import of 'ISQ::*'.\n- **Generated model** has `private import ScalarValues::*;` but does not mention 'ISQ' or an equivalent.\n- **Coverage:** Not covered.\n\n#### Claim 3: The package makes a private import of 'USCustomaryUnits::*'.\n- **Generated model** does not mention 'USCustomaryUnits' or an equivalent.\n- **Coverage:** Not covered.\n\n---\n\n### 3. Summarize the results\n\n**Score: 0/3**\n\n---\n\n#### Final Output\n\nScore: 0/3",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 452,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 308,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 760
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771570298,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the reference system model.\n\nReference Model:\n```plaintext\npackage 'UnitSystemsStandard' {\n    private import ISQ::*;\n    private import USCustomaryUnits::*;\n}\n```\n\nAtomic claims:\n1. There is a package named 'UnitSystemsStandard'.\n2. The package makes a private import of 'ISQ::*'.\n3. The package makes a private import of 'USCustomaryUnits::*'.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\nLet's check each claim:\n\n#### Claim 1: There is a package named 'UnitSystemsStandard'.\n- **Generated model** has a package, but it is named 'UnitSystemLibrary', not 'UnitSystemsStandard'.\n- **Coverage:** Not covered (since the package is a different conceptually named entity).\n\n#### Claim 2: The package makes a private import of 'ISQ::*'.\n- **Generated model** has `private import ScalarValues::*;` but does not mention 'ISQ' or an equivalent.\n- **Coverage:** Not covered.\n\n#### Claim 3: The package makes a private import of 'USCustomaryUnits::*'.\n- **Generated model** does not mention 'USCustomaryUnits' or an equivalent.\n- **Coverage:** Not covered.\n\n---\n\n### 3. Summarize the results\n\n**Score: 0/3**\n\n---\n\n#### Final Output\n\nScore: 0/3"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "model_id": 23,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PhotographyWorkflow' {\n\tpart def Scene;\n\tpart def Image {\n\t\tisWellFocused: ScalarValues::Boolean;\n\t}\n\tpart def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\n\taction def TakePicture { in scene : Scene; out picture : Picture; }\n\taction takePicture : TakePicture {\n\t\tin item scene;\n\t\tout item picture;\n\t\taction focus : Focus {\n\t\t\tin item scene = takePicture::scene; \n\t\t\tout item image;\n\t\t}\t\n\t\tfirst focus \n\t\t\tif focus.image.isWellFocused then shoot;\n\t\tflow from focus.image to shoot.image;\n\t\taction shoot : Shoot {\n\t\t\tin item; \n\t\t\tout item picture = takePicture::picture;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage PhotographyWorkflow {\n  private import ScalarValues::*;\n\n  enum def FocusState {\n    enum clear;\n    enum unclear;\n  }\n\n  item def Scene;\n  item def Photo;\n\n  port def ScenePort {\n    attribute scene : Scene;\n  }\n\n  port def FocusStatusPort {\n    attribute status : FocusState;\n  }\n\n  port def PhotoPort {\n    attribute photo : Photo;\n  }\n\n  part def SceneSelector {\n    port sceneOut : ScenePort;\n  }\n\n  part def FocusUnit {\n    attribute autoFocus : Boolean = true;\n    port sceneIn : ScenePort;\n    port focusStatusOut : FocusStatusPort;\n  }\n\n  part def PhotoShooter {\n    attribute oneClick : Boolean = true;\n    port sceneIn : ScenePort;\n    port focusIn : FocusStatusPort;\n    port photoOut : PhotoPort;\n  }\n\n  part def PhotographySystem {\n    part selector : SceneSelector;\n    part focus : FocusUnit;\n    part shooter : PhotoShooter;\n\n    port photoOut : PhotoPort;\n\n    connect selector.sceneOut to focus.sceneIn;\n    connect selector.sceneOut to shooter.sceneIn;\n    connect focus.focusStatusOut to shooter.focusIn;\n    connect shooter.photoOut to photoOut;\n  }\n\n  part system : PhotographySystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/23/23_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/23/23.sysml",
+  "response": {
+    "id": "resp_0bef53e3705e9e0800699800105bec819eb043fd40cc74be65",
+    "created_at": 1771569168.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0bef53e3705e9e080069980010a15c819eb671a81ca54ba6a5",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Atomic Claims:**\n\n1. The package is named \"PhotographyWorkflow\".\n2. There is a private import of ScalarValues::*.\n3. There is an enum type `FocusState` with values `clear` and `unclear`.\n4. There is an item definition `Scene`.\n5. There is an item definition `Photo`.\n6. There is a port definition `ScenePort` with attribute `scene` of type `Scene`.\n7. There is a port definition `FocusStatusPort` with attribute `status` of type `FocusState`.\n8. There is a port definition `PhotoPort` with attribute `photo` of type `Photo`.\n9. There is a part definition `SceneSelector` with port `sceneOut` of type `ScenePort`.\n10. There is a part definition `FocusUnit` with attribute `autoFocus` of type `Boolean` (default true).\n11. `FocusUnit` has a port `sceneIn` of type `ScenePort`.\n12. `FocusUnit` has a port `focusStatusOut` of type `FocusStatusPort`.\n13. There is a part definition `PhotoShooter` with attribute `oneClick` of type `Boolean` (default true).\n14. `PhotoShooter` has a port `sceneIn` of type `ScenePort`.\n15. `PhotoShooter` has a port `focusIn` of type `FocusStatusPort`.\n16. `PhotoShooter` has a port `photoOut` of type `PhotoPort`.\n17. There is a part definition `PhotographySystem` with parts: `selector` (SceneSelector), `focus` (FocusUnit), `shooter` (PhotoShooter).\n18. `PhotographySystem` has a port `photoOut` of type `PhotoPort`.\n19. `PhotographySystem` connects `selector.sceneOut` to `focus.sceneIn`.\n20. `PhotographySystem` connects `selector.sceneOut` to `shooter.sceneIn`.\n21. `PhotographySystem` connects `focus.focusStatusOut` to `shooter.focusIn`.\n22. `PhotographySystem` connects `shooter.photoOut` to `photoOut`.\n23. There is a part `system` of type `PhotographySystem`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\nLet's check each claim:\n\n1. **Package is named \"PhotographyWorkflow\".**  \n   - **Supported** (Reference model uses the same package name.)\n\n2. **Private import of ScalarValues::*.**  \n   - **Supported** (Reference model uses `ScalarValues::Boolean`.)\n\n3. **Enum type `FocusState` with values `clear` and `unclear`.**  \n   - **Not Supported** (No such enum in the reference model.)\n\n4. **Item definition `Scene`.**  \n   - **Supported** (Reference model: `part def Scene;`)\n\n5. **Item definition `Photo`.**  \n   - **Not Supported** (Reference model has `Image` and `Picture`, but not `Photo`.)\n\n6. **Port definition `ScenePort` with attribute `scene` of type `Scene`.**  \n   - **Not Supported** (No such port in the reference model.)\n\n7. **Port definition `FocusStatusPort` with attribute `status` of type `FocusState`.**  \n   - **Not Supported** (No such port or enum in the reference model.)\n\n8. **Port definition `PhotoPort` with attribute `photo` of type `Photo`.**  \n   - **Not Supported** (No such port or type in the reference model.)\n\n9. **Part definition `SceneSelector` with port `sceneOut` of type `ScenePort`.**  \n   - **Not Supported** (No such part in the reference model.)\n\n10. **Part definition `FocusUnit` with attribute `autoFocus` of type `Boolean` (default true).**  \n    - **Not Supported** (No such part or attribute in the reference model.)\n\n11. **`FocusUnit` has a port `sceneIn` of type `ScenePort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n12. **`FocusUnit` has a port `focusStatusOut` of type `FocusStatusPort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n13. **Part definition `PhotoShooter` with attribute `oneClick` of type `Boolean` (default true).**  \n    - **Not Supported** (No such part or attribute in the reference model.)\n\n14. **`PhotoShooter` has a port `sceneIn` of type `ScenePort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n15. **`PhotoShooter` has a port `focusIn` of type `FocusStatusPort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n16. **`PhotoShooter` has a port `photoOut` of type `PhotoPort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n17. **Part definition `PhotographySystem` with parts: `selector` (SceneSelector), `focus` (FocusUnit), `shooter` (PhotoShooter).**  \n    - **Not Supported** (No such part or composition in the reference model.)\n\n18. **`PhotographySystem` has a port `photoOut` of type `PhotoPort`.**  \n    - **Not Supported** (No such port in the reference model.)\n\n19. **`PhotographySystem` connects `selector.sceneOut` to `focus.sceneIn`.**  \n    - **Not Supported** (No such connection in the reference model.)\n\n20. **`PhotographySystem` connects `selector.sceneOut` to `shooter.sceneIn`.**  \n    - **Not Supported** (No such connection in the reference model.)\n\n21. **`PhotographySystem` connects `focus.focusStatusOut` to `shooter.focusIn`.**  \n    - **Not Supported** (No such connection in the reference model.)\n\n22. **`PhotographySystem` connects `shooter.photoOut` to `photoOut`.**  \n    - **Not Supported** (No such connection in the reference model.)\n\n23. **There is a part `system` of type `PhotographySystem`.**  \n    - **Not Supported** (No such part in the reference model.)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:** 1, 2, 4  \n**Total claims:** 23\n\n**Score:** 3/23\n\n---\n\n## **Final Output**\n\n**Score: 3/23**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 615,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1420,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2035
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569181,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Atomic Claims:**\n\n1. The package is named \"PhotographyWorkflow\".\n2. There is a private import of ScalarValues::*.\n3. There is an enum type `FocusState` with values `clear` and `unclear`.\n4. There is an item definition `Scene`.\n5. There is an item definition `Photo`.\n6. There is a port definition `ScenePort` with attribute `scene` of type `Scene`.\n7. There is a port definition `FocusStatusPort` with attribute `status` of type `FocusState`.\n8. There is a port definition `PhotoPort` with attribute `photo` of type `Photo`.\n9. There is a part definition `SceneSelector` with port `sceneOut` of type `ScenePort`.\n10. There is a part definition `FocusUnit` with attribute `autoFocus` of type `Boolean` (default true).\n11. `FocusUnit` has a port `sceneIn` of type `ScenePort`.\n12. `FocusUnit` has a port `focusStatusOut` of type `FocusStatusPort`.\n13. There is a part definition `PhotoShooter` with attribute `oneClick` of type `Boolean` (default true).\n14. `PhotoShooter` has a port `sceneIn` of type `ScenePort`.\n15. `PhotoShooter` has a port `focusIn` of type `FocusStatusPort`.\n16. `PhotoShooter` has a port `photoOut` of type `PhotoPort`.\n17. There is a part definition `PhotographySystem` with parts: `selector` (SceneSelector), `focus` (FocusUnit), `shooter` (PhotoShooter).\n18. `PhotographySystem` has a port `photoOut` of type `PhotoPort`.\n19. `PhotographySystem` connects `selector.sceneOut` to `focus.sceneIn`.\n20. `PhotographySystem` connects `selector.sceneOut` to `shooter.sceneIn`.\n21. `PhotographySystem` connects `focus.focusStatusOut` to `shooter.focusIn`.\n22. `PhotographySystem` connects `shooter.photoOut` to `photoOut`.\n23. There is a part `system` of type `PhotographySystem`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\nLet's check each claim:\n\n1. **Package is named \"PhotographyWorkflow\".**  \n   - **Supported** (Reference model uses the same package name.)\n\n2. **Private import of ScalarValues::*.**  \n   - **Supported** (Reference model uses `ScalarValues::Boolean`.)\n\n3. **Enum type `FocusState` with values `clear` and `unclear`.**  \n   - **Not Supported** (No such enum in the reference model.)\n\n4. **Item definition `Scene`.**  \n   - **Supported** (Reference model: `part def Scene;`)\n\n5. **Item definition `Photo`.**  \n   - **Not Supported** (Reference model has `Image` and `Picture`, but not `Photo`.)\n\n6. **Port definition `ScenePort` with attribute `scene` of type `Scene`.**  \n   - **Not Supported** (No such port in the reference model.)\n\n7. **Port definition `FocusStatusPort` with attribute `status` of type `FocusState`.**  \n   - **Not Supported** (No such port or enum in the reference model.)\n\n8. **Port definition `PhotoPort` with attribute `photo` of type `Photo`.**  \n   - **Not Supported** (No such port or type in the reference model.)\n\n9. **Part definition `SceneSelector` with port `sceneOut` of type `ScenePort`.**  \n   - **Not Supported** (No such part in the reference model.)\n\n10. **Part definition `FocusUnit` with attribute `autoFocus` of type `Boolean` (default true).**  \n    - **Not Supported** (No such part or attribute in the reference model.)\n\n11. **`FocusUnit` has a port `sceneIn` of type `ScenePort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n12. **`FocusUnit` has a port `focusStatusOut` of type `FocusStatusPort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n13. **Part definition `PhotoShooter` with attribute `oneClick` of type `Boolean` (default true).**  \n    - **Not Supported** (No such part or attribute in the reference model.)\n\n14. **`PhotoShooter` has a port `sceneIn` of type `ScenePort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n15. **`PhotoShooter` has a port `focusIn` of type `FocusStatusPort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n16. **`PhotoShooter` has a port `photoOut` of type `PhotoPort`.**  \n    - **Not Supported** (No such part or port in the reference model.)\n\n17. **Part definition `PhotographySystem` with parts: `selector` (SceneSelector), `focus` (FocusUnit), `shooter` (PhotoShooter).**  \n    - **Not Supported** (No such part or composition in the reference model.)\n\n18. **`PhotographySystem` has a port `photoOut` of type `PhotoPort`.**  \n    - **Not Supported** (No such port in the reference model.)\n\n19. **`PhotographySystem` connects `selector.sceneOut` to `focus.sceneIn`.**  \n    - **Not Supported** (No such connection in the reference model.)\n\n20. **`PhotographySystem` connects `selector.sceneOut` to `shooter.sceneIn`.**  \n    - **Not Supported** (No such connection in the reference model.)\n\n21. **`PhotographySystem` connects `focus.focusStatusOut` to `shooter.focusIn`.**  \n    - **Not Supported** (No such connection in the reference model.)\n\n22. **`PhotographySystem` connects `shooter.photoOut` to `photoOut`.**  \n    - **Not Supported** (No such connection in the reference model.)\n\n23. **There is a part `system` of type `PhotographySystem`.**  \n    - **Not Supported** (No such part in the reference model.)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:** 1, 2, 4  \n**Total claims:** 23\n\n**Score:** 3/23\n\n---\n\n## **Final Output**\n\n**Score: 3/23**"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "model_id": 109,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'DynamicTrailerCouplingReferenceModel' {\n\tpart def Vehicle;\n\tpart def VehicleFrame;\n\tpart def HitchBall;\n\tpart def Trailer;\n\tpart def TrailerFrame;\n\tpart def TrailerCoupler;\n\tpart vehicle : Vehicle {\n\t\tpart vehicleFrame : VehicleFrame {\n\t\t\tpart hitch : HitchBall;\n\t\t}\n\t}\n\tpart trailer : Trailer {\n\t\tpart trailerFrame : TrailerFrame {\n\t\t\tpart coupler : TrailerCoupler {\n\t\t\t\tref part hitch : HitchBall;\n\t\t\t}\n\t\t}\t\t\n\t}\t\t\n\taction {\n\t\taction 'connect trailer to vehicle'\n\t\t\tassign trailer.trailerFrame.coupler.hitch := vehicle.vehicleFrame.hitch;\n\t\tthen action 'disconnect trailer from vehicle'\n\t\t\tassign trailer.trailerFrame.coupler.hitch := null;\n\t}\n}\n\nGenerated Model:\npackage TrailerHitchSystem {\n    private import ScalarValues::*;\n\n    enum def ConnectionState {\n        enum Connected;\n        enum Disconnected;\n    }\n\n    port def HitchPort;\n\n    part def TowBall {\n        port hitch : HitchPort;\n    }\n\n    part def Coupler {\n        port hitch : HitchPort;\n        attribute canEngage : Boolean = true;\n        attribute canDisengage : Boolean = true;\n        attribute engaged : Boolean = false;\n    }\n\n    part def Chassis {\n    }\n\n    part def TrailerChassis {\n    }\n\n    part def Vehicle {\n        part chassis : Chassis;\n        part towBall : TowBall;\n    }\n\n    part def Trailer {\n        part trailerChassis : TrailerChassis;\n        part coupler : Coupler;\n    }\n\n    part def VehicleTrailerSystem {\n        part vehicle : Vehicle;\n        part trailer : Trailer;\n        attribute connectionState : ConnectionState = ConnectionState::Disconnected;\n\n        connect vehicle.towBall.hitch to trailer.coupler.hitch;\n    }\n\n    part system : VehicleTrailerSystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/109/109_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/109/109.sysml",
+  "response": {
+    "id": "resp_0d46c57b3d219bf500699802ea61a0819fa090d6d0d7bfed29",
+    "created_at": 1771569898.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0d46c57b3d219bf500699802ead00c819fa5c1deecccfaa7b3",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Atomic Claims:**\n\n1. Definition of part `Vehicle`.\n2. Definition of part `VehicleFrame`.\n3. Definition of part `HitchBall`.\n4. Definition of part `Trailer`.\n5. Definition of part `TrailerFrame`.\n6. Definition of part `TrailerCoupler`.\n7. Declaration of part `vehicle` of type `Vehicle`.\n8. `vehicle` contains part `vehicleFrame` of type `VehicleFrame`.\n9. `vehicleFrame` contains part `hitch` of type `HitchBall`.\n10. Declaration of part `trailer` of type `Trailer`.\n11. `trailer` contains part `trailerFrame` of type `TrailerFrame`.\n12. `trailerFrame` contains part `coupler` of type `TrailerCoupler`.\n13. `coupler` contains reference part `hitch` of type `HitchBall`.\n14. Action: \"connect trailer to vehicle\" assigns `trailer.trailerFrame.coupler.hitch := vehicle.vehicleFrame.hitch`.\n15. Action: \"disconnect trailer from vehicle\" assigns `trailer.trailerFrame.coupler.hitch := null`.\n\n---\n\n### 2. For each atomic claim in the reference model, determine coverage in the generated model.\n\n#### 1. Definition of part `Vehicle`.\n- **Covered.** (`part def Vehicle` exists.)\n\n#### 2. Definition of part `VehicleFrame`.\n- **Not covered.** No `VehicleFrame` part; only `Chassis` is present, which may be analogous, but not explicitly the same.\n\n#### 3. Definition of part `HitchBall`.\n- **Covered (as equivalent).** `TowBall` is used instead of `HitchBall`, but functionally equivalent.\n\n#### 4. Definition of part `Trailer`.\n- **Covered.** (`part def Trailer` exists.)\n\n#### 5. Definition of part `TrailerFrame`.\n- **Not covered.** No `TrailerFrame` part; only `TrailerChassis` is present, which may be analogous, but not explicitly the same.\n\n#### 6. Definition of part `TrailerCoupler`.\n- **Covered (as equivalent).** `Coupler` is used instead of `TrailerCoupler`, but functionally equivalent.\n\n#### 7. Declaration of part `vehicle` of type `Vehicle`.\n- **Covered.** `part vehicle : Vehicle` exists in `VehicleTrailerSystem`.\n\n#### 8. `vehicle` contains part `vehicleFrame` of type `VehicleFrame`.\n- **Partially covered.** `vehicle` contains `chassis : Chassis`. If we accept `Chassis` as equivalent to `VehicleFrame`, then covered. Let's be strict: **Not covered** (since names differ and no explicit mapping).\n\n#### 9. `vehicleFrame` contains part `hitch` of type `HitchBall`.\n- **Partially covered.** In the generated model, `vehicle` contains `towBall : TowBall`, which contains `hitch : HitchPort`. The structure is different, but the intent is similar. Let's be strict: **Not covered** (since the containment structure is not the same).\n\n#### 10. Declaration of part `trailer` of type `Trailer`.\n- **Covered.** `part trailer : Trailer` exists in `VehicleTrailerSystem`.\n\n#### 11. `trailer` contains part `trailerFrame` of type `TrailerFrame`.\n- **Partially covered.** `trailer` contains `trailerChassis : TrailerChassis`. If we accept as equivalent, then covered. Let's be strict: **Not covered**.\n\n#### 12. `trailerFrame` contains part `coupler` of type `TrailerCoupler`.\n- **Partially covered.** In the generated model, `trailer` contains `coupler : Coupler`, but not within `trailerChassis`. **Not covered**.\n\n#### 13. `coupler` contains reference part `hitch` of type `HitchBall`.\n- **Partially covered.** `Coupler` has `port hitch : HitchPort`, but not a reference to a `HitchBall`/`TowBall`. **Not covered**.\n\n#### 14. Action: \"connect trailer to vehicle\" assigns `trailer.trailerFrame.coupler.hitch := vehicle.vehicleFrame.hitch`.\n- **Covered (as equivalent).** The `connect vehicle.towBall.hitch to trailer.coupler.hitch;` statement in `VehicleTrailerSystem` is functionally equivalent.\n\n#### 15. Action: \"disconnect trailer from vehicle\" assigns `trailer.trailerFrame.coupler.hitch := null`.\n- **Not covered.** No explicit disconnect action.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n1. Definition of part `Vehicle`.\n2. Definition of part `HitchBall` (as `TowBall`).\n3. Definition of part `Trailer`.\n4. Definition of part `TrailerCoupler` (as `Coupler`).\n5. Declaration of part `vehicle : Vehicle`.\n6. Declaration of part `trailer : Trailer`.\n7. Action: connect trailer to vehicle (as connect statement).\n\n**Total covered:** 7\n\n**Total claims:** 15\n\n---\n\n**Score: 7/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 562,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1120,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1682
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569909,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Atomic Claims:**\n\n1. Definition of part `Vehicle`.\n2. Definition of part `VehicleFrame`.\n3. Definition of part `HitchBall`.\n4. Definition of part `Trailer`.\n5. Definition of part `TrailerFrame`.\n6. Definition of part `TrailerCoupler`.\n7. Declaration of part `vehicle` of type `Vehicle`.\n8. `vehicle` contains part `vehicleFrame` of type `VehicleFrame`.\n9. `vehicleFrame` contains part `hitch` of type `HitchBall`.\n10. Declaration of part `trailer` of type `Trailer`.\n11. `trailer` contains part `trailerFrame` of type `TrailerFrame`.\n12. `trailerFrame` contains part `coupler` of type `TrailerCoupler`.\n13. `coupler` contains reference part `hitch` of type `HitchBall`.\n14. Action: \"connect trailer to vehicle\" assigns `trailer.trailerFrame.coupler.hitch := vehicle.vehicleFrame.hitch`.\n15. Action: \"disconnect trailer from vehicle\" assigns `trailer.trailerFrame.coupler.hitch := null`.\n\n---\n\n### 2. For each atomic claim in the reference model, determine coverage in the generated model.\n\n#### 1. Definition of part `Vehicle`.\n- **Covered.** (`part def Vehicle` exists.)\n\n#### 2. Definition of part `VehicleFrame`.\n- **Not covered.** No `VehicleFrame` part; only `Chassis` is present, which may be analogous, but not explicitly the same.\n\n#### 3. Definition of part `HitchBall`.\n- **Covered (as equivalent).** `TowBall` is used instead of `HitchBall`, but functionally equivalent.\n\n#### 4. Definition of part `Trailer`.\n- **Covered.** (`part def Trailer` exists.)\n\n#### 5. Definition of part `TrailerFrame`.\n- **Not covered.** No `TrailerFrame` part; only `TrailerChassis` is present, which may be analogous, but not explicitly the same.\n\n#### 6. Definition of part `TrailerCoupler`.\n- **Covered (as equivalent).** `Coupler` is used instead of `TrailerCoupler`, but functionally equivalent.\n\n#### 7. Declaration of part `vehicle` of type `Vehicle`.\n- **Covered.** `part vehicle : Vehicle` exists in `VehicleTrailerSystem`.\n\n#### 8. `vehicle` contains part `vehicleFrame` of type `VehicleFrame`.\n- **Partially covered.** `vehicle` contains `chassis : Chassis`. If we accept `Chassis` as equivalent to `VehicleFrame`, then covered. Let's be strict: **Not covered** (since names differ and no explicit mapping).\n\n#### 9. `vehicleFrame` contains part `hitch` of type `HitchBall`.\n- **Partially covered.** In the generated model, `vehicle` contains `towBall : TowBall`, which contains `hitch : HitchPort`. The structure is different, but the intent is similar. Let's be strict: **Not covered** (since the containment structure is not the same).\n\n#### 10. Declaration of part `trailer` of type `Trailer`.\n- **Covered.** `part trailer : Trailer` exists in `VehicleTrailerSystem`.\n\n#### 11. `trailer` contains part `trailerFrame` of type `TrailerFrame`.\n- **Partially covered.** `trailer` contains `trailerChassis : TrailerChassis`. If we accept as equivalent, then covered. Let's be strict: **Not covered**.\n\n#### 12. `trailerFrame` contains part `coupler` of type `TrailerCoupler`.\n- **Partially covered.** In the generated model, `trailer` contains `coupler : Coupler`, but not within `trailerChassis`. **Not covered**.\n\n#### 13. `coupler` contains reference part `hitch` of type `HitchBall`.\n- **Partially covered.** `Coupler` has `port hitch : HitchPort`, but not a reference to a `HitchBall`/`TowBall`. **Not covered**.\n\n#### 14. Action: \"connect trailer to vehicle\" assigns `trailer.trailerFrame.coupler.hitch := vehicle.vehicleFrame.hitch`.\n- **Covered (as equivalent).** The `connect vehicle.towBall.hitch to trailer.coupler.hitch;` statement in `VehicleTrailerSystem` is functionally equivalent.\n\n#### 15. Action: \"disconnect trailer from vehicle\" assigns `trailer.trailerFrame.coupler.hitch := null`.\n- **Not covered.** No explicit disconnect action.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n1. Definition of part `Vehicle`.\n2. Definition of part `HitchBall` (as `TowBall`).\n3. Definition of part `Trailer`.\n4. Definition of part `TrailerCoupler` (as `Coupler`).\n5. Declaration of part `vehicle : Vehicle`.\n6. Declaration of part `trailer : Trailer`.\n7. Action: connect trailer to vehicle (as connect statement).\n\n**Total covered:** 7\n\n**Total claims:** 15\n\n---\n\n**Score: 7/15**"
+  }
+}

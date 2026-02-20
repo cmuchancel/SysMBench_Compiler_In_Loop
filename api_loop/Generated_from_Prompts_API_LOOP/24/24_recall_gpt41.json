@@ -1,0 +1,85 @@
+{
+  "model_id": 24,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PhotographyWorkflow' {\n\tpart def Scene;\n\tpart def Image {\n\t\tisWellFocused: ScalarValues::Boolean;\n\t}\n\tpart def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\n\taction def TakePicture { in scene : Scene; out picture : Picture; }\n\taction takePicture : TakePicture {\n\t\tin item scene;\n\t\tout item picture;\n\t\taction focus : Focus {\n\t\t\tin item scene = takePicture::scene; \n\t\t\tout item image;\n\t\t}\n\t\tif focus.image.isWellFocused then shoot;\n\t\tflow from focus.image to shoot.image;\n\t\taction shoot : Shoot {\n\t\t\tin item image; \n\t\t\tout item picture = takePicture::picture;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage PhotoWorkflow {\n  private import ScalarValues::*;\n\n  enum def FocusQuality { Good; Bad; }\n\n  item def Scene;\n  item def Image;\n  item def Photograph;\n  item def FocusEvaluation { attribute quality: FocusQuality; }\n\n  port def SceneInPort { ref item scene: Scene; }\n  port def SceneOutPort { ref item scene: Scene; }\n  port def ImagePort { ref item image: Image; }\n  port def EvalPort { ref item evaluation: FocusEvaluation; }\n  port def PhotoPort { ref item photo: Photograph; }\n\n  part def SceneSelector {\n    port sceneOut: SceneOutPort;\n  }\n\n  part def FocusAndImage {\n    port sceneIn: SceneInPort;\n    port imageOut: ImagePort;\n  }\n\n  part def FocusEvaluator {\n    port imageIn: ImagePort;\n    port evalOut: EvalPort;\n  }\n\n  part def Shooter {\n    port imageIn: ImagePort;\n    port evalIn: EvalPort;\n    port photoOut: PhotoPort;\n  }\n\n  part def PhotoOutput {\n    port photoIn: PhotoPort;\n  }\n\n  part def CameraSystem {\n    part selector: SceneSelector;\n    part focus: FocusAndImage;\n    part evaluator: FocusEvaluator;\n    part shooter: Shooter;\n    part output: PhotoOutput;\n\n    connect selector.sceneOut to focus.sceneIn;\n    connect focus.imageOut to evaluator.imageIn;\n    connect evaluator.evalOut to shooter.evalIn;\n    connect focus.imageOut to shooter.imageIn;\n    connect shooter.photoOut to output.photoIn;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/24/24_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/24/24.sysml",
+  "response": {
+    "id": "resp_0028df7454319ad2006998003a279481a0965a744e0a2dc1dc",
+    "created_at": 1771569210.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0028df7454319ad2006998003a7b0081a0b053a71ffe8a324f",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'PhotographyWorkflow'.\n2. There is a part definition named 'Scene'.\n3. There is a part definition named 'Image'.\n4. The part 'Image' has an attribute 'isWellFocused' of type 'ScalarValues::Boolean'.\n5. There is a part definition named 'Picture'.\n6. There is an action definition named 'Focus' with input 'scene: Scene' and output 'image: Image'.\n7. There is an action definition named 'Shoot' with input 'image: Image' and output 'picture: Picture'.\n8. There is an action definition named 'TakePicture' with input 'scene: Scene' and output 'picture: Picture'.\n9. There is an action instance 'takePicture' of type 'TakePicture' with input 'scene' and output 'picture'.\n10. Inside 'takePicture', there is an action instance 'focus' of type 'Focus' with input 'scene' and output 'image'.\n11. Inside 'takePicture', there is a conditional: if 'focus.image.isWellFocused' then 'shoot'.\n12. There is a flow from 'focus.image' to 'shoot.image'.\n13. Inside 'takePicture', there is an action instance 'shoot' of type 'Shoot' with input 'image' and output 'picture'.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package 'PhotographyWorkflow' | **Yes** (as 'PhotoWorkflow') | Naming difference ignored. |\n| 2 | Part def 'Scene' | **Yes** | 'item def Scene' present. |\n| 3 | Part def 'Image' | **Yes** | 'item def Image' present. |\n| 4 | 'Image' has attribute 'isWellFocused: ScalarValues::Boolean' | **No** | No such attribute; instead, focus quality is modeled separately in 'FocusEvaluation'. |\n| 5 | Part def 'Picture' | **Partial** | 'item def Photograph' exists, likely equivalent to 'Picture'. Accept as covered. |\n| 6 | Action def 'Focus' (in: Scene, out: Image) | **Yes** | 'FocusAndImage' part with sceneIn and imageOut ports. |\n| 7 | Action def 'Shoot' (in: Image, out: Picture) | **Yes** | 'Shooter' part with imageIn and photoOut ports. |\n| 8 | Action def 'TakePicture' (in: Scene, out: Picture) | **Yes** | 'CameraSystem' as the composition, matches the workflow. |\n| 9 | Action instance 'takePicture' of 'TakePicture' | **Yes** | 'CameraSystem' is the system-level composition. |\n| 10 | Action instance 'focus' of 'Focus' inside 'takePicture' | **Yes** | 'focus: FocusAndImage' part in 'CameraSystem'. |\n| 11 | Conditional: if 'focus.image.isWellFocused' then 'shoot' | **Partial/No** | Focus evaluation is present, but explicit conditional not modeled. |\n| 12 | Flow from 'focus.image' to 'shoot.image' | **Yes** | 'connect focus.imageOut to shooter.imageIn' present. |\n| 13 | Action instance 'shoot' of 'Shoot' inside 'takePicture' | **Yes** | 'shooter: Shooter' part in 'CameraSystem'. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Covered**: 1, 2, 3, 5, 6, 7, 8, 9, 10, 12, 13 (11 claims)\n- **Not covered**: 4 (attribute on Image), 11 (explicit conditional on focus quality)\n\n**Score: 11/13**\n\n---\n\n**Final Output:**\n\n---\n\n**Score: 11/13**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 679,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 885,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1564
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569223,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'PhotographyWorkflow'.\n2. There is a part definition named 'Scene'.\n3. There is a part definition named 'Image'.\n4. The part 'Image' has an attribute 'isWellFocused' of type 'ScalarValues::Boolean'.\n5. There is a part definition named 'Picture'.\n6. There is an action definition named 'Focus' with input 'scene: Scene' and output 'image: Image'.\n7. There is an action definition named 'Shoot' with input 'image: Image' and output 'picture: Picture'.\n8. There is an action definition named 'TakePicture' with input 'scene: Scene' and output 'picture: Picture'.\n9. There is an action instance 'takePicture' of type 'TakePicture' with input 'scene' and output 'picture'.\n10. Inside 'takePicture', there is an action instance 'focus' of type 'Focus' with input 'scene' and output 'image'.\n11. Inside 'takePicture', there is a conditional: if 'focus.image.isWellFocused' then 'shoot'.\n12. There is a flow from 'focus.image' to 'shoot.image'.\n13. Inside 'takePicture', there is an action instance 'shoot' of type 'Shoot' with input 'image' and output 'picture'.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package 'PhotographyWorkflow' | **Yes** (as 'PhotoWorkflow') | Naming difference ignored. |\n| 2 | Part def 'Scene' | **Yes** | 'item def Scene' present. |\n| 3 | Part def 'Image' | **Yes** | 'item def Image' present. |\n| 4 | 'Image' has attribute 'isWellFocused: ScalarValues::Boolean' | **No** | No such attribute; instead, focus quality is modeled separately in 'FocusEvaluation'. |\n| 5 | Part def 'Picture' | **Partial** | 'item def Photograph' exists, likely equivalent to 'Picture'. Accept as covered. |\n| 6 | Action def 'Focus' (in: Scene, out: Image) | **Yes** | 'FocusAndImage' part with sceneIn and imageOut ports. |\n| 7 | Action def 'Shoot' (in: Image, out: Picture) | **Yes** | 'Shooter' part with imageIn and photoOut ports. |\n| 8 | Action def 'TakePicture' (in: Scene, out: Picture) | **Yes** | 'CameraSystem' as the composition, matches the workflow. |\n| 9 | Action instance 'takePicture' of 'TakePicture' | **Yes** | 'CameraSystem' is the system-level composition. |\n| 10 | Action instance 'focus' of 'Focus' inside 'takePicture' | **Yes** | 'focus: FocusAndImage' part in 'CameraSystem'. |\n| 11 | Conditional: if 'focus.image.isWellFocused' then 'shoot' | **Partial/No** | Focus evaluation is present, but explicit conditional not modeled. |\n| 12 | Flow from 'focus.image' to 'shoot.image' | **Yes** | 'connect focus.imageOut to shooter.imageIn' present. |\n| 13 | Action instance 'shoot' of 'Shoot' inside 'takePicture' | **Yes** | 'shooter: Shooter' part in 'CameraSystem'. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Covered**: 1, 2, 3, 5, 6, 7, 8, 9, 10, 12, 13 (11 claims)\n- **Not covered**: 4 (attribute on Image), 11 (explicit conditional on focus quality)\n\n**Score: 11/13**\n\n---\n\n**Final Output:**\n\n---\n\n**Score: 11/13**"
+  }
+}

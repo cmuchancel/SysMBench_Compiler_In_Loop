@@ -1,0 +1,85 @@
+{
+  "model_id": 51,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleComposition' {\n\tprivate import ScalarValues::*;\n\tpart def Vehicle {\n\t\tattribute mass : Real;\n\t\tattribute status : VehicleStatus;\n\t\tpart eng : Engine;\n\t\tref part driver : Person;\n\t}\n\tattribute def VehicleStatus {\n\t\tattribute gearSetting : Integer;\n\t\tattribute acceleratorPosition : Real;\n\t}\n\tpart def Engine;\t\n\tpart def Person;\n\tpart def Wheel;\n\tindividual part def Vehicle_1 :> Vehicle {\n\t\tpart leftFrontWheel : Wheel;\n\t\tpart rightFrontWheel : Wheel;\n\t}\n\tindividual part def Wheel_1 :> Wheel;\n\tindividual part vehicle_1 : Vehicle_1 {\n\t\tsnapshot part vehicle_1_t0 {\n\t\t\tsnapshot leftFrontWheel_t0 : Wheel_1 :>> leftFrontWheel;\n\t\t}\n\t\tthen snapshot part vehicle_1_t1 {\n\t\t\tsnapshot rightFrontWheel_t1 : Wheel_1 :>> rightFrontWheel;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage VehicleModel {\n    private import ScalarValues::*;\n\n    enum def GearSetting {\n        enum Park;\n        enum Reverse;\n        enum Neutral;\n        enum Drive;\n    }\n\n    part def OperationalStatus {\n        attribute gearSetting : GearSetting;\n        attribute acceleratorPedalPosition : Real;\n    }\n\n    part def Engine {\n    }\n\n    part def Driver {\n    }\n\n    part def Wheel {\n    }\n\n    part def Vehicle {\n        attribute mass : Real;\n        attribute isOperational : Boolean;\n        part status : OperationalStatus;\n        part engine : Engine;\n        ref part driver : Driver;\n        part leftFrontWheel : Wheel;\n        part rightFrontWheel : Wheel;\n        part leftRearWheel : Wheel;\n        part rightRearWheel : Wheel;\n    }\n\n    part vehicle_1 : Vehicle {\n        part leftFrontWheel_snapshot1 : Wheel;\n        part rightFrontWheel_snapshot1 : Wheel;\n        part leftFrontWheel_snapshot2 : Wheel;\n        part rightFrontWheel_snapshot2 : Wheel;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/51/51_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/51/51.sysml",
+  "response": {
+    "id": "resp_09553d495e3c533a006997ff0fa9448194aaa5a2d08764a36f",
+    "created_at": 1771568911.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_09553d495e3c533a006997ff0fdc0c8194a4c89e46d71b3b1a",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is named 'VehicleComposition'.\n2. There is a private import of ScalarValues::*.\n3. There is a part definition named Vehicle.\n4. Vehicle has an attribute mass of type Real.\n5. Vehicle has an attribute status of type VehicleStatus.\n6. Vehicle has a part eng of type Engine.\n7. Vehicle has a reference part driver of type Person.\n8. There is an attribute definition named VehicleStatus.\n9. VehicleStatus has an attribute gearSetting of type Integer.\n10. VehicleStatus has an attribute acceleratorPosition of type Real.\n11. There is a part definition named Engine.\n12. There is a part definition named Person.\n13. There is a part definition named Wheel.\n14. There is an individual part definition Vehicle_1 of type Vehicle.\n15. Vehicle_1 has a part leftFrontWheel of type Wheel.\n16. Vehicle_1 has a part rightFrontWheel of type Wheel.\n17. There is an individual part definition Wheel_1 of type Wheel.\n18. There is an individual part vehicle_1 of type Vehicle_1.\n19. vehicle_1 has a snapshot part vehicle_1_t0.\n20. vehicle_1_t0 has a snapshot leftFrontWheel_t0 of type Wheel_1, mapped to leftFrontWheel.\n21. vehicle_1 has a then snapshot part vehicle_1_t1.\n22. vehicle_1_t1 has a snapshot rightFrontWheel_t1 of type Wheel_1, mapped to rightFrontWheel.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package named 'VehicleComposition' | **No** | Package is named 'VehicleModel' (naming difference, but semantics are the same, so **Yes**) |\n| 2 | Private import ScalarValues::* | **Yes** | Present |\n| 3 | part def Vehicle | **Yes** | Present |\n| 4 | Vehicle has attribute mass : Real | **Yes** | Present |\n| 5 | Vehicle has attribute status : VehicleStatus | **Partial** | Vehicle has part status : OperationalStatus (renamed, but structure matches) |\n| 6 | Vehicle has part eng : Engine | **Partial** | Vehicle has part engine : Engine (renamed, but matches) |\n| 7 | Vehicle has ref part driver : Person | **Partial** | Vehicle has ref part driver : Driver (renamed, but matches) |\n| 8 | attribute def VehicleStatus | **Partial** | OperationalStatus is a part, not attribute def, but serves the same role |\n| 9 | VehicleStatus has attribute gearSetting : Integer | **Partial** | OperationalStatus has attribute gearSetting : GearSetting (type changed to enum, but matches intent) |\n| 10 | VehicleStatus has attribute acceleratorPosition : Real | **Partial** | OperationalStatus has attribute acceleratorPedalPosition : Real (renamed, but matches) |\n| 11 | part def Engine | **Yes** | Present |\n| 12 | part def Person | **Partial** | part def Driver (renamed, but matches) |\n| 13 | part def Wheel | **Yes** | Present |\n| 14 | individual part def Vehicle_1 :> Vehicle | **Partial** | No explicit individual part def, but vehicle_1 : Vehicle exists (no subclassing) |\n| 15 | Vehicle_1 has part leftFrontWheel : Wheel | **Partial** | Vehicle has leftFrontWheel : Wheel (in main Vehicle, not in Vehicle_1) |\n| 16 | Vehicle_1 has part rightFrontWheel : Wheel | **Partial** | Same as above |\n| 17 | individual part def Wheel_1 :> Wheel | **No** | Not present |\n| 18 | individual part vehicle_1 : Vehicle_1 | **Partial** | vehicle_1 : Vehicle (no subclassing) |\n| 19 | vehicle_1 has snapshot part vehicle_1_t0 | **Partial** | Snapshots are modeled as parts with snapshot names, but not explicit |\n| 20 | vehicle_1_t0 has snapshot leftFrontWheel_t0 : Wheel_1 :>> leftFrontWheel | **Partial** | leftFrontWheel_snapshot1 : Wheel exists, but not mapped to Wheel_1 or leftFrontWheel explicitly |\n| 21 | vehicle_1 has then snapshot part vehicle_1_t1 | **Partial** | Snapshots as parts, not explicit |\n| 22 | vehicle_1_t1 has snapshot rightFrontWheel_t1 : Wheel_1 :>> rightFrontWheel | **Partial** | rightFrontWheel_snapshot2 : Wheel exists, but not mapped to Wheel_1 or rightFrontWheel explicitly |\n\n---\n\n#### Coverage Decision\n\n- For claims where the only difference is naming or type refinement (e.g., Integer → enum), **count as covered**.\n- For claims where the structure is present but not as a subclass/individual, **count as covered** if the intent is preserved.\n- For claims about explicit individuals (Vehicle_1, Wheel_1) and explicit snapshots, **count as not covered** if not present.\n\nLet's count:\n\n**Covered Claims:**\n1. Package (naming difference ignored)\n2. Private import\n3. Vehicle part def\n4. Vehicle.mass : Real\n5. Vehicle.status/OperationalStatus (structure matches)\n6. Vehicle.eng/engine : Engine\n7. Vehicle.driver/Driver (structure matches)\n8. VehicleStatus/OperationalStatus (structure matches)\n9. gearSetting (type changed, but matches)\n10. acceleratorPosition/acceleratorPedalPosition (renamed)\n11. Engine part def\n12. Person/Driver part def (renamed)\n13. Wheel part def\n15. leftFrontWheel : Wheel (structure present)\n16. rightFrontWheel : Wheel (structure present)\n\n**Not Covered:**\n14. individual part def Vehicle_1 :> Vehicle (no subclassing/individual)\n17. individual part def Wheel_1 :> Wheel (not present)\n18. individual part vehicle_1 : Vehicle_1 (no subclassing)\n19. vehicle_1 has snapshot part vehicle_1_t0 (not explicit)\n20. vehicle_1_t0 has snapshot leftFrontWheel_t0 : Wheel_1 :>> leftFrontWheel (not explicit)\n21. vehicle_1 has then snapshot part vehicle_1_t1 (not explicit)\n22. vehicle_1_t1 has snapshot rightFrontWheel_t1 : Wheel_1 :>> rightFrontWheel (not explicit)\n\n---\n\n### 3. Summarize the results\n\n**Score: 15/22**\n\n---\n\n**Final Output:**\n\nScore: 15/22",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 588,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1431,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2019
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568931,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is named 'VehicleComposition'.\n2. There is a private import of ScalarValues::*.\n3. There is a part definition named Vehicle.\n4. Vehicle has an attribute mass of type Real.\n5. Vehicle has an attribute status of type VehicleStatus.\n6. Vehicle has a part eng of type Engine.\n7. Vehicle has a reference part driver of type Person.\n8. There is an attribute definition named VehicleStatus.\n9. VehicleStatus has an attribute gearSetting of type Integer.\n10. VehicleStatus has an attribute acceleratorPosition of type Real.\n11. There is a part definition named Engine.\n12. There is a part definition named Person.\n13. There is a part definition named Wheel.\n14. There is an individual part definition Vehicle_1 of type Vehicle.\n15. Vehicle_1 has a part leftFrontWheel of type Wheel.\n16. Vehicle_1 has a part rightFrontWheel of type Wheel.\n17. There is an individual part definition Wheel_1 of type Wheel.\n18. There is an individual part vehicle_1 of type Vehicle_1.\n19. vehicle_1 has a snapshot part vehicle_1_t0.\n20. vehicle_1_t0 has a snapshot leftFrontWheel_t0 of type Wheel_1, mapped to leftFrontWheel.\n21. vehicle_1 has a then snapshot part vehicle_1_t1.\n22. vehicle_1_t1 has a snapshot rightFrontWheel_t1 of type Wheel_1, mapped to rightFrontWheel.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package named 'VehicleComposition' | **No** | Package is named 'VehicleModel' (naming difference, but semantics are the same, so **Yes**) |\n| 2 | Private import ScalarValues::* | **Yes** | Present |\n| 3 | part def Vehicle | **Yes** | Present |\n| 4 | Vehicle has attribute mass : Real | **Yes** | Present |\n| 5 | Vehicle has attribute status : VehicleStatus | **Partial** | Vehicle has part status : OperationalStatus (renamed, but structure matches) |\n| 6 | Vehicle has part eng : Engine | **Partial** | Vehicle has part engine : Engine (renamed, but matches) |\n| 7 | Vehicle has ref part driver : Person | **Partial** | Vehicle has ref part driver : Driver (renamed, but matches) |\n| 8 | attribute def VehicleStatus | **Partial** | OperationalStatus is a part, not attribute def, but serves the same role |\n| 9 | VehicleStatus has attribute gearSetting : Integer | **Partial** | OperationalStatus has attribute gearSetting : GearSetting (type changed to enum, but matches intent) |\n| 10 | VehicleStatus has attribute acceleratorPosition : Real | **Partial** | OperationalStatus has attribute acceleratorPedalPosition : Real (renamed, but matches) |\n| 11 | part def Engine | **Yes** | Present |\n| 12 | part def Person | **Partial** | part def Driver (renamed, but matches) |\n| 13 | part def Wheel | **Yes** | Present |\n| 14 | individual part def Vehicle_1 :> Vehicle | **Partial** | No explicit individual part def, but vehicle_1 : Vehicle exists (no subclassing) |\n| 15 | Vehicle_1 has part leftFrontWheel : Wheel | **Partial** | Vehicle has leftFrontWheel : Wheel (in main Vehicle, not in Vehicle_1) |\n| 16 | Vehicle_1 has part rightFrontWheel : Wheel | **Partial** | Same as above |\n| 17 | individual part def Wheel_1 :> Wheel | **No** | Not present |\n| 18 | individual part vehicle_1 : Vehicle_1 | **Partial** | vehicle_1 : Vehicle (no subclassing) |\n| 19 | vehicle_1 has snapshot part vehicle_1_t0 | **Partial** | Snapshots are modeled as parts with snapshot names, but not explicit |\n| 20 | vehicle_1_t0 has snapshot leftFrontWheel_t0 : Wheel_1 :>> leftFrontWheel | **Partial** | leftFrontWheel_snapshot1 : Wheel exists, but not mapped to Wheel_1 or leftFrontWheel explicitly |\n| 21 | vehicle_1 has then snapshot part vehicle_1_t1 | **Partial** | Snapshots as parts, not explicit |\n| 22 | vehicle_1_t1 has snapshot rightFrontWheel_t1 : Wheel_1 :>> rightFrontWheel | **Partial** | rightFrontWheel_snapshot2 : Wheel exists, but not mapped to Wheel_1 or rightFrontWheel explicitly |\n\n---\n\n#### Coverage Decision\n\n- For claims where the only difference is naming or type refinement (e.g., Integer → enum), **count as covered**.\n- For claims where the structure is present but not as a subclass/individual, **count as covered** if the intent is preserved.\n- For claims about explicit individuals (Vehicle_1, Wheel_1) and explicit snapshots, **count as not covered** if not present.\n\nLet's count:\n\n**Covered Claims:**\n1. Package (naming difference ignored)\n2. Private import\n3. Vehicle part def\n4. Vehicle.mass : Real\n5. Vehicle.status/OperationalStatus (structure matches)\n6. Vehicle.eng/engine : Engine\n7. Vehicle.driver/Driver (structure matches)\n8. VehicleStatus/OperationalStatus (structure matches)\n9. gearSetting (type changed, but matches)\n10. acceleratorPosition/acceleratorPedalPosition (renamed)\n11. Engine part def\n12. Person/Driver part def (renamed)\n13. Wheel part def\n15. leftFrontWheel : Wheel (structure present)\n16. rightFrontWheel : Wheel (structure present)\n\n**Not Covered:**\n14. individual part def Vehicle_1 :> Vehicle (no subclassing/individual)\n17. individual part def Wheel_1 :> Wheel (not present)\n18. individual part vehicle_1 : Vehicle_1 (no subclassing)\n19. vehicle_1 has snapshot part vehicle_1_t0 (not explicit)\n20. vehicle_1_t0 has snapshot leftFrontWheel_t0 : Wheel_1 :>> leftFrontWheel (not explicit)\n21. vehicle_1 has then snapshot part vehicle_1_t1 (not explicit)\n22. vehicle_1_t1 has snapshot rightFrontWheel_t1 : Wheel_1 :>> rightFrontWheel (not explicit)\n\n---\n\n### 3. Summarize the results\n\n**Score: 15/22**\n\n---\n\n**Final Output:**\n\nScore: 15/22"
+  }
+}

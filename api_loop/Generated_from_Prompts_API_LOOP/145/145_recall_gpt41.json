@@ -1,0 +1,85 @@
+{
+  "model_id": 145,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'StructuredDataTypes' {\n\tprivate import ScalarValues::*;\n\tprivate import USCustomaryUnits::'in';\n    attribute def PositionVector {\n        attribute x: Real[1];\n        attribute y: Real[1];\n        attribute z: Real[1];\n    }\n    attribute def LengthValue :> Real;\n    attribute def TireInfo {\n    \tattribute manufacturer: String;\n        attribute hubDiameter: LengthValue;\n        attribute width: Integer;\n        attribute placement: PositionVector[0..1];\n    }\n    attribute frenchTireInfo: TireInfo {\n    \tattribute :>> manufacturer = \"Michelin\";\n    \tattribute :>> hubDiameter = 18.0['in'];\n    \tattribute :>> width = 245;\n    }\n}\n\nGenerated Model:\npackage TireInfo {\n    private import ScalarValues::*;\n\n    item def Vector3 {\n        attribute x : Real;\n        attribute y : Real;\n        attribute z : Real;\n    }\n\n    part def Tire {\n        attribute manufacturerName : String;\n        attribute rimDiameterInInches : Real;\n        attribute tireWidth : Real;\n        attribute position : Vector3 [0..1];\n    }\n\n    part def TireCatalog {\n        part tires : Tire[*];\n    }\n\n    part MichelinExample : Tire {\n        manufacturerName = \"Michelin\";\n        rimDiameterInInches = 18.0;\n        tireWidth = 245.0;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/145/145_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/145/145.sysml",
+  "response": {
+    "id": "resp_0e951dfe7002791700699801c3e43c8197b698c721de2ad537",
+    "created_at": 1771569603.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0e951dfe7002791700699801c4148c8197b1904e9e875792fe",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is named 'StructuredDataTypes'.\n2. The package imports 'ScalarValues::*'.\n3. The package imports 'USCustomaryUnits::in'.\n4. There is an attribute definition 'PositionVector'.\n5. 'PositionVector' has an attribute 'x' of type 'Real[1]'.\n6. 'PositionVector' has an attribute 'y' of type 'Real[1]'.\n7. 'PositionVector' has an attribute 'z' of type 'Real[1]'.\n8. There is an attribute definition 'LengthValue' as a subtype of 'Real'.\n9. There is an attribute definition 'TireInfo'.\n10. 'TireInfo' has an attribute 'manufacturer' of type 'String'.\n11. 'TireInfo' has an attribute 'hubDiameter' of type 'LengthValue'.\n12. 'TireInfo' has an attribute 'width' of type 'Integer'.\n13. 'TireInfo' has an attribute 'placement' of type 'PositionVector[0..1]'.\n14. There is an attribute 'frenchTireInfo' of type 'TireInfo'.\n15. 'frenchTireInfo' has 'manufacturer' set to \"Michelin\".\n16. 'frenchTireInfo' has 'hubDiameter' set to 18.0['in'].\n17. 'frenchTireInfo' has 'width' set to 245.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered by Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package name 'StructuredDataTypes' | **No** | Package is named 'TireInfo' in generated model. |\n| 2 | Import 'ScalarValues::*' | **Yes** | Present. |\n| 3 | Import 'USCustomaryUnits::in' | **No** | Not present. |\n| 4 | Attribute def 'PositionVector' | **Yes** | Equivalent: 'Vector3' item def. |\n| 5 | 'PositionVector' has 'x: Real[1]' | **Yes** | 'Vector3' has 'x: Real'. Multiplicity not specified, but assumed equivalent. |\n| 6 | 'PositionVector' has 'y: Real[1]' | **Yes** | Same as above. |\n| 7 | 'PositionVector' has 'z: Real[1]' | **Yes** | Same as above. |\n| 8 | Attribute def 'LengthValue' as subtype of Real | **No** | No explicit subtype for rim diameter; just uses Real. |\n| 9 | Attribute def 'TireInfo' | **Yes** | Equivalent: 'Tire' part def. |\n| 10 | 'TireInfo' has 'manufacturer: String' | **Yes** | 'manufacturerName: String' in 'Tire'. Naming difference ignored. |\n| 11 | 'TireInfo' has 'hubDiameter: LengthValue' | **Partial** | 'rimDiameterInInches: Real' in 'Tire'. No explicit LengthValue type, but semantically similar. We'll count as covered. |\n| 12 | 'TireInfo' has 'width: Integer' | **Partial** | 'tireWidth: Real' in 'Tire'. Type is Real, not Integer. We'll count as covered for recall. |\n| 13 | 'TireInfo' has 'placement: PositionVector[0..1]' | **Yes** | 'position: Vector3[0..1]' in 'Tire'. Equivalent. |\n| 14 | Attribute 'frenchTireInfo: TireInfo' | **Yes** | 'MichelinExample: Tire' part. Equivalent. |\n| 15 | 'frenchTireInfo' has 'manufacturer' = \"Michelin\" | **Yes** | 'MichelinExample' sets 'manufacturerName = \"Michelin\"'. |\n| 16 | 'frenchTireInfo' has 'hubDiameter' = 18.0['in'] | **Partial** | 'MichelinExample' sets 'rimDiameterInInches = 18.0'. Unit not explicit, but implied by name. Count as covered. |\n| 17 | 'frenchTireInfo' has 'width' = 245 | **Yes** | 'MichelinExample' sets 'tireWidth = 245.0'. |\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n\n- 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17\n\n**Not Covered Claims:**\n\n- 1 (package name), 3 (import USCustomaryUnits::in), 8 (LengthValue subtype)\n\n**Total Claims:** 17  \n**Covered Claims:** 14\n\n---\n\n**Score: 14/17**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 471,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1078,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1549
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569615,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is named 'StructuredDataTypes'.\n2. The package imports 'ScalarValues::*'.\n3. The package imports 'USCustomaryUnits::in'.\n4. There is an attribute definition 'PositionVector'.\n5. 'PositionVector' has an attribute 'x' of type 'Real[1]'.\n6. 'PositionVector' has an attribute 'y' of type 'Real[1]'.\n7. 'PositionVector' has an attribute 'z' of type 'Real[1]'.\n8. There is an attribute definition 'LengthValue' as a subtype of 'Real'.\n9. There is an attribute definition 'TireInfo'.\n10. 'TireInfo' has an attribute 'manufacturer' of type 'String'.\n11. 'TireInfo' has an attribute 'hubDiameter' of type 'LengthValue'.\n12. 'TireInfo' has an attribute 'width' of type 'Integer'.\n13. 'TireInfo' has an attribute 'placement' of type 'PositionVector[0..1]'.\n14. There is an attribute 'frenchTireInfo' of type 'TireInfo'.\n15. 'frenchTireInfo' has 'manufacturer' set to \"Michelin\".\n16. 'frenchTireInfo' has 'hubDiameter' set to 18.0['in'].\n17. 'frenchTireInfo' has 'width' set to 245.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered by Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package name 'StructuredDataTypes' | **No** | Package is named 'TireInfo' in generated model. |\n| 2 | Import 'ScalarValues::*' | **Yes** | Present. |\n| 3 | Import 'USCustomaryUnits::in' | **No** | Not present. |\n| 4 | Attribute def 'PositionVector' | **Yes** | Equivalent: 'Vector3' item def. |\n| 5 | 'PositionVector' has 'x: Real[1]' | **Yes** | 'Vector3' has 'x: Real'. Multiplicity not specified, but assumed equivalent. |\n| 6 | 'PositionVector' has 'y: Real[1]' | **Yes** | Same as above. |\n| 7 | 'PositionVector' has 'z: Real[1]' | **Yes** | Same as above. |\n| 8 | Attribute def 'LengthValue' as subtype of Real | **No** | No explicit subtype for rim diameter; just uses Real. |\n| 9 | Attribute def 'TireInfo' | **Yes** | Equivalent: 'Tire' part def. |\n| 10 | 'TireInfo' has 'manufacturer: String' | **Yes** | 'manufacturerName: String' in 'Tire'. Naming difference ignored. |\n| 11 | 'TireInfo' has 'hubDiameter: LengthValue' | **Partial** | 'rimDiameterInInches: Real' in 'Tire'. No explicit LengthValue type, but semantically similar. We'll count as covered. |\n| 12 | 'TireInfo' has 'width: Integer' | **Partial** | 'tireWidth: Real' in 'Tire'. Type is Real, not Integer. We'll count as covered for recall. |\n| 13 | 'TireInfo' has 'placement: PositionVector[0..1]' | **Yes** | 'position: Vector3[0..1]' in 'Tire'. Equivalent. |\n| 14 | Attribute 'frenchTireInfo: TireInfo' | **Yes** | 'MichelinExample: Tire' part. Equivalent. |\n| 15 | 'frenchTireInfo' has 'manufacturer' = \"Michelin\" | **Yes** | 'MichelinExample' sets 'manufacturerName = \"Michelin\"'. |\n| 16 | 'frenchTireInfo' has 'hubDiameter' = 18.0['in'] | **Partial** | 'MichelinExample' sets 'rimDiameterInInches = 18.0'. Unit not explicit, but implied by name. Count as covered. |\n| 17 | 'frenchTireInfo' has 'width' = 245 | **Yes** | 'MichelinExample' sets 'tireWidth = 245.0'. |\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n\n- 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17\n\n**Not Covered Claims:**\n\n- 1 (package name), 3 (import USCustomaryUnits::in), 8 (LengthValue subtype)\n\n**Total Claims:** 17  \n**Covered Claims:** 14\n\n---\n\n**Score: 14/17**"
+  }
+}

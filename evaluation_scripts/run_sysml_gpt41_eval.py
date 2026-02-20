@@ -11,10 +11,10 @@ For every model directory (default: Generated_from_Prompts/1..75) we:
 
 Usage example:
     OPENAI_API_KEY=... python run_sysml_gpt41_eval.py \\
-        --generated-root Generated_from_Prompts \\
-        --reference-root Generated_from_Prompts \\
-        --precision-prompt DesignBench/src/metrics/sysm-eval-p.txt \\
-        --recall-prompt DesignBench/src/metrics/sysm-eval-r.txt \\
+        --generated-root ai_agent/Generated_from_Prompts_AI_AGENT \\
+        --reference-root ai_agent/Generated_from_Prompts_AI_AGENT \\
+        --precision-prompt evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt \\
+        --recall-prompt evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt \\
         --start-id 1 --end-id 75 --skip 7 13
 """
 

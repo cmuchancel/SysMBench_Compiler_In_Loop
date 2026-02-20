@@ -1,0 +1,85 @@
+{
+  "model_id": 42,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleControlSignals' {\n\tattribute def VehicleStartSignal;\n\tattribute def VehicleOnSignal;\n\tattribute def VehicleOffSignal;\n\tattribute def ControllerStartSignal;\n\tpart def Vehicle {\n\t\tbrakePedalDepressed : ScalarValues::Boolean;\n\t}\n\tpart def VehicleController;\n\taction performSelfTest { in vehicle : Vehicle; }\n\tstate def VehicleStates;\n\tstate vehicleStates : VehicleStates {\n\t\tin operatingVehicle : Vehicle;\n\t\tin controller : VehicleController;\n\t\tentry; then off;\n\t\tstate off;\n\t\taccept VehicleStartSignal \n\t\t\tthen starting;\n\t\tstate starting;\n\t\taccept VehicleOnSignal\n\t\t\tif operatingVehicle.brakePedalDepressed\n\t\t\tdo send ControllerStartSignal() to controller\n\t\t\tthen on;\n\t\tstate on {\n\t\t\tentry performSelfTest{ in vehicle = operatingVehicle; }\n\t\t\tdo action providePower { /* ... */ }\n\t\t\texit action applyParkingBrake { /* ... */ }\n\t\t}\n\t\taccept VehicleOffSignal\n\t\t\tthen off;\n\t}\n}\n\nGenerated Model:\npackage VehicleStartStopSystemPkg {\n  private import ScalarValues::*;\n\n  enum def VehicleState {\n    off;\n    starting;\n    operating;\n  }\n\n  item def Signal;\n\n  part def Controller {\n    attribute controllerReady : Boolean = true;\n  }\n\n  part def StartStopSystem {\n    attribute vehicleState : VehicleState = VehicleState::off;\n    attribute brakePedalDepressed : Boolean = false;\n    attribute startSignal : Boolean = false;\n    attribute powerOnSignal : Boolean = false;\n    attribute stopSignal : Boolean = false;\n    attribute selfCheckComplete : Boolean = false;\n    attribute powerSupplyOn : Boolean = false;\n    attribute parkingBrakeApplied : Boolean = true;\n    attribute startSignalToController : Boolean = false;\n    part controller : Controller;\n  }\n\n  part def Vehicle {\n    part startStop : StartStopSystem;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/42/42_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/42/42.sysml",
+  "response": {
+    "id": "resp_080927574893266f006997fdb18690819d8916b7b96aeae2f7",
+    "created_at": 1771568561.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_080927574893266f006997fdb21944819da072444ddcc5e212",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehicleControlSignals'.\n2. There is an attribute definition: VehicleStartSignal.\n3. There is an attribute definition: VehicleOnSignal.\n4. There is an attribute definition: VehicleOffSignal.\n5. There is an attribute definition: ControllerStartSignal.\n6. There is a part definition: Vehicle.\n7. The part Vehicle has an attribute: brakePedalDepressed of type ScalarValues::Boolean.\n8. There is a part definition: VehicleController.\n9. There is an action definition: performSelfTest with input parameter vehicle of type Vehicle.\n10. There is a state definition: VehicleStates.\n11. There is a state instance: vehicleStates of type VehicleStates.\n12. The state vehicleStates has an input: operatingVehicle of type Vehicle.\n13. The state vehicleStates has an input: controller of type VehicleController.\n14. The state vehicleStates has an entry action, then transitions to 'off'.\n15. The state vehicleStates has a substate: off.\n16. The state vehicleStates accepts VehicleStartSignal and transitions to 'starting'.\n17. The state vehicleStates has a substate: starting.\n18. The state vehicleStates accepts VehicleOnSignal, with a guard: operatingVehicle.brakePedalDepressed.\n19. On accepting VehicleOnSignal (with the guard), it sends ControllerStartSignal to controller and transitions to 'on'.\n20. The state vehicleStates has a substate: on.\n21. The 'on' state has an entry action: performSelfTest with vehicle = operatingVehicle.\n22. The 'on' state has a do action: providePower.\n23. The 'on' state has an exit action: applyParkingBrake.\n24. The state vehicleStates accepts VehicleOffSignal and transitions to 'off'.\n\n**Total atomic claims: 24**\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n#### 1. Package named 'VehicleControlSignals'\n- **Not covered** (Generated model uses 'VehicleStartStopSystemPkg', not equivalent in semantics.)\n\n#### 2. Attribute definition: VehicleStartSignal\n- **Not covered** (No such attribute or equivalent signal in generated model.)\n\n#### 3. Attribute definition: VehicleOnSignal\n- **Not covered** (No such attribute or equivalent signal in generated model.)\n\n#### 4. Attribute definition: VehicleOffSignal\n- **Not covered** (No such attribute or equivalent signal in generated model.)\n\n#### 5. Attribute definition: ControllerStartSignal\n- **Not covered** (No such attribute or equivalent signal in generated model.)\n\n#### 6. Part definition: Vehicle\n- **Covered** (There is a part def Vehicle.)\n\n#### 7. Vehicle has attribute brakePedalDepressed : ScalarValues::Boolean\n- **Covered** (StartStopSystem has brakePedalDepressed : Boolean, and Vehicle contains StartStopSystem as a part. Not a direct attribute, but present in the structure.)\n\n#### 8. Part definition: VehicleController\n- **Covered** (There is a part def Controller, which is equivalent.)\n\n#### 9. Action performSelfTest { in vehicle : Vehicle; }\n- **Not covered** (No such action or equivalent in generated model.)\n\n#### 10. State definition: VehicleStates\n- **Partially covered** (There is an enum VehicleState, which is similar but not a state machine definition. Let's count as **not covered**.)\n\n#### 11. State instance: vehicleStates : VehicleStates\n- **Not covered** (No state instance.)\n\n#### 12. State vehicleStates has input: operatingVehicle : Vehicle\n- **Not covered** (No such input.)\n\n#### 13. State vehicleStates has input: controller : VehicleController\n- **Not covered** (No such input.)\n\n#### 14. State vehicleStates has entry; then off\n- **Not covered** (No entry action or initial transition.)\n\n#### 15. State vehicleStates has substate: off\n- **Covered** (Enum VehicleState has 'off' state.)\n\n#### 16. Accept VehicleStartSignal then starting\n- **Not covered** (No signal handling or transition logic.)\n\n#### 17. Substate: starting\n- **Covered** (Enum VehicleState has 'starting' state.)\n\n#### 18. Accept VehicleOnSignal if operatingVehicle.brakePedalDepressed\n- **Not covered** (No such signal handling or guard.)\n\n#### 19. On accepting VehicleOnSignal, send ControllerStartSignal to controller, then on\n- **Not covered** (No such action or transition.)\n\n#### 20. Substate: on\n- **Covered** (Enum VehicleState has 'operating', which is likely equivalent to 'on'.)\n\n#### 21. 'on' state entry action: performSelfTest{ in vehicle = operatingVehicle; }\n- **Not covered** (No such entry action.)\n\n#### 22. 'on' state do action: providePower\n- **Not covered** (No such do action.)\n\n#### 23. 'on' state exit action: applyParkingBrake\n- **Not covered** (No such exit action.)\n\n#### 24. Accept VehicleOffSignal then off\n- **Not covered** (No such signal handling or transition.)\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 6. Part definition: Vehicle\n- 7. Vehicle has attribute brakePedalDepressed : ScalarValues::Boolean\n- 8. Part definition: VehicleController\n- 15. State vehicleStates has substate: off\n- 17. Substate: starting\n- 20. Substate: on\n\n**Total covered: 6**\n\n**Total claims: 24**\n\n---\n\n**Score: 6/24**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 572,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1221,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1793
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568584,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehicleControlSignals'.\n2. There is an attribute definition: VehicleStartSignal.\n3. There is an attribute definition: VehicleOnSignal.\n4. There is an attribute definition: VehicleOffSignal.\n5. There is an attribute definition: ControllerStartSignal.\n6. There is a part definition: Vehicle.\n7. The part Vehicle has an attribute: brakePedalDepressed of type ScalarValues::Boolean.\n8. There is a part definition: VehicleController.\n9. There is an action definition: performSelfTest with input parameter vehicle of type Vehicle.\n10. There is a state definition: VehicleStates.\n11. There is a state instance: vehicleStates of type VehicleStates.\n12. The state vehicleStates has an input: operatingVehicle of type Vehicle.\n13. The state vehicleStates has an input: controller of type VehicleController.\n14. The state vehicleStates has an entry action, then transitions to 'off'.\n15. The state vehicleStates has a substate: off.\n16. The state vehicleStates accepts VehicleStartSignal and transitions to 'starting'.\n17. The state vehicleStates has a substate: starting.\n18. The state vehicleStates accepts VehicleOnSignal, with a guard: operatingVehicle.brakePedalDepressed.\n19. On accepting VehicleOnSignal (with the guard), it sends ControllerStartSignal to controller and transitions to 'on'.\n20. The state vehicleStates has a substate: on.\n21. The 'on' state has an entry action: performSelfTest with vehicle = operatingVehicle.\n22. The 'on' state has a do action: providePower.\n23. The 'on' state has an exit action: applyParkingBrake.\n24. The state vehicleStates accepts VehicleOffSignal and transitions to 'off'.\n\n**Total atomic claims: 24**\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n#### 1. Package named 'VehicleControlSignals'\n- **Not covered** (Generated model uses 'VehicleStartStopSystemPkg', not equivalent in semantics.)\n\n#### 2. Attribute definition: VehicleStartSignal\n- **Not covered** (No such attribute or equivalent signal in generated model.)\n\n#### 3. Attribute definition: VehicleOnSignal\n- **Not covered** (No such attribute or equivalent signal in generated model.)\n\n#### 4. Attribute definition: VehicleOffSignal\n- **Not covered** (No such attribute or equivalent signal in generated model.)\n\n#### 5. Attribute definition: ControllerStartSignal\n- **Not covered** (No such attribute or equivalent signal in generated model.)\n\n#### 6. Part definition: Vehicle\n- **Covered** (There is a part def Vehicle.)\n\n#### 7. Vehicle has attribute brakePedalDepressed : ScalarValues::Boolean\n- **Covered** (StartStopSystem has brakePedalDepressed : Boolean, and Vehicle contains StartStopSystem as a part. Not a direct attribute, but present in the structure.)\n\n#### 8. Part definition: VehicleController\n- **Covered** (There is a part def Controller, which is equivalent.)\n\n#### 9. Action performSelfTest { in vehicle : Vehicle; }\n- **Not covered** (No such action or equivalent in generated model.)\n\n#### 10. State definition: VehicleStates\n- **Partially covered** (There is an enum VehicleState, which is similar but not a state machine definition. Let's count as **not covered**.)\n\n#### 11. State instance: vehicleStates : VehicleStates\n- **Not covered** (No state instance.)\n\n#### 12. State vehicleStates has input: operatingVehicle : Vehicle\n- **Not covered** (No such input.)\n\n#### 13. State vehicleStates has input: controller : VehicleController\n- **Not covered** (No such input.)\n\n#### 14. State vehicleStates has entry; then off\n- **Not covered** (No entry action or initial transition.)\n\n#### 15. State vehicleStates has substate: off\n- **Covered** (Enum VehicleState has 'off' state.)\n\n#### 16. Accept VehicleStartSignal then starting\n- **Not covered** (No signal handling or transition logic.)\n\n#### 17. Substate: starting\n- **Covered** (Enum VehicleState has 'starting' state.)\n\n#### 18. Accept VehicleOnSignal if operatingVehicle.brakePedalDepressed\n- **Not covered** (No such signal handling or guard.)\n\n#### 19. On accepting VehicleOnSignal, send ControllerStartSignal to controller, then on\n- **Not covered** (No such action or transition.)\n\n#### 20. Substate: on\n- **Covered** (Enum VehicleState has 'operating', which is likely equivalent to 'on'.)\n\n#### 21. 'on' state entry action: performSelfTest{ in vehicle = operatingVehicle; }\n- **Not covered** (No such entry action.)\n\n#### 22. 'on' state do action: providePower\n- **Not covered** (No such do action.)\n\n#### 23. 'on' state exit action: applyParkingBrake\n- **Not covered** (No such exit action.)\n\n#### 24. Accept VehicleOffSignal then off\n- **Not covered** (No such signal handling or transition.)\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 6. Part definition: Vehicle\n- 7. Vehicle has attribute brakePedalDepressed : ScalarValues::Boolean\n- 8. Part definition: VehicleController\n- 15. State vehicleStates has substate: off\n- 17. Substate: starting\n- 20. Substate: on\n\n**Total covered: 6**\n\n**Total claims: 24**\n\n---\n\n**Score: 6/24**"
+  }
+}

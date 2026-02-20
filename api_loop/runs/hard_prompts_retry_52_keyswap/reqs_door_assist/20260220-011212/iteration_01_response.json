@@ -1,0 +1,82 @@
+{
+  "id": "resp_01f334f13092115b006997fb3d1b68819c8dece7d4ce3a28d7",
+  "created_at": 1771567933.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-5.2-codex",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_01f334f13092115b006997fb3da5f0819cacf5023cf911feb7",
+      "summary": [],
+      "type": "reasoning",
+      "content": null,
+      "encrypted_content": null,
+      "status": null
+    },
+    {
+      "id": "msg_01f334f13092115b006997fb5af5c0819ca9f176b7e4912c13",
+      "content": [
+        {
+          "annotations": [],
+          "text": "package DoorAssistModel {\n  private import ScalarValues::*;\n\n  enum def SystemStatus {\n    enum Ready;\n    enum Active;\n    enum Fault;\n    enum Standby;\n  }\n\n  item def UserRequest {\n    attribute requested: Boolean;\n  }\n\n  item def StatusSignal {\n    attribute status: SystemStatus;\n  }\n\n  port def RequestPort {\n    attribute req: UserRequest;\n  }\n\n  port def StatusPort {\n    attribute status: StatusSignal;\n  }\n\n  part def Requirement {\n    attribute id: String;\n    attribute text: String;\n  }\n\n  part def UserRequestInterfaceSubsystem {\n    port requestIn: RequestPort;\n    port statusOut: StatusPort;\n  }\n\n  part def DoorInteractionSubsystem {\n  }\n\n  part def ReadinessHoldingSubsystem {\n  }\n\n  part def MotionManagementSubsystem {\n  }\n\n  part def MountingEnclosureIntegrationSubsystem {\n  }\n\n  part def SafetyAssuranceSubsystem {\n  }\n\n  part def MaintenanceLifecycleSupportSubsystem {\n  }\n\n  part def AutomaticDoorOpeningAssistSystem {\n    part userRequestInterface: UserRequestInterfaceSubsystem;\n    part doorInteraction: DoorInteractionSubsystem;\n    part readinessHolding: ReadinessHoldingSubsystem;\n    part motionManagement: MotionManagementSubsystem;\n    part mountingIntegration: MountingEnclosureIntegrationSubsystem;\n    part safetyAssurance: SafetyAssuranceSubsystem;\n    part maintenanceLifecycle: MaintenanceLifecycleSupportSubsystem;\n    attribute openingForceCapability_lbf: Real = 11.375;\n  }\n\n  part system: AutomaticDoorOpeningAssistSystem;\n\n  part req_R_MSN_001: Requirement { id = \"R-MSN-001\"; text = \"The system shall enable an interior hinged door to open automatically for an accessibility user when requested.\"; }\n  part req_R_MSN_002: Requirement { id = \"R-MSN-002\"; text = \"The system shall be designed as an add-on for existing doors that already use traditional door-closer hardware.\"; }\n  part req_R_MSN_003: Requirement { id = \"R-MSN-003\"; text = \"The system shall be suitable for installation on a large number of doors in an institutional campus setting, not just exterior entrances.\"; }\n  part req_R_MSN_004: Requirement { id = \"R-MSN-004\"; text = \"The system shall improve user independence by reducing reliance on assistance from other people for routine door access.\"; }\n\n  part req_R_FUNC_001: Requirement { id = \"R-FUNC-001\"; text = \"The system shall provide a user-initiated means to request automatic opening without requiring the user to manipulate a door knob.\"; }\n  part req_R_FUNC_002: Requirement { id = \"R-FUNC-002\"; text = \"The primary initiation interface shall be compatible with push-button actuation appropriate for accessibility users.\"; }\n  part req_R_FUNC_003: Requirement { id = \"R-FUNC-003\"; text = \"The system shall open the door against the resistance of the existing door closer and typical hinge or friction loads.\"; }\n  part req_R_FUNC_004: Requirement { id = \"R-FUNC-004\"; text = \"The system shall support a ready state in which it is prepared to perform an opening upon request without unintended actuation.\"; }\n  part req_R_FUNC_005: Requirement { id = \"R-FUNC-005\"; text = \"The system shall not impede or materially increase resistance during normal door closing under the door closer.\"; }\n  part req_R_FUNC_006: Requirement { id = \"R-FUNC-006\"; text = \"The system shall ensure that the automatic opening motion occurs in the intended opening direction and does not reverse the door expected behavior.\"; }\n  part req_R_FUNC_007: Requirement { id = \"R-FUNC-007\"; text = \"After completing an opening cycle or after a cancellation the system shall return to a defined standby state suitable for subsequent use.\"; }\n\n  part req_R_PERF_001: Requirement { id = \"R-PERF-001\"; text = \"The system shall be capable of opening doors with an opening force requirement up to at least 11.375 lbf.\"; }\n  part req_R_PERF_002: Requirement { id = \"R-PERF-002\"; text = \"The system shall open the door to a usable open position sufficient for wheelchair passage under normal operating conditions.\"; }\n  part req_R_PERF_003: Requirement { id = \"R-PERF-003\"; text = \"Upon user request the system shall begin the opening action within a short user acceptable delay and proceed with controlled motion.\"; }\n  part req_R_PERF_004: Requirement { id = \"R-PERF-004\"; text = \"The system shall provide repeatable opening performance across repeated cycles without requiring re-adjustment between typical uses.\"; }\n\n  part req_R_CNST_001: Requirement { id = \"R-CNST-001\"; text = \"The system shall be designed to be lower-cost than typical electrically-driven automatic door operators suitable for scaling across many doors.\"; }\n  part req_R_CNST_002: Requirement { id = \"R-CNST-002\"; text = \"The system shall be installable without requiring specialized high-skill labor for each door installation supporting scalable deployment.\"; }\n  part req_R_CNST_003: Requirement { id = \"R-CNST-003\"; text = \"The system shall be compatible with common door closer interface geometries and shall tolerate variation in existing door hardware across buildings.\"; }\n  part req_R_CNST_004: Requirement { id = \"R-CNST-004\"; text = \"The system shall be simple and intuitive for both accessibility users and general building occupants minimizing the need for training.\"; }\n  part req_R_CNST_005: Requirement { id = \"R-CNST-005\"; text = \"The system shall fit within a practical on-door or near-door packaging envelope and shall include an enclosure appropriate for building environments.\"; }\n\n  part req_R_SAFE_001: Requirement { id = \"R-SAFE-001\"; text = \"The system shall provide controlled door motion such that the opening action does not create unsafe rapid movement for nearby pedestrians.\"; }\n  part req_R_SAFE_002: Requirement { id = \"R-SAFE-002\"; text = \"The system shall prevent user contact with hazardous moving elements during normal operation and typical interaction.\"; }\n  part req_R_SAFE_003: Requirement { id = \"R-SAFE-003\"; text = \"In the presence of a fault jam or abnormal operating condition the system shall transition to a safe state that avoids uncontrolled door motion.\"; }\n  part req_R_SAFE_004: Requirement { id = \"R-SAFE-004\"; text = \"The system shall minimize pinch points and entrapment hazards introduced by the add-on mechanism.\"; }\n\n  part req_R_RAM_001: Requirement { id = \"R-RAM-001\"; text = \"The system shall withstand frequent daily use in a public building environment without loss of function.\"; }\n  part req_R_RAM_002: Requirement { id = \"R-RAM-002\"; text = \"The system shall maintain its readiness or standby condition for extended periods without unintended actuation or loss of ability to operate when requested.\"; }\n  part req_R_RAM_003: Requirement { id = \"R-RAM-003\"; text = \"The system shall allow inspection and maintenance using common tools and replaceable wear items shall be accessible.\"; }\n  part req_R_RAM_004: Requirement { id = \"R-RAM-004\"; text = \"The system shall operate reliably under typical indoor building conditions including dust incidental impacts and temperature variation within conditioned spaces.\"; }\n\n  part req_R_VER_001: Requirement { id = \"R-VER-001\"; text = \"The opening capability shall be verifiable by test on representative doors spanning measured opening force requirements up to the specified baseline.\"; }\n  part req_R_VER_002: Requirement { id = \"R-VER-002\"; text = \"Non-interference during door closing shall be verifiable by comparing closing behavior time or effort with and without the installed system.\"; }\n  part req_R_VER_003: Requirement { id = \"R-VER-003\"; text = \"Repeatability shall be verifiable by conducting a multi-cycle endurance test demonstrating consistent operation across repeated open and close cycles.\"; }\n  part req_R_VER_004: Requirement { id = \"R-VER-004\"; text = \"Safe-state behavior shall be verifiable by induced fault or jam scenarios demonstrating controlled stop and absence of hazardous motion.\"; }\n}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1771567984.0,
+  "conversation": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "generate_summary": null,
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1680,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 3226,
+    "output_tokens_details": {
+      "reasoning_tokens": 1408
+    },
+    "total_tokens": 4906
+  },
+  "user": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": true
+}

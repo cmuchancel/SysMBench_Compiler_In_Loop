@@ -1,0 +1,85 @@
+{
+  "model_id": 149,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PubSubInteractionModel' {\n\tprivate import ScalarValues::*;\n\tprivate import PayloadDefinitions::*;\n\tpackage PayloadDefinitions {\n\t    item def Subscribe {\n\t    \tattribute topic : String;\n\t    \tref part subscriber;\n\t    }\n\t\titem def Publish {\n\t\t\tattribute topic : String;\n\t\t\tref publication;\n\t\t}\n\t\titem def Deliver {\n\t\t\tref publication;\n\t\t}\n\t}\n\toccurrence def PubSubSequence {\n\t\tpart producer[1] {\n\t\t\tevent occurrence publish_source_event;\n\t\t}\n\t\tmessage publish_message of Publish[1] from producer.publish_source_event to server.publish_target_event;\n\t\tpart server[1] {\n\t\t\tevent occurrence subscribe_target_event;\n\t\t\tthen event occurrence publish_target_event;\n\t\t\tthen event occurrence deliver_source_event;\n\t\t}\n\t\tmessage subscribe_message of Subscribe[1] from consumer.subscribe_source_event to server.subscribe_target_event;\n\t\tmessage deliver_message of Deliver[1] from server.deliver_source_event to consumer.deliver_target_event;\n\t\tpart consumer[1] {\n\t\t\tevent occurrence subscribe_source_event;\n\t\t\tthen event occurrence deliver_target_event;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage PubSubSystem {\n  private import ScalarValues::*;\n\n  item def Message {\n    attribute topic : String;\n    attribute content : String;\n  }\n\n  item def Topic {\n    attribute name : String;\n  }\n\n  item def Subscription {\n    attribute topic : String;\n  }\n\n  port def PublishPort;\n  port def SubscribePort;\n  port def DeliverPort;\n\n  part def Publisher {\n    attribute publishTopic : String;\n    port publish : PublishPort;\n  }\n\n  part def Subscriber {\n    attribute subscribedTopic : String;\n    port subscribe : SubscribePort;\n    port receive : DeliverPort;\n  }\n\n  part def Server {\n    attribute subscriptionTable : String;\n    port publishIn : PublishPort;\n    port subscribeIn : SubscribePort;\n    port deliverOut : DeliverPort;\n  }\n\n  part def PubSubSystem {\n    part server : Server;\n    part producer1 : Publisher;\n    part consumer1 : Subscriber;\n\n    connect producer1.publish to server.publishIn;\n    connect consumer1.subscribe to server.subscribeIn;\n    connect server.deliverOut to consumer1.receive;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/149/149_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/149/149.sysml",
+  "response": {
+    "id": "resp_08a23ccfc326b16b006998026bbc748197a653587c591ac618",
+    "created_at": 1771569771.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_08a23ccfc326b16b006998026c13048197b9f5ce6c5f5c1f07",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n#### **Imports and Packages**\n1. The model imports `ScalarValues::*`.\n2. The model imports `PayloadDefinitions::*`.\n3. There is a package `PayloadDefinitions`.\n\n#### **Item Definitions in PayloadDefinitions**\n4. There is an item definition `Subscribe`.\n5. `Subscribe` has an attribute `topic` of type `String`.\n6. `Subscribe` has a reference part `subscriber`.\n7. There is an item definition `Publish`.\n8. `Publish` has an attribute `topic` of type `String`.\n9. `Publish` has a reference `publication`.\n10. There is an item definition `Deliver`.\n11. `Deliver` has a reference `publication`.\n\n#### **Occurrence Definition: PubSubSequence**\n12. There is an occurrence definition `PubSubSequence`.\n13. `PubSubSequence` has a part `producer[1]`.\n14. `producer` has an event occurrence `publish_source_event`.\n15. There is a message `publish_message` of type `Publish[1]` from `producer.publish_source_event` to `server.publish_target_event`.\n16. `PubSubSequence` has a part `server[1]`.\n17. `server` has an event occurrence `subscribe_target_event`.\n18. `server` has an event occurrence `publish_target_event` (after `subscribe_target_event`).\n19. `server` has an event occurrence `deliver_source_event` (after `publish_target_event`).\n20. There is a message `subscribe_message` of type `Subscribe[1]` from `consumer.subscribe_source_event` to `server.subscribe_target_event`.\n21. There is a message `deliver_message` of type `Deliver[1]` from `server.deliver_source_event` to `consumer.deliver_target_event`.\n22. `PubSubSequence` has a part `consumer[1]`.\n23. `consumer` has an event occurrence `subscribe_source_event`.\n24. `consumer` has an event occurrence `deliver_target_event` (after `subscribe_source_event`).\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### **Imports and Packages**\n1. **Import ScalarValues**: **Covered** (present in generated model).\n2. **Import PayloadDefinitions**: **Not covered** (no such package in generated model).\n3. **Package PayloadDefinitions**: **Not covered** (no such package in generated model).\n\n#### **Item Definitions in PayloadDefinitions**\n4. **Item def Subscribe**: **Partially covered** (there is `Subscription` with a `topic` attribute, but no reference to a subscriber).\n5. **Subscribe.topic : String**: **Covered** (`Subscription` has `topic : String`).\n6. **Subscribe.ref subscriber**: **Not covered** (no reference to a subscriber in `Subscription` or elsewhere).\n7. **Item def Publish**: **Partially covered** (`Message` and `Publisher` exist, but no explicit `Publish` item).\n8. **Publish.topic : String**: **Covered** (`Message` and `Publisher` have topic attributes).\n9. **Publish.ref publication**: **Not covered** (no reference to a publication in `Publish` or equivalent).\n10. **Item def Deliver**: **Not covered** (no `Deliver` item; closest is `DeliverPort`).\n11. **Deliver.ref publication**: **Not covered** (no such reference).\n\n#### **Occurrence Definition: PubSubSequence**\n12. **Occurrence def PubSubSequence**: **Partially covered** (the system structure is present, but not as an occurrence with events/messages).\n13. **Part producer[1]**: **Covered** (`producer1 : Publisher` in system).\n14. **producer.publish_source_event**: **Not covered** (no events defined).\n15. **publish_message of Publish[1] from producer.publish_source_event to server.publish_target_event**: **Partially covered** (connection from producer to server exists, but not as a message/event).\n16. **Part server[1]**: **Covered** (`server : Server` in system).\n17. **server.subscribe_target_event**: **Not covered** (no events defined).\n18. **server.publish_target_event**: **Not covered** (no events defined).\n19. **server.deliver_source_event**: **Not covered** (no events defined).\n20. **subscribe_message of Subscribe[1] from consumer.subscribe_source_event to server.subscribe_target_event**: **Partially covered** (connection from consumer to server exists, but not as a message/event).\n21. **deliver_message of Deliver[1] from server.deliver_source_event to consumer.deliver_target_event**: **Partially covered** (connection from server to consumer exists, but not as a message/event).\n22. **Part consumer[1]**: **Covered** (`consumer1 : Subscriber` in system).\n23. **consumer.subscribe_source_event**: **Not covered** (no events defined).\n24. **consumer.deliver_target_event**: **Not covered** (no events defined).\n\n---\n\n### 3. Summarize the results\n\n#### **Count of covered claims:**\n\n- **Fully covered:** 1, 5, 8, 13, 16, 22 (**6** claims)\n- **Partially covered:** 4, 7, 12, 15, 20, 21 (**6** claims)\n- **Not covered:** 2, 3, 6, 9, 10, 11, 14, 17, 18, 19, 23, 24 (**12** claims)\n\n**Recall is based on fully covered claims only.**\n\n**Total claims:** 24  \n**Fully covered claims:** 6\n\n---\n\n**Score: 6/24**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 632,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1232,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1864
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569786,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n#### **Imports and Packages**\n1. The model imports `ScalarValues::*`.\n2. The model imports `PayloadDefinitions::*`.\n3. There is a package `PayloadDefinitions`.\n\n#### **Item Definitions in PayloadDefinitions**\n4. There is an item definition `Subscribe`.\n5. `Subscribe` has an attribute `topic` of type `String`.\n6. `Subscribe` has a reference part `subscriber`.\n7. There is an item definition `Publish`.\n8. `Publish` has an attribute `topic` of type `String`.\n9. `Publish` has a reference `publication`.\n10. There is an item definition `Deliver`.\n11. `Deliver` has a reference `publication`.\n\n#### **Occurrence Definition: PubSubSequence**\n12. There is an occurrence definition `PubSubSequence`.\n13. `PubSubSequence` has a part `producer[1]`.\n14. `producer` has an event occurrence `publish_source_event`.\n15. There is a message `publish_message` of type `Publish[1]` from `producer.publish_source_event` to `server.publish_target_event`.\n16. `PubSubSequence` has a part `server[1]`.\n17. `server` has an event occurrence `subscribe_target_event`.\n18. `server` has an event occurrence `publish_target_event` (after `subscribe_target_event`).\n19. `server` has an event occurrence `deliver_source_event` (after `publish_target_event`).\n20. There is a message `subscribe_message` of type `Subscribe[1]` from `consumer.subscribe_source_event` to `server.subscribe_target_event`.\n21. There is a message `deliver_message` of type `Deliver[1]` from `server.deliver_source_event` to `consumer.deliver_target_event`.\n22. `PubSubSequence` has a part `consumer[1]`.\n23. `consumer` has an event occurrence `subscribe_source_event`.\n24. `consumer` has an event occurrence `deliver_target_event` (after `subscribe_source_event`).\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### **Imports and Packages**\n1. **Import ScalarValues**: **Covered** (present in generated model).\n2. **Import PayloadDefinitions**: **Not covered** (no such package in generated model).\n3. **Package PayloadDefinitions**: **Not covered** (no such package in generated model).\n\n#### **Item Definitions in PayloadDefinitions**\n4. **Item def Subscribe**: **Partially covered** (there is `Subscription` with a `topic` attribute, but no reference to a subscriber).\n5. **Subscribe.topic : String**: **Covered** (`Subscription` has `topic : String`).\n6. **Subscribe.ref subscriber**: **Not covered** (no reference to a subscriber in `Subscription` or elsewhere).\n7. **Item def Publish**: **Partially covered** (`Message` and `Publisher` exist, but no explicit `Publish` item).\n8. **Publish.topic : String**: **Covered** (`Message` and `Publisher` have topic attributes).\n9. **Publish.ref publication**: **Not covered** (no reference to a publication in `Publish` or equivalent).\n10. **Item def Deliver**: **Not covered** (no `Deliver` item; closest is `DeliverPort`).\n11. **Deliver.ref publication**: **Not covered** (no such reference).\n\n#### **Occurrence Definition: PubSubSequence**\n12. **Occurrence def PubSubSequence**: **Partially covered** (the system structure is present, but not as an occurrence with events/messages).\n13. **Part producer[1]**: **Covered** (`producer1 : Publisher` in system).\n14. **producer.publish_source_event**: **Not covered** (no events defined).\n15. **publish_message of Publish[1] from producer.publish_source_event to server.publish_target_event**: **Partially covered** (connection from producer to server exists, but not as a message/event).\n16. **Part server[1]**: **Covered** (`server : Server` in system).\n17. **server.subscribe_target_event**: **Not covered** (no events defined).\n18. **server.publish_target_event**: **Not covered** (no events defined).\n19. **server.deliver_source_event**: **Not covered** (no events defined).\n20. **subscribe_message of Subscribe[1] from consumer.subscribe_source_event to server.subscribe_target_event**: **Partially covered** (connection from consumer to server exists, but not as a message/event).\n21. **deliver_message of Deliver[1] from server.deliver_source_event to consumer.deliver_target_event**: **Partially covered** (connection from server to consumer exists, but not as a message/event).\n22. **Part consumer[1]**: **Covered** (`consumer1 : Subscriber` in system).\n23. **consumer.subscribe_source_event**: **Not covered** (no events defined).\n24. **consumer.deliver_target_event**: **Not covered** (no events defined).\n\n---\n\n### 3. Summarize the results\n\n#### **Count of covered claims:**\n\n- **Fully covered:** 1, 5, 8, 13, 16, 22 (**6** claims)\n- **Partially covered:** 4, 7, 12, 15, 20, 21 (**6** claims)\n- **Not covered:** 2, 3, 6, 9, 10, 11, 14, 17, 18, 19, 23, 24 (**12** claims)\n\n**Recall is based on fully covered claims only.**\n\n**Total claims:** 24  \n**Fully covered claims:** 6\n\n---\n\n**Score: 6/24**"
+  }
+}

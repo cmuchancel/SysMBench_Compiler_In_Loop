@@ -1,0 +1,85 @@
+{
+  "model_id": 28,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'LoopBasedCharging' {\n\tprivate import ScalarValues::*;\n\tattribute def BatteryCharged;\n\tpart battery;\n\tpart powerSystem;\n\taction def MonitorBattery { out charge : Real; }\n\taction def AddCharge { in charge : Real; }\n\taction def EndCharging;\n\taction def ChargeBattery {\n\t\tloop action charging {\n\t\t\taction monitor : MonitorBattery {\n\t\t\t\tout charge;\n\t\t\t}\n\t\t\tthen if monitor.charge < 100 {\n\t\t\t\taction addCharge : AddCharge {\n\t\t\t\t\tin charge = monitor.charge;\n\t\t\t\t}\n\t\t\t}\t\t\t\t\n\t\t} until charging.monitor.charge >= 100;\n\t\tthen action endCharging : EndCharging;\n\t\tthen done;\n\t}\n}\n\nGenerated Model:\npackage BatteryChargingSystem {\n    private import ScalarValues::*;\n\n    port def LevelPort {\n        attribute level : Real;\n    }\n\n    port def ControlPort {\n        attribute charging : Boolean;\n    }\n\n    part def Battery {\n        attribute level : Real;\n        attribute charging : Boolean;\n        port levelPort : LevelPort;\n        port controlPort : ControlPort;\n    }\n\n    part def ChargerController {\n        attribute targetLevel : Real = 100.0;\n        attribute autoStop : Boolean = true;\n        port levelPort : LevelPort;\n        port controlPort : ControlPort;\n    }\n\n    part def ChargingSystem {\n        part battery : Battery;\n        part controller : ChargerController;\n        connect battery.levelPort to controller.levelPort;\n        connect controller.controlPort to battery.controlPort;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/28/28_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/28/28.sysml",
+  "response": {
+    "id": "resp_0c1ea8b2493900f100699800aaf82481a293148e21e4262d1d",
+    "created_at": 1771569322.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0c1ea8b2493900f100699800ab53e881a2864e304f2fe03c87",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```\npackage 'LoopBasedCharging' {\n\tprivate import ScalarValues::*;\n\tattribute def BatteryCharged;\n\tpart battery;\n\tpart powerSystem;\n\taction def MonitorBattery { out charge : Real; }\n\taction def AddCharge { in charge : Real; }\n\taction def EndCharging;\n\taction def ChargeBattery {\n\t\tloop action charging {\n\t\t\taction monitor : MonitorBattery {\n\t\t\t\tout charge;\n\t\t\t}\n\t\t\tthen if monitor.charge < 100 {\n\t\t\t\taction addCharge : AddCharge {\n\t\t\t\t\tin charge = monitor.charge;\n\t\t\t\t}\n\t\t\t}\t\t\t\t\n\t\t} until charging.monitor.charge >= 100;\n\t\tthen action endCharging : EndCharging;\n\t\tthen done;\n\t}\n}\n```\n\n#### Atomic Claims:\n\n1. The model is in a package (named 'LoopBasedCharging').\n2. The model imports ScalarValues privately.\n3. There is an attribute definition named `BatteryCharged`.\n4. There is a part named `battery`.\n5. There is a part named `powerSystem`.\n6. There is an action definition `MonitorBattery` with an output `charge` of type Real.\n7. There is an action definition `AddCharge` with an input `charge` of type Real.\n8. There is an action definition `EndCharging`.\n9. There is an action definition `ChargeBattery` that:\n    - 9a. Contains a loop action named `charging`.\n    - 9b. The loop contains an action `monitor` of type `MonitorBattery` with output `charge`.\n    - 9c. After `monitor`, if `monitor.charge < 100`, perform an action `addCharge` of type `AddCharge` with input `charge = monitor.charge`.\n    - 9d. The loop continues until `charging.monitor.charge >= 100`.\n    - 9e. After the loop, perform an action `endCharging` of type `EndCharging`.\n    - 9f. Then done (end of action sequence).\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n#### 1. The model is in a package (named 'LoopBasedCharging').\n- **Generated model** is in a package (named 'BatteryChargingSystem').  \n  **Covered** (naming differences ignored).\n\n#### 2. The model imports ScalarValues privately.\n- **Generated model**: `private import ScalarValues::*;`  \n  **Covered**.\n\n#### 3. There is an attribute definition named `BatteryCharged`.\n- **Generated model**: No attribute named `BatteryCharged` or equivalent.  \n  **Not covered**.\n\n#### 4. There is a part named `battery`.\n- **Generated model**: There is a part `battery` (inside `ChargingSystem`).  \n  **Covered**.\n\n#### 5. There is a part named `powerSystem`.\n- **Generated model**: No part named `powerSystem` or equivalent.  \n  **Not covered**.\n\n#### 6. There is an action definition `MonitorBattery` with an output `charge` of type Real.\n- **Generated model**: No action definitions; closest is `LevelPort` with attribute `level : Real`, but not an action.  \n  **Not covered**.\n\n#### 7. There is an action definition `AddCharge` with an input `charge` of type Real.\n- **Generated model**: No action definitions; no equivalent.  \n  **Not covered**.\n\n#### 8. There is an action definition `EndCharging`.\n- **Generated model**: No action definitions; no equivalent.  \n  **Not covered**.\n\n#### 9. There is an action definition `ChargeBattery` that:\n- **Generated model**: No action definitions; no equivalent.  \n  **Not covered** for all subclaims (9a–9f).\n\n---\n\n### 3. Summarize the results\n\n#### Total atomic claims: 15\n(Breakdown: 1–8 are single claims, 9 is broken into 6 subclaims: 9a–9f)\n\n#### Covered claims:\n- 1 (package)\n- 2 (import)\n- 4 (battery part)\n\n**Total covered: 3**\n\n---\n\n**Score: 3/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 487,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 909,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1396
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569333,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```\npackage 'LoopBasedCharging' {\n\tprivate import ScalarValues::*;\n\tattribute def BatteryCharged;\n\tpart battery;\n\tpart powerSystem;\n\taction def MonitorBattery { out charge : Real; }\n\taction def AddCharge { in charge : Real; }\n\taction def EndCharging;\n\taction def ChargeBattery {\n\t\tloop action charging {\n\t\t\taction monitor : MonitorBattery {\n\t\t\t\tout charge;\n\t\t\t}\n\t\t\tthen if monitor.charge < 100 {\n\t\t\t\taction addCharge : AddCharge {\n\t\t\t\t\tin charge = monitor.charge;\n\t\t\t\t}\n\t\t\t}\t\t\t\t\n\t\t} until charging.monitor.charge >= 100;\n\t\tthen action endCharging : EndCharging;\n\t\tthen done;\n\t}\n}\n```\n\n#### Atomic Claims:\n\n1. The model is in a package (named 'LoopBasedCharging').\n2. The model imports ScalarValues privately.\n3. There is an attribute definition named `BatteryCharged`.\n4. There is a part named `battery`.\n5. There is a part named `powerSystem`.\n6. There is an action definition `MonitorBattery` with an output `charge` of type Real.\n7. There is an action definition `AddCharge` with an input `charge` of type Real.\n8. There is an action definition `EndCharging`.\n9. There is an action definition `ChargeBattery` that:\n    - 9a. Contains a loop action named `charging`.\n    - 9b. The loop contains an action `monitor` of type `MonitorBattery` with output `charge`.\n    - 9c. After `monitor`, if `monitor.charge < 100`, perform an action `addCharge` of type `AddCharge` with input `charge = monitor.charge`.\n    - 9d. The loop continues until `charging.monitor.charge >= 100`.\n    - 9e. After the loop, perform an action `endCharging` of type `EndCharging`.\n    - 9f. Then done (end of action sequence).\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n#### 1. The model is in a package (named 'LoopBasedCharging').\n- **Generated model** is in a package (named 'BatteryChargingSystem').  \n  **Covered** (naming differences ignored).\n\n#### 2. The model imports ScalarValues privately.\n- **Generated model**: `private import ScalarValues::*;`  \n  **Covered**.\n\n#### 3. There is an attribute definition named `BatteryCharged`.\n- **Generated model**: No attribute named `BatteryCharged` or equivalent.  \n  **Not covered**.\n\n#### 4. There is a part named `battery`.\n- **Generated model**: There is a part `battery` (inside `ChargingSystem`).  \n  **Covered**.\n\n#### 5. There is a part named `powerSystem`.\n- **Generated model**: No part named `powerSystem` or equivalent.  \n  **Not covered**.\n\n#### 6. There is an action definition `MonitorBattery` with an output `charge` of type Real.\n- **Generated model**: No action definitions; closest is `LevelPort` with attribute `level : Real`, but not an action.  \n  **Not covered**.\n\n#### 7. There is an action definition `AddCharge` with an input `charge` of type Real.\n- **Generated model**: No action definitions; no equivalent.  \n  **Not covered**.\n\n#### 8. There is an action definition `EndCharging`.\n- **Generated model**: No action definitions; no equivalent.  \n  **Not covered**.\n\n#### 9. There is an action definition `ChargeBattery` that:\n- **Generated model**: No action definitions; no equivalent.  \n  **Not covered** for all subclaims (9a–9f).\n\n---\n\n### 3. Summarize the results\n\n#### Total atomic claims: 15\n(Breakdown: 1–8 are single claims, 9 is broken into 6 subclaims: 9a–9f)\n\n#### Covered claims:\n- 1 (package)\n- 2 (import)\n- 4 (battery part)\n\n**Total covered: 3**\n\n---\n\n**Score: 3/15**"
+  }
+}

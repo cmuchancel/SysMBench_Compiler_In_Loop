@@ -1,0 +1,85 @@
+{
+  "model_id": 44,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'CruiseControlEventFlow' {\t\n\tpart def Driver;\n\tpart def CruiseController;\n\tpart def Speedometer;\n\tpart def Engine;\n\tpart def Vehicle;\n\tpart driver : Driver {\n\t\tevent occurrence setSpeedSent;\n\t}\n\tpart vehicle : Vehicle {\n\t\tpart cruiseController : CruiseController {\n\t\t\tevent occurrence setSpeedReceived;\t\t\n\t\t\tthen event occurrence sensedSpeedReceived;\t\t\n\t\t\tthen event occurrence fuelCommandSent;\n\t\t}\n\t\tpart speedometer : Speedometer {\n\t\t\tevent occurrence sensedSpeedSent;\n\t\t}\n\t\tpart engine : Engine {\n\t\t\tevent occurrence fuelCommandReceived;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage CruiseControlSystemModel {\n   private import ScalarValues::*;\n\n   item def SetSpeedCommand;\n   item def SpeedValue;\n   item def FuelControlCommand;\n\n   port def SetSpeedCmdPort {\n      attribute cmd : SetSpeedCommand;\n   }\n\n   port def SpeedValuePort {\n      attribute speed : SpeedValue;\n   }\n\n   port def FuelControlCmdPort {\n      attribute fuelCmd : FuelControlCommand;\n   }\n\n   part def Driver {\n      port setSpeedOut : SetSpeedCmdPort;\n   }\n\n   part def CruiseController {\n      port setSpeedIn : SetSpeedCmdPort;\n      port speedIn : SpeedValuePort;\n      port fuelOut : FuelControlCmdPort;\n      attribute desiredSpeed : Real;\n   }\n\n   part def Speedometer {\n      port speedIn : SpeedValuePort;\n      port speedOut : SpeedValuePort;\n      attribute currentSpeed : Real;\n   }\n\n   part def Engine {\n      port fuelIn : FuelControlCmdPort;\n   }\n\n   part def Vehicle {\n      port speedOut : SpeedValuePort;\n      attribute actualSpeed : Real;\n   }\n\n   part def CruiseControlSystem {\n      part driver : Driver;\n      part controller : CruiseController;\n      part speedometer : Speedometer;\n      part engine : Engine;\n      part vehicle : Vehicle;\n\n      connect driver.setSpeedOut to controller.setSpeedIn;\n      connect vehicle.speedOut to speedometer.speedIn;\n      connect speedometer.speedOut to controller.speedIn;\n      connect controller.fuelOut to engine.fuelIn;\n   }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/44/44_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/44/44.sysml",
+  "response": {
+    "id": "resp_09ab20f2681558ba006997fdf7a270819c9c3a7989579f9b7b",
+    "created_at": 1771568631.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_09ab20f2681558ba006997fdf7f79c819ca860f028006f9b49",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The existence of a package named 'CruiseControlEventFlow'.\n2. Definition of part type 'Driver'.\n3. Definition of part type 'CruiseController'.\n4. Definition of part type 'Speedometer'.\n5. Definition of part type 'Engine'.\n6. Definition of part type 'Vehicle'.\n7. Declaration of a part named 'driver' of type 'Driver'.\n8. 'driver' has an event occurrence 'setSpeedSent'.\n9. Declaration of a part named 'vehicle' of type 'Vehicle'.\n10. 'vehicle' contains a part 'cruiseController' of type 'CruiseController'.\n11. 'cruiseController' has an event occurrence 'setSpeedReceived'.\n12. 'cruiseController' has an event occurrence 'sensedSpeedReceived'.\n13. 'cruiseController' has an event occurrence 'fuelCommandSent'.\n14. 'vehicle' contains a part 'speedometer' of type 'Speedometer'.\n15. 'speedometer' has an event occurrence 'sensedSpeedSent'.\n16. 'vehicle' contains a part 'engine' of type 'Engine'.\n17. 'engine' has an event occurrence 'fuelCommandReceived'.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package exists | **Yes** | Name differs, but both define a package for the system. |\n| 2 | part def Driver | **Yes** | Present. |\n| 3 | part def CruiseController | **Yes** | Present. |\n| 4 | part def Speedometer | **Yes** | Present. |\n| 5 | part def Engine | **Yes** | Present. |\n| 6 | part def Vehicle | **Yes** | Present. |\n| 7 | part driver : Driver | **Yes** | Present as part of CruiseControlSystem. |\n| 8 | driver has event occurrence setSpeedSent | **Yes** | Modeled as port setSpeedOut (sending set speed command). |\n| 9 | part vehicle : Vehicle | **Yes** | Present as part of CruiseControlSystem. |\n| 10 | vehicle contains cruiseController : CruiseController | **Yes** | Present as part of CruiseControlSystem (not nested, but equivalent). |\n| 11 | cruiseController has event occurrence setSpeedReceived | **Yes** | Modeled as port setSpeedIn (receiving set speed command). |\n| 12 | cruiseController has event occurrence sensedSpeedReceived | **Yes** | Modeled as port speedIn (receiving sensed speed). |\n| 13 | cruiseController has event occurrence fuelCommandSent | **Yes** | Modeled as port fuelOut (sending fuel command). |\n| 14 | vehicle contains speedometer : Speedometer | **Yes** | Present as part of CruiseControlSystem (not nested, but equivalent). |\n| 15 | speedometer has event occurrence sensedSpeedSent | **Yes** | Modeled as port speedOut (sending sensed speed). |\n| 16 | vehicle contains engine : Engine | **Yes** | Present as part of CruiseControlSystem (not nested, but equivalent). |\n| 17 | engine has event occurrence fuelCommandReceived | **Yes** | Modeled as port fuelIn (receiving fuel command). |\n\n---\n\n### 3. Summarize the results\n\n**Score: 17/17**\n\nAll atomic claims from the reference model are covered by the generated model, either directly or via semantically equivalent constructs (e.g., events mapped to ports and connections).",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 621,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 788,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1409
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568638,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The existence of a package named 'CruiseControlEventFlow'.\n2. Definition of part type 'Driver'.\n3. Definition of part type 'CruiseController'.\n4. Definition of part type 'Speedometer'.\n5. Definition of part type 'Engine'.\n6. Definition of part type 'Vehicle'.\n7. Declaration of a part named 'driver' of type 'Driver'.\n8. 'driver' has an event occurrence 'setSpeedSent'.\n9. Declaration of a part named 'vehicle' of type 'Vehicle'.\n10. 'vehicle' contains a part 'cruiseController' of type 'CruiseController'.\n11. 'cruiseController' has an event occurrence 'setSpeedReceived'.\n12. 'cruiseController' has an event occurrence 'sensedSpeedReceived'.\n13. 'cruiseController' has an event occurrence 'fuelCommandSent'.\n14. 'vehicle' contains a part 'speedometer' of type 'Speedometer'.\n15. 'speedometer' has an event occurrence 'sensedSpeedSent'.\n16. 'vehicle' contains a part 'engine' of type 'Engine'.\n17. 'engine' has an event occurrence 'fuelCommandReceived'.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package exists | **Yes** | Name differs, but both define a package for the system. |\n| 2 | part def Driver | **Yes** | Present. |\n| 3 | part def CruiseController | **Yes** | Present. |\n| 4 | part def Speedometer | **Yes** | Present. |\n| 5 | part def Engine | **Yes** | Present. |\n| 6 | part def Vehicle | **Yes** | Present. |\n| 7 | part driver : Driver | **Yes** | Present as part of CruiseControlSystem. |\n| 8 | driver has event occurrence setSpeedSent | **Yes** | Modeled as port setSpeedOut (sending set speed command). |\n| 9 | part vehicle : Vehicle | **Yes** | Present as part of CruiseControlSystem. |\n| 10 | vehicle contains cruiseController : CruiseController | **Yes** | Present as part of CruiseControlSystem (not nested, but equivalent). |\n| 11 | cruiseController has event occurrence setSpeedReceived | **Yes** | Modeled as port setSpeedIn (receiving set speed command). |\n| 12 | cruiseController has event occurrence sensedSpeedReceived | **Yes** | Modeled as port speedIn (receiving sensed speed). |\n| 13 | cruiseController has event occurrence fuelCommandSent | **Yes** | Modeled as port fuelOut (sending fuel command). |\n| 14 | vehicle contains speedometer : Speedometer | **Yes** | Present as part of CruiseControlSystem (not nested, but equivalent). |\n| 15 | speedometer has event occurrence sensedSpeedSent | **Yes** | Modeled as port speedOut (sending sensed speed). |\n| 16 | vehicle contains engine : Engine | **Yes** | Present as part of CruiseControlSystem (not nested, but equivalent). |\n| 17 | engine has event occurrence fuelCommandReceived | **Yes** | Modeled as port fuelIn (receiving fuel command). |\n\n---\n\n### 3. Summarize the results\n\n**Score: 17/17**\n\nAll atomic claims from the reference model are covered by the generated model, either directly or via semantically equivalent constructs (e.g., events mapped to ports and connections)."
+  }
+}

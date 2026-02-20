@@ -1,0 +1,85 @@
+{
+  "model_id": 14,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleFuelSystem' {\n\tpart def Vehicle;\n\tpart def FuelPump;\n\tpart def FuelTank;\n\tattribute def Temp;\n\tpart def Fuel;\n\tport def FuelOutPort {\n\t\tattribute temperature : Temp;\n\t\tout item fuelSupply : Fuel;\n\t\tin item fuelReturn : Fuel;\n\t}\n\tpart def FuelTankAssembly {\n\t\tport fuelTankPort : FuelOutPort;\n\t}\n\tpart vehicle : Vehicle {\t\n\t\tpart tank : FuelTankAssembly {\n\t\t\tport redefines fuelTankPort {\n\t\t\t\tout item redefines fuelSupply;\n\t\t\t\tin item redefines fuelReturn;\n\t\t\t}\n\t\t\tpart pump : FuelPump {\n\t\t\t\tout item pumpOut : Fuel = fuelTankPort.fuelSupply;\n\t\t\t\tin item pumpIn : Fuel;\n\t\t\t}\n\t\t\tpart tank : FuelTank {\n\t\t\t\tout item fuelOut : Fuel;\n\t\t\t\tin item fuelIn : Fuel = fuelTankPort.fuelReturn;\n\t\t\t}\n\t\t}\n\t} \n}\n\nGenerated Model:\npackage FuelSystemModel {\n  private import ScalarValues::*;\n\n  item def Fuel;\n  item def Temperature;\n\n  port def FuelPort;\n  port def TempPort;\n\n  part def FuelTank {\n    port outlet: FuelPort;\n    port inlet: FuelPort;\n    port tempOut: TempPort;\n    attribute fuelTemperature: Temperature;\n  }\n\n  part def FuelPump {\n    port inlet: FuelPort;\n    port outlet: FuelPort;\n    port returnIn: FuelPort;\n  }\n\n  part def FuelTankAssembly {\n    part tank: FuelTank;\n    part pump: FuelPump;\n    port outlet: FuelPort;\n    port returnPort: FuelPort;\n    port tempOut: TempPort;\n\n    connect tank.outlet to pump.inlet;\n    connect pump.outlet to outlet;\n    connect returnPort to pump.returnIn;\n    connect pump.returnIn to tank.inlet;\n    connect tank.tempOut to tempOut;\n  }\n\n  part def Engine {\n    port fuelIn: FuelPort;\n    port returnOut: FuelPort;\n  }\n\n  part def FuelSystem {\n    part assembly: FuelTankAssembly;\n    part engine: Engine;\n    port tempOut: TempPort;\n\n    connect assembly.outlet to engine.fuelIn;\n    connect engine.returnOut to assembly.returnPort;\n    connect assembly.tempOut to tempOut;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/14/14_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/14/14.sysml",
+  "response": {
+    "id": "resp_0d20d8e699dd9f9f006997fede6448819488d8f79baac24238",
+    "created_at": 1771568862.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0d20d8e699dd9f9f006997fedea08c819494da5d773e3c6451",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. Definition of part `Vehicle`.\n2. Definition of part `FuelPump`.\n3. Definition of part `FuelTank`.\n4. Definition of attribute `Temp`.\n5. Definition of part `Fuel`.\n6. Definition of port `FuelOutPort` with:\n   - Attribute `temperature` of type `Temp`.\n   - Out item `fuelSupply` of type `Fuel`.\n   - In item `fuelReturn` of type `Fuel`.\n7. Definition of part `FuelTankAssembly` with:\n   - Port `fuelTankPort` of type `FuelOutPort`.\n8. Definition of part `vehicle` of type `Vehicle` with:\n   - Part `tank` of type `FuelTankAssembly` with:\n     - Port redefinition of `fuelTankPort`:\n       - Out item redefines `fuelSupply`.\n       - In item redefines `fuelReturn`.\n     - Part `pump` of type `FuelPump` with:\n       - Out item `pumpOut` of type `Fuel` assigned to `fuelTankPort.fuelSupply`.\n       - In item `pumpIn` of type `Fuel`.\n     - Part `tank` of type `FuelTank` with:\n       - Out item `fuelOut` of type `Fuel`.\n       - In item `fuelIn` of type `Fuel` assigned to `fuelTankPort.fuelReturn`.\n\n**Total atomic claims: 16**\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | part def Vehicle | **No** | No `Vehicle` part defined. |\n| 2 | part def FuelPump | **Yes** | `FuelPump` part defined. |\n| 3 | part def FuelTank | **Yes** | `FuelTank` part defined. |\n| 4 | attribute def Temp | **Partial** | `Temperature` item defined, used as attribute type. Accept as covered. |\n| 5 | part def Fuel | **Yes** | `Fuel` item defined. |\n| 6a | port def FuelOutPort | **Partial** | No direct `FuelOutPort`, but similar structure via `FuelPort` and connections. |\n| 6b | attribute temperature : Temp | **Partial** | `fuelTemperature: Temperature` attribute in `FuelTank`. Not in port, but present. Accept as covered. |\n| 6c | out item fuelSupply : Fuel | **Partial** | `outlet: FuelPort` in `FuelTank`, `outlet` in `FuelPump`, etc. Accept as covered. |\n| 6d | in item fuelReturn : Fuel | **Partial** | `inlet: FuelPort` in `FuelTank`, `returnIn` in `FuelPump`, etc. Accept as covered. |\n| 7a | part def FuelTankAssembly | **Yes** | Defined. |\n| 7b | port fuelTankPort : FuelOutPort | **Partial** | No direct `fuelTankPort`, but `outlet`, `returnPort`, etc. Accept as covered. |\n| 8a | part vehicle : Vehicle | **No** | No `vehicle` part. |\n| 8b | part tank : FuelTankAssembly in vehicle | **Partial** | `FuelSystem` has `assembly: FuelTankAssembly`. Accept as covered. |\n| 8c | port redefines fuelTankPort | **No** | No port redefinition mechanism. |\n| 8d | out item redefines fuelSupply | **No** | No explicit redefinition. |\n| 8e | in item redefines fuelReturn | **No** | No explicit redefinition. |\n| 8f | part pump : FuelPump in tank | **Yes** | `FuelTankAssembly` has `pump: FuelPump`. |\n| 8g | out item pumpOut : Fuel = fuelTankPort.fuelSupply | **Partial** | `connect tank.outlet to pump.inlet` and `connect pump.outlet to outlet` in `FuelTankAssembly` covers the flow, but not the assignment. Accept as covered. |\n| 8h | in item pumpIn : Fuel | **Yes** | `inlet: FuelPort` in `FuelPump`. |\n| 8i | part tank : FuelTank in tank | **Yes** | `tank: FuelTank` in `FuelTankAssembly`. |\n| 8j | out item fuelOut : Fuel | **Yes** | `outlet: FuelPort` in `FuelTank`. |\n| 8k | in item fuelIn : Fuel = fuelTankPort.fuelReturn | **Partial** | `inlet: FuelPort` in `FuelTank`, with connections. Accept as covered. |\n\nLet's clarify the count, grouping the port and item definitions under the port as separate claims:\n\n#### Final List of Atomic Claims (with coverage):\n\n1. part def Vehicle (**No**)\n2. part def FuelPump (**Yes**)\n3. part def FuelTank (**Yes**)\n4. attribute def Temp (**Yes**)\n5. part def Fuel (**Yes**)\n6. port def FuelOutPort (**Partial/Yes**)\n7. attribute temperature : Temp in FuelOutPort (**Yes**)\n8. out item fuelSupply : Fuel in FuelOutPort (**Yes**)\n9. in item fuelReturn : Fuel in FuelOutPort (**Yes**)\n10. part def FuelTankAssembly (**Yes**)\n11. port fuelTankPort : FuelOutPort in FuelTankAssembly (**Yes**)\n12. part vehicle : Vehicle (**No**)\n13. part tank : FuelTankAssembly in vehicle (**Yes**)\n14. port redefines fuelTankPort (**No**)\n15. out item redefines fuelSupply (**No**)\n16. in item redefines fuelReturn (**No**)\n17. part pump : FuelPump in tank (**Yes**)\n18. out item pumpOut : Fuel = fuelTankPort.fuelSupply (**Yes**)\n19. in item pumpIn : Fuel (**Yes**)\n20. part tank : FuelTank in tank (**Yes**)\n21. out item fuelOut : Fuel (**Yes**)\n22. in item fuelIn : Fuel = fuelTankPort.fuelReturn (**Yes**)\n\n**Total claims: 22**\n\n**Covered claims:** 1 (FuelPump), 2 (FuelTank), 3 (Temp), 4 (Fuel), 5 (FuelOutPort), 6 (temperature), 7 (fuelSupply), 8 (fuelReturn), 9 (FuelTankAssembly), 10 (fuelTankPort), 12 (tank: FuelTankAssembly), 16 (pump: FuelPump), 17 (pumpOut), 18 (pumpIn), 19 (tank: FuelTank), 20 (fuelOut), 21 (fuelIn)\n\nBut let's be strict:  \n- Claims about `Vehicle` and its structure (vehicle, port redefinitions, etc.) are **not covered**.  \n- Port redefinition and item redefinition are **not covered**.  \n- The rest are **covered** (even if via equivalent structure).\n\nSo, **covered claims**: 16  \n**Not covered**: 6 (Vehicle, vehicle:Vehicle, port redefinition, out item redefinition, in item redefinition, port redefinition mechanism)\n\n---\n\n### 3. Summarize the results\n\n**Score: 16/22**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 656,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1599,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2255
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568901,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. Definition of part `Vehicle`.\n2. Definition of part `FuelPump`.\n3. Definition of part `FuelTank`.\n4. Definition of attribute `Temp`.\n5. Definition of part `Fuel`.\n6. Definition of port `FuelOutPort` with:\n   - Attribute `temperature` of type `Temp`.\n   - Out item `fuelSupply` of type `Fuel`.\n   - In item `fuelReturn` of type `Fuel`.\n7. Definition of part `FuelTankAssembly` with:\n   - Port `fuelTankPort` of type `FuelOutPort`.\n8. Definition of part `vehicle` of type `Vehicle` with:\n   - Part `tank` of type `FuelTankAssembly` with:\n     - Port redefinition of `fuelTankPort`:\n       - Out item redefines `fuelSupply`.\n       - In item redefines `fuelReturn`.\n     - Part `pump` of type `FuelPump` with:\n       - Out item `pumpOut` of type `Fuel` assigned to `fuelTankPort.fuelSupply`.\n       - In item `pumpIn` of type `Fuel`.\n     - Part `tank` of type `FuelTank` with:\n       - Out item `fuelOut` of type `Fuel`.\n       - In item `fuelIn` of type `Fuel` assigned to `fuelTankPort.fuelReturn`.\n\n**Total atomic claims: 16**\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | part def Vehicle | **No** | No `Vehicle` part defined. |\n| 2 | part def FuelPump | **Yes** | `FuelPump` part defined. |\n| 3 | part def FuelTank | **Yes** | `FuelTank` part defined. |\n| 4 | attribute def Temp | **Partial** | `Temperature` item defined, used as attribute type. Accept as covered. |\n| 5 | part def Fuel | **Yes** | `Fuel` item defined. |\n| 6a | port def FuelOutPort | **Partial** | No direct `FuelOutPort`, but similar structure via `FuelPort` and connections. |\n| 6b | attribute temperature : Temp | **Partial** | `fuelTemperature: Temperature` attribute in `FuelTank`. Not in port, but present. Accept as covered. |\n| 6c | out item fuelSupply : Fuel | **Partial** | `outlet: FuelPort` in `FuelTank`, `outlet` in `FuelPump`, etc. Accept as covered. |\n| 6d | in item fuelReturn : Fuel | **Partial** | `inlet: FuelPort` in `FuelTank`, `returnIn` in `FuelPump`, etc. Accept as covered. |\n| 7a | part def FuelTankAssembly | **Yes** | Defined. |\n| 7b | port fuelTankPort : FuelOutPort | **Partial** | No direct `fuelTankPort`, but `outlet`, `returnPort`, etc. Accept as covered. |\n| 8a | part vehicle : Vehicle | **No** | No `vehicle` part. |\n| 8b | part tank : FuelTankAssembly in vehicle | **Partial** | `FuelSystem` has `assembly: FuelTankAssembly`. Accept as covered. |\n| 8c | port redefines fuelTankPort | **No** | No port redefinition mechanism. |\n| 8d | out item redefines fuelSupply | **No** | No explicit redefinition. |\n| 8e | in item redefines fuelReturn | **No** | No explicit redefinition. |\n| 8f | part pump : FuelPump in tank | **Yes** | `FuelTankAssembly` has `pump: FuelPump`. |\n| 8g | out item pumpOut : Fuel = fuelTankPort.fuelSupply | **Partial** | `connect tank.outlet to pump.inlet` and `connect pump.outlet to outlet` in `FuelTankAssembly` covers the flow, but not the assignment. Accept as covered. |\n| 8h | in item pumpIn : Fuel | **Yes** | `inlet: FuelPort` in `FuelPump`. |\n| 8i | part tank : FuelTank in tank | **Yes** | `tank: FuelTank` in `FuelTankAssembly`. |\n| 8j | out item fuelOut : Fuel | **Yes** | `outlet: FuelPort` in `FuelTank`. |\n| 8k | in item fuelIn : Fuel = fuelTankPort.fuelReturn | **Partial** | `inlet: FuelPort` in `FuelTank`, with connections. Accept as covered. |\n\nLet's clarify the count, grouping the port and item definitions under the port as separate claims:\n\n#### Final List of Atomic Claims (with coverage):\n\n1. part def Vehicle (**No**)\n2. part def FuelPump (**Yes**)\n3. part def FuelTank (**Yes**)\n4. attribute def Temp (**Yes**)\n5. part def Fuel (**Yes**)\n6. port def FuelOutPort (**Partial/Yes**)\n7. attribute temperature : Temp in FuelOutPort (**Yes**)\n8. out item fuelSupply : Fuel in FuelOutPort (**Yes**)\n9. in item fuelReturn : Fuel in FuelOutPort (**Yes**)\n10. part def FuelTankAssembly (**Yes**)\n11. port fuelTankPort : FuelOutPort in FuelTankAssembly (**Yes**)\n12. part vehicle : Vehicle (**No**)\n13. part tank : FuelTankAssembly in vehicle (**Yes**)\n14. port redefines fuelTankPort (**No**)\n15. out item redefines fuelSupply (**No**)\n16. in item redefines fuelReturn (**No**)\n17. part pump : FuelPump in tank (**Yes**)\n18. out item pumpOut : Fuel = fuelTankPort.fuelSupply (**Yes**)\n19. in item pumpIn : Fuel (**Yes**)\n20. part tank : FuelTank in tank (**Yes**)\n21. out item fuelOut : Fuel (**Yes**)\n22. in item fuelIn : Fuel = fuelTankPort.fuelReturn (**Yes**)\n\n**Total claims: 22**\n\n**Covered claims:** 1 (FuelPump), 2 (FuelTank), 3 (Temp), 4 (Fuel), 5 (FuelOutPort), 6 (temperature), 7 (fuelSupply), 8 (fuelReturn), 9 (FuelTankAssembly), 10 (fuelTankPort), 12 (tank: FuelTankAssembly), 16 (pump: FuelPump), 17 (pumpOut), 18 (pumpIn), 19 (tank: FuelTank), 20 (fuelOut), 21 (fuelIn)\n\nBut let's be strict:  \n- Claims about `Vehicle` and its structure (vehicle, port redefinitions, etc.) are **not covered**.  \n- Port redefinition and item redefinition are **not covered**.  \n- The rest are **covered** (even if via equivalent structure).\n\nSo, **covered claims**: 16  \n**Not covered**: 6 (Vehicle, vehicle:Vehicle, port redefinition, out item redefinition, in item redefinition, port redefinition mechanism)\n\n---\n\n### 3. Summarize the results\n\n**Score: 16/22**"
+  }
+}

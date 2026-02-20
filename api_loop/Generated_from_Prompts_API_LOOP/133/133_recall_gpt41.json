@@ -1,0 +1,85 @@
+{
+  "model_id": 133,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'AutomotiveECUModeling' {\n\tpackage LibraryModel {\n\t\tpart def ECU;\n\t}\n\tpackage UserModel {\t\n\t\tpackage Definitions {\n\t\t\tprivate import LibraryModel::*;\n\t\t\tpart def VehicleControlUnit :> ECU;\n\t\t\tpart def EngineControlUnit :> ECU;\n\t\t\tpart def Vehicle;\n\t\t\tpart def Engine;\n\t\t\tpart def CanBus;\n\t\t\tport def BusIF;\n\t\t}\n\t\tpackage Usages {\n\t\t\tprivate import Definitions::*;\n\t\t\tpart vehicle1: Vehicle {\n\t\t\t\tpart vehicleControlUnit : VehicleControlUnit {\n\t\t\t\t\tport busIF: ~BusIF;\n\t\t\t\t}\n\t\t\t\tconnect vehicleControlUnit.busIF to canBus.vehicleControlIF;\n\t\t\t\tpart canBus: CanBus {\n\t\t\t\t\tport vehicleControlIF: BusIF;\n\t\t\t\t\tport engineControlIF: BusIF;\n\t\t\t\t\tport sensorIF: BusIF;\t\t\t\t\t\n\t\t\t\t}\n\t\t\t\tconnect engine.engineControlUnit.busIF to canBus.engineControlIF;\n\t\t\t\tpart engine: Engine {\n\t\t\t\t\tpart engineControlUnit: EngineControlUnit {\n\t\t\t\t\t\tport busIF: ~BusIF;\n\t\t\t\t\t}\t\t\t\t\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage AutomotiveECU {\n    private import ScalarValues::*;\n\n    item def CANMessage;\n    item def SensorData;\n\n    port def CANPort {\n    }\n\n    port def SensorPort {\n    }\n\n    part def BusIF {\n        port busPort: CANPort;\n        port controllerPort: CANPort;\n    }\n\n    part def VCU {\n        part busIF: BusIF;\n        port canPort: CANPort;\n        port sensorPort: SensorPort;\n        connect canPort to busIF.controllerPort;\n    }\n\n    part def ECU {\n        part busIF: BusIF;\n        port canPort: CANPort;\n        port sensorPort: SensorPort;\n        connect canPort to busIF.controllerPort;\n    }\n\n    part def CANBus {\n        port busPort: CANPort;\n    }\n\n    part def VehicleSystem {\n        part vcu: VCU;\n        part ecu: ECU;\n        part canBus: CANBus;\n\n        connect vcu.busIF.busPort to canBus.busPort;\n        connect ecu.busIF.busPort to canBus.busPort;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/133/133_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/133/133.sysml",
+  "response": {
+    "id": "resp_0defaa9fb59bdfa90069980082fec481938b853546f0adb0fc",
+    "created_at": 1771569283.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0defaa9fb59bdfa90069980083492481939fdf2c4d620a34d1",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### **Reference Model Atomic Claims**\n\n**LibraryModel:**\n1. Definition of part `ECU`.\n\n**UserModel.Definitions:**\n2. Definition of part `VehicleControlUnit` as a subtype of `ECU`.\n3. Definition of part `EngineControlUnit` as a subtype of `ECU`.\n4. Definition of part `Vehicle`.\n5. Definition of part `Engine`.\n6. Definition of part `CanBus`.\n7. Definition of port `BusIF`.\n\n**UserModel.Usages:**\n8. Definition of part `vehicle1` of type `Vehicle`.\n9. `vehicle1` contains part `vehicleControlUnit` of type `VehicleControlUnit`.\n10. `vehicleControlUnit` contains port `busIF` of type `BusIF` (with directionality `~BusIF`).\n11. Connection from `vehicleControlUnit.busIF` to `canBus.vehicleControlIF`.\n12. `vehicle1` contains part `canBus` of type `CanBus`.\n13. `canBus` contains port `vehicleControlIF` of type `BusIF`.\n14. `canBus` contains port `engineControlIF` of type `BusIF`.\n15. `canBus` contains port `sensorIF` of type `BusIF`.\n16. Connection from `engine.engineControlUnit.busIF` to `canBus.engineControlIF`.\n17. `vehicle1` contains part `engine` of type `Engine`.\n18. `engine` contains part `engineControlUnit` of type `EngineControlUnit`.\n19. `engineControlUnit` contains port `busIF` of type `BusIF` (with directionality `~BusIF`).\n\n**Total atomic claims: 19**\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's go through each claim:\n\n| # | Reference Atomic Claim | Covered in Generated Model? | Notes |\n|---|-----------------------|-----------------------------|-------|\n| 1 | Definition of part `ECU` | **Yes** | `part def ECU` exists. |\n| 2 | Definition of part `VehicleControlUnit` as subtype of `ECU` | **Partial/No** | There is a `VCU` part, but no explicit subtype or inheritance from `ECU`. |\n| 3 | Definition of part `EngineControlUnit` as subtype of `ECU` | **No** | No `EngineControlUnit` part. |\n| 4 | Definition of part `Vehicle` | **No** | No `Vehicle` part. |\n| 5 | Definition of part `Engine` | **No** | No `Engine` part. |\n| 6 | Definition of part `CanBus` | **Yes** | `part def CANBus` exists (naming difference ignored). |\n| 7 | Definition of port `BusIF` | **Yes** | `part def BusIF` exists (as a part, but also used as a port in reference). |\n| 8 | Definition of part `vehicle1` of type `Vehicle` | **No** | No such part. |\n| 9 | `vehicle1` contains part `vehicleControlUnit` of type `VehicleControlUnit` | **No** | No such containment. |\n|10 | `vehicleControlUnit` contains port `busIF` of type `BusIF` | **Partial/Yes** | `VCU` contains `busIF: BusIF`. |\n|11 | Connection from `vehicleControlUnit.busIF` to `canBus.vehicleControlIF` | **Partial/No** | There is a connection from `vcu.busIF.busPort` to `canBus.busPort`, but not the same structure. |\n|12 | `vehicle1` contains part `canBus` of type `CanBus` | **No** | No such containment. |\n|13 | `canBus` contains port `vehicleControlIF` of type `BusIF` | **No** | `CANBus` has `busPort: CANPort`, not `vehicleControlIF: BusIF`. |\n|14 | `canBus` contains port `engineControlIF` of type `BusIF` | **No** | Same as above. |\n|15 | `canBus` contains port `sensorIF` of type `BusIF` | **No** | Same as above. |\n|16 | Connection from `engine.engineControlUnit.busIF` to `canBus.engineControlIF` | **No** | No such structure or connection. |\n|17 | `vehicle1` contains part `engine` of type `Engine` | **No** | No such containment. |\n|18 | `engine` contains part `engineControlUnit` of type `EngineControlUnit` | **No** | No such containment. |\n|19 | `engineControlUnit` contains port `busIF` of type `BusIF` | **No** | No such part or containment. |\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- #1 (ECU)\n- #6 (CanBus)\n- #7 (BusIF)\n- #10 (busIF port in VCU, partial match)\n\n**Partial matches:** #2, #10, #11 (but these are not full matches, so not counted as covered)\n\n**Total covered claims:** 4\n\n**Total claims in reference model:** 19\n\n---\n\n**Score: 4/19**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 639,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1161,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1800
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569299,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### **Reference Model Atomic Claims**\n\n**LibraryModel:**\n1. Definition of part `ECU`.\n\n**UserModel.Definitions:**\n2. Definition of part `VehicleControlUnit` as a subtype of `ECU`.\n3. Definition of part `EngineControlUnit` as a subtype of `ECU`.\n4. Definition of part `Vehicle`.\n5. Definition of part `Engine`.\n6. Definition of part `CanBus`.\n7. Definition of port `BusIF`.\n\n**UserModel.Usages:**\n8. Definition of part `vehicle1` of type `Vehicle`.\n9. `vehicle1` contains part `vehicleControlUnit` of type `VehicleControlUnit`.\n10. `vehicleControlUnit` contains port `busIF` of type `BusIF` (with directionality `~BusIF`).\n11. Connection from `vehicleControlUnit.busIF` to `canBus.vehicleControlIF`.\n12. `vehicle1` contains part `canBus` of type `CanBus`.\n13. `canBus` contains port `vehicleControlIF` of type `BusIF`.\n14. `canBus` contains port `engineControlIF` of type `BusIF`.\n15. `canBus` contains port `sensorIF` of type `BusIF`.\n16. Connection from `engine.engineControlUnit.busIF` to `canBus.engineControlIF`.\n17. `vehicle1` contains part `engine` of type `Engine`.\n18. `engine` contains part `engineControlUnit` of type `EngineControlUnit`.\n19. `engineControlUnit` contains port `busIF` of type `BusIF` (with directionality `~BusIF`).\n\n**Total atomic claims: 19**\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's go through each claim:\n\n| # | Reference Atomic Claim | Covered in Generated Model? | Notes |\n|---|-----------------------|-----------------------------|-------|\n| 1 | Definition of part `ECU` | **Yes** | `part def ECU` exists. |\n| 2 | Definition of part `VehicleControlUnit` as subtype of `ECU` | **Partial/No** | There is a `VCU` part, but no explicit subtype or inheritance from `ECU`. |\n| 3 | Definition of part `EngineControlUnit` as subtype of `ECU` | **No** | No `EngineControlUnit` part. |\n| 4 | Definition of part `Vehicle` | **No** | No `Vehicle` part. |\n| 5 | Definition of part `Engine` | **No** | No `Engine` part. |\n| 6 | Definition of part `CanBus` | **Yes** | `part def CANBus` exists (naming difference ignored). |\n| 7 | Definition of port `BusIF` | **Yes** | `part def BusIF` exists (as a part, but also used as a port in reference). |\n| 8 | Definition of part `vehicle1` of type `Vehicle` | **No** | No such part. |\n| 9 | `vehicle1` contains part `vehicleControlUnit` of type `VehicleControlUnit` | **No** | No such containment. |\n|10 | `vehicleControlUnit` contains port `busIF` of type `BusIF` | **Partial/Yes** | `VCU` contains `busIF: BusIF`. |\n|11 | Connection from `vehicleControlUnit.busIF` to `canBus.vehicleControlIF` | **Partial/No** | There is a connection from `vcu.busIF.busPort` to `canBus.busPort`, but not the same structure. |\n|12 | `vehicle1` contains part `canBus` of type `CanBus` | **No** | No such containment. |\n|13 | `canBus` contains port `vehicleControlIF` of type `BusIF` | **No** | `CANBus` has `busPort: CANPort`, not `vehicleControlIF: BusIF`. |\n|14 | `canBus` contains port `engineControlIF` of type `BusIF` | **No** | Same as above. |\n|15 | `canBus` contains port `sensorIF` of type `BusIF` | **No** | Same as above. |\n|16 | Connection from `engine.engineControlUnit.busIF` to `canBus.engineControlIF` | **No** | No such structure or connection. |\n|17 | `vehicle1` contains part `engine` of type `Engine` | **No** | No such containment. |\n|18 | `engine` contains part `engineControlUnit` of type `EngineControlUnit` | **No** | No such containment. |\n|19 | `engineControlUnit` contains port `busIF` of type `BusIF` | **No** | No such part or containment. |\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- #1 (ECU)\n- #6 (CanBus)\n- #7 (BusIF)\n- #10 (busIF port in VCU, partial match)\n\n**Partial matches:** #2, #10, #11 (but these are not full matches, so not counted as covered)\n\n**Total covered claims:** 4\n\n**Total claims in reference model:** 19\n\n---\n\n**Score: 4/19**"
+  }
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Batch runner for refine_sysml.py over DesignBench NL prompts (1..151)."""
+"""Batch runner for refine_sysml.py over SysMBench NL prompts (1..151)."""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ from typing import Dict, List, Optional, Sequence
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+UPSTREAM_ROOT = SCRIPT_DIR.parent / "sysmbench_original_upstream"
 DONE_LOG_RE = re.compile(r"\[done\] run details saved to (.+run_log\.json)")
 
 
@@ -34,13 +35,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--prompts-root",
         type=Path,
-        default=SCRIPT_DIR / "DesignBench" / "nl_prompts",
+        default=SCRIPT_DIR / "nl_prompts",
         help="Root containing per-ID prompt folders with nl.txt.",
     )
     parser.add_argument(
         "--samples-root",
         type=Path,
-        default=SCRIPT_DIR / "DesignBench" / "dataset" / "sysml" / "samples",
+        default=UPSTREAM_ROOT / "dataset" / "sysml" / "samples",
         help="Root containing ground-truth sample folders (01..151).",
     )
     parser.add_argument(

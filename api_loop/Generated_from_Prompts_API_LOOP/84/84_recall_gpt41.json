@@ -1,0 +1,85 @@
+{
+  "model_id": 84,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PowertrainAllocation' {\n\tpackage LogicalModel {\n\t\taction def ProvidePower;\n\t\taction def GenerateTorque;\n\t\tpart def TorqueGenerator;\n\t\taction providePower : ProvidePower {\n\t\t\taction generateTorque : GenerateTorque;\n\t\t}\n\t\tpart torqueGenerator : TorqueGenerator {\n\t\t\tperform providePower.generateTorque;\n\t\t}\n\t}\n\tpackage PhysicalModel {\n\t\tprivate import LogicalModel::*;\n\t\tpart def PowerTrain;\n\t\tpart def Engine;\n\t\tpart powerTrain : PowerTrain {\n\t\t\tpart engine : Engine {\n\t\t\t\tperform providePower.generateTorque;\n\t\t\t}\n\t\t}\n\t\tallocate torqueGenerator to powerTrain {\n\t\t\tallocate torqueGenerator.generateTorque to powerTrain.engine.generateTorque;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage PowerSystemModel {\n  private import ScalarValues::*;\n\n  part def PowerTransmissionSystem {\n    attribute providesPower : Boolean = true;\n    attribute generatesTorque : Boolean = true;\n  }\n\n  part def GeneratingTorqueAction {\n    attribute generatesTorque : Boolean = true;\n    attribute enablesPowerTransfer : Boolean = true;\n  }\n\n  part def TorqueGenerator {\n    part generatingTorqueAction : GeneratingTorqueAction;\n    attribute deliversPower : Boolean = true;\n    attribute generatesTorque : Boolean = true;\n  }\n\n  part def LogicalModel {\n    part torqueGenerator : TorqueGenerator;\n    attribute deliversPower : Boolean = true;\n    attribute generatesTorque : Boolean = true;\n  }\n\n  part def Engine {\n    attribute generatesTorque : Boolean = true;\n  }\n\n  part def Powertrain {\n    part engine : Engine;\n    attribute providesPower : Boolean = true;\n  }\n\n  part def PhysicalModel {\n    part powertrain : Powertrain;\n  }\n\n  part def VehicleSystem {\n    part powerTransmissionSystem : PowerTransmissionSystem;\n    part logicalModel : LogicalModel;\n    part physicalModel : PhysicalModel;\n    attribute managesPowerAndTorque : Boolean = true;\n    connect logicalModel.torqueGenerator to physicalModel.powertrain;\n    connect logicalModel.torqueGenerator.generatingTorqueAction to physicalModel.powertrain.engine;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/84/84_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/84/84.sysml",
+  "response": {
+    "id": "resp_009c91a565b09d30006997fe37e560819d885b1d1f55eb0c6e",
+    "created_at": 1771568695.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_009c91a565b09d30006997fe38312c819d8f6898684e7e7cc7",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n#### Reference Model:  \n**Package: PowertrainAllocation**\n\n**Package: LogicalModel**\n1. Definition of action `ProvidePower`.\n2. Definition of action `GenerateTorque`.\n3. Definition of part `TorqueGenerator`.\n4. Definition of action `providePower` of type `ProvidePower`.\n5. Definition of action `generateTorque` of type `GenerateTorque` as a sub-action of `providePower`.\n6. Definition of part `torqueGenerator` of type `TorqueGenerator`.\n7. `torqueGenerator` performs `providePower.generateTorque`.\n\n**Package: PhysicalModel**\n8. Private import of `LogicalModel::*`.\n9. Definition of part `PowerTrain`.\n10. Definition of part `Engine`.\n11. Definition of part `powerTrain` of type `PowerTrain`.\n12. Definition of part `engine` of type `Engine` as a sub-part of `powerTrain`.\n13. `powerTrain.engine` performs `providePower.generateTorque`.\n14. Allocation of `torqueGenerator` to `powerTrain`.\n15. Allocation of `torqueGenerator.generateTorque` to `powerTrain.engine.generateTorque`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model.\n\n#### LogicalModel\n\n1. **Definition of action `ProvidePower`.**  \n   - **Not covered.** No explicit action definition; only attributes like `providesPower`.\n\n2. **Definition of action `GenerateTorque`.**  \n   - **Not covered.** No explicit action definition; only attributes like `generatesTorque`.\n\n3. **Definition of part `TorqueGenerator`.**  \n   - **Covered.** `part def TorqueGenerator` exists.\n\n4. **Definition of action `providePower` of type `ProvidePower`.**  \n   - **Not covered.** No explicit action part or attribute; only attributes.\n\n5. **Definition of action `generateTorque` of type `GenerateTorque` as a sub-action of `providePower`.**  \n   - **Not covered.** No explicit action hierarchy.\n\n6. **Definition of part `torqueGenerator` of type `TorqueGenerator`.**  \n   - **Covered.** `part torqueGenerator : TorqueGenerator` exists in `LogicalModel`.\n\n7. **`torqueGenerator` performs `providePower.generateTorque`.**  \n   - **Partially covered.** There is a `generatingTorqueAction` as a part of `TorqueGenerator`, and attributes, but no explicit perform relationship.\n\n#### PhysicalModel\n\n8. **Private import of `LogicalModel::*`.**  \n   - **Covered.** `PhysicalModel` contains a part `powertrain`, and `VehicleSystem` connects `logicalModel.torqueGenerator` to `physicalModel.powertrain`.\n\n9. **Definition of part `PowerTrain`.**  \n   - **Covered.** `part def Powertrain` exists.\n\n10. **Definition of part `Engine`.**  \n    - **Covered.** `part def Engine` exists.\n\n11. **Definition of part `powerTrain` of type `PowerTrain`.**  \n    - **Covered.** `part powertrain : Powertrain` in `PhysicalModel`.\n\n12. **Definition of part `engine` of type `Engine` as a sub-part of `powerTrain`.**  \n    - **Covered.** `part engine : Engine` in `Powertrain`.\n\n13. **`powerTrain.engine` performs `providePower.generateTorque`.**  \n    - **Not covered.** No explicit perform relationship.\n\n14. **Allocation of `torqueGenerator` to `powerTrain`.**  \n    - **Covered.** `connect logicalModel.torqueGenerator to physicalModel.powertrain`.\n\n15. **Allocation of `torqueGenerator.generateTorque` to `powerTrain.engine.generateTorque`.**  \n    - **Covered.** `connect logicalModel.torqueGenerator.generatingTorqueAction to physicalModel.powertrain.engine`.\n\n---\n\n### 3. Summarize the results\n\n#### Coverage Table\n\n| # | Atomic Claim | Covered? | Notes |\n|---|--------------|----------|-------|\n| 1 | action ProvidePower | No | Not present |\n| 2 | action GenerateTorque | No | Not present |\n| 3 | part def TorqueGenerator | Yes | Present |\n| 4 | action providePower : ProvidePower | No | Not present |\n| 5 | action generateTorque : GenerateTorque (sub-action) | No | Not present |\n| 6 | part torqueGenerator : TorqueGenerator | Yes | Present |\n| 7 | torqueGenerator performs providePower.generateTorque | Partial/No | No explicit perform |\n| 8 | private import LogicalModel::* | Yes | Structure is present |\n| 9 | part def PowerTrain | Yes | Present |\n| 10 | part def Engine | Yes | Present |\n| 11 | part powerTrain : PowerTrain | Yes | Present |\n| 12 | part engine : Engine (in powerTrain) | Yes | Present |\n| 13 | powerTrain.engine performs providePower.generateTorque | No | Not present |\n| 14 | allocate torqueGenerator to powerTrain | Yes | Present as connect |\n| 15 | allocate torqueGenerator.generateTorque to powerTrain.engine.generateTorque | Yes | Present as connect |\n\n**Total atomic claims:** 15  \n**Number of covered claims:** 9\n\n---\n\n### Final Score\n\n**Score: 9/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 606,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1133,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1739
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568708,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n#### Reference Model:  \n**Package: PowertrainAllocation**\n\n**Package: LogicalModel**\n1. Definition of action `ProvidePower`.\n2. Definition of action `GenerateTorque`.\n3. Definition of part `TorqueGenerator`.\n4. Definition of action `providePower` of type `ProvidePower`.\n5. Definition of action `generateTorque` of type `GenerateTorque` as a sub-action of `providePower`.\n6. Definition of part `torqueGenerator` of type `TorqueGenerator`.\n7. `torqueGenerator` performs `providePower.generateTorque`.\n\n**Package: PhysicalModel**\n8. Private import of `LogicalModel::*`.\n9. Definition of part `PowerTrain`.\n10. Definition of part `Engine`.\n11. Definition of part `powerTrain` of type `PowerTrain`.\n12. Definition of part `engine` of type `Engine` as a sub-part of `powerTrain`.\n13. `powerTrain.engine` performs `providePower.generateTorque`.\n14. Allocation of `torqueGenerator` to `powerTrain`.\n15. Allocation of `torqueGenerator.generateTorque` to `powerTrain.engine.generateTorque`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model.\n\n#### LogicalModel\n\n1. **Definition of action `ProvidePower`.**  \n   - **Not covered.** No explicit action definition; only attributes like `providesPower`.\n\n2. **Definition of action `GenerateTorque`.**  \n   - **Not covered.** No explicit action definition; only attributes like `generatesTorque`.\n\n3. **Definition of part `TorqueGenerator`.**  \n   - **Covered.** `part def TorqueGenerator` exists.\n\n4. **Definition of action `providePower` of type `ProvidePower`.**  \n   - **Not covered.** No explicit action part or attribute; only attributes.\n\n5. **Definition of action `generateTorque` of type `GenerateTorque` as a sub-action of `providePower`.**  \n   - **Not covered.** No explicit action hierarchy.\n\n6. **Definition of part `torqueGenerator` of type `TorqueGenerator`.**  \n   - **Covered.** `part torqueGenerator : TorqueGenerator` exists in `LogicalModel`.\n\n7. **`torqueGenerator` performs `providePower.generateTorque`.**  \n   - **Partially covered.** There is a `generatingTorqueAction` as a part of `TorqueGenerator`, and attributes, but no explicit perform relationship.\n\n#### PhysicalModel\n\n8. **Private import of `LogicalModel::*`.**  \n   - **Covered.** `PhysicalModel` contains a part `powertrain`, and `VehicleSystem` connects `logicalModel.torqueGenerator` to `physicalModel.powertrain`.\n\n9. **Definition of part `PowerTrain`.**  \n   - **Covered.** `part def Powertrain` exists.\n\n10. **Definition of part `Engine`.**  \n    - **Covered.** `part def Engine` exists.\n\n11. **Definition of part `powerTrain` of type `PowerTrain`.**  \n    - **Covered.** `part powertrain : Powertrain` in `PhysicalModel`.\n\n12. **Definition of part `engine` of type `Engine` as a sub-part of `powerTrain`.**  \n    - **Covered.** `part engine : Engine` in `Powertrain`.\n\n13. **`powerTrain.engine` performs `providePower.generateTorque`.**  \n    - **Not covered.** No explicit perform relationship.\n\n14. **Allocation of `torqueGenerator` to `powerTrain`.**  \n    - **Covered.** `connect logicalModel.torqueGenerator to physicalModel.powertrain`.\n\n15. **Allocation of `torqueGenerator.generateTorque` to `powerTrain.engine.generateTorque`.**  \n    - **Covered.** `connect logicalModel.torqueGenerator.generatingTorqueAction to physicalModel.powertrain.engine`.\n\n---\n\n### 3. Summarize the results\n\n#### Coverage Table\n\n| # | Atomic Claim | Covered? | Notes |\n|---|--------------|----------|-------|\n| 1 | action ProvidePower | No | Not present |\n| 2 | action GenerateTorque | No | Not present |\n| 3 | part def TorqueGenerator | Yes | Present |\n| 4 | action providePower : ProvidePower | No | Not present |\n| 5 | action generateTorque : GenerateTorque (sub-action) | No | Not present |\n| 6 | part torqueGenerator : TorqueGenerator | Yes | Present |\n| 7 | torqueGenerator performs providePower.generateTorque | Partial/No | No explicit perform |\n| 8 | private import LogicalModel::* | Yes | Structure is present |\n| 9 | part def PowerTrain | Yes | Present |\n| 10 | part def Engine | Yes | Present |\n| 11 | part powerTrain : PowerTrain | Yes | Present |\n| 12 | part engine : Engine (in powerTrain) | Yes | Present |\n| 13 | powerTrain.engine performs providePower.generateTorque | No | Not present |\n| 14 | allocate torqueGenerator to powerTrain | Yes | Present as connect |\n| 15 | allocate torqueGenerator.generateTorque to powerTrain.engine.generateTorque | Yes | Present as connect |\n\n**Total atomic claims:** 15  \n**Number of covered claims:** 9\n\n---\n\n### Final Score\n\n**Score: 9/15**"
+  }
+}

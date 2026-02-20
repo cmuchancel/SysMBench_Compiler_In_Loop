@@ -1,0 +1,85 @@
+{
+  "model_id": 70,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleRequirementsSatisfaction' {\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\trequirement def MassLimitationRequirement {\n\t\tdoc /* The actual mass shall be less than or equal to the required mass. */\n\t\tattribute massActual: MassValue;\n\t\tattribute massReqd: MassValue;\n\t\trequire constraint { massActual <= massReqd }\n\t}\n\tpart def Vehicle {\n\t\tattribute dryMass: MassValue;\n\t\tattribute fuelMass: MassValue;\n\t\tattribute fuelFullMass: MassValue;\n\t}\n\trequirement def <'1'> VehicleMassLimitationRequirement :> MassLimitationRequirement {\n\t\tdoc /* The total mass of a vehicle shall be less than or equal to the required mass. */\n\t\tsubject vehicle : Vehicle;\n\t\tattribute redefines massActual = vehicle.dryMass + vehicle.fuelMass;\n\t\tassume constraint { vehicle.fuelMass > 0[kg] }\n\t}\n\tport def ClutchPort;\n\taction def GenerateTorque;\n\trequirement def <'2'> DrivePowerInterface {\n\t\tdoc /* The engine shall transfer its generated torque to the transmission via the clutch interface. */\n\t\tsubject clutchPort: ClutchPort;\n\t}\n\trequirement def <'3'> TorqueGeneration {\n\t\tdoc /* The engine shall generate torque as a function of RPM as shown in Table 1. */\n\t\tsubject generateTorque: GenerateTorque;\n\t}\n\trequirement <'1.1'> fullVehicleMassLimit : VehicleMassLimitationRequirement {\n\t\tsubject vehicle : Vehicle;\n\t\tattribute :>> massReqd = 2000[kg];\n\t\t\n\t\tassume constraint {\n\t\t\tdoc /* Full tank is full. */\n\t\t\tvehicle.fuelMass == vehicle.fuelFullMass\n\t\t}\n\t}\n\trequirement <'1.2'> emptyVehicleMassLimit : VehicleMassLimitationRequirement {\n\t\tsubject vehicle : Vehicle;\n\t\tattribute :>> massReqd = 1500[kg];\n\t\t\n\t\tassume constraint {\n\t\t\tdoc /* Full tank is empty. */\n\t\t\tvehicle.fuelMass == 0[kg]\n\t\t}\n\t}\n\tpart def Engine {\n\t\tport clutchPort: ClutchPort;\n\t\tperform action generateTorque: GenerateTorque;\n\t}\n\trequirement vehicleSpecification {\n\t\tdoc /* Overall vehicle requirements group */\n\t\tsubject vehicle : Vehicle;\n\t\trequire fullVehicleMassLimit;\n\t\trequire emptyVehicleMassLimit;\n\t}\n\trequirement engineSpecification {\n\t\tdoc /* Engine power requirements group */\n\t\tsubject engine : Engine;\n\t\trequirement drivePowerInterface : DrivePowerInterface {\n\t\t\tsubject = engine.clutchPort;\n\t\t}\n\t\trequirement torqueGeneration : TorqueGeneration {\n\t\t\tsubject = engine.generateTorque;\t\n\t\t}\n\t}\n\taction 'provide power' {\n\t\taction 'generate torque' { }\n\t}\n\tpart vehicle_c1 : Vehicle {\n\t\tperform 'provide power';\t\t\n\t\tpart engine_v1: Engine {\n\t\t\tport :>> clutchPort;\n\t\t\tperform 'provide power'.'generate torque' :>> generateTorque;\n\t\t}\t\n\t}\n\tpart 'Vehicle c1 Design Context' {\t\n\t\tref vehicle_design :> vehicle_c1;\n\t\tsatisfy vehicleSpecification by vehicle_design;\n\t\tsatisfy engineSpecification by vehicle_design.engine_v1;\n\t}\n}\n\nGenerated Model:\npackage VehicleSystem {\n   private import ScalarValues::*;\n\n   port def ClutchPort {\n   }\n\n   part def Engine {\n      port clutchOut : ClutchPort;\n      attribute torqueAt1000rpm : Real = 200.0;\n      attribute torqueAt2000rpm : Real = 250.0;\n      attribute torqueAt3000rpm : Real = 300.0;\n   }\n\n   part def Transmission {\n      port clutchIn : ClutchPort;\n   }\n\n   part def Vehicle {\n      attribute emptyMass : Real = 1400.0;\n      attribute fueledMass : Real = 1800.0;\n      part engine : Engine;\n      part transmission : Transmission;\n      connect engine.clutchOut to transmission.clutchIn;\n   }\n\n   part vehicleInstance : Vehicle;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/70/70_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/70/70.sysml",
+  "response": {
+    "id": "resp_0bee6d0d5d8baace006998017da9288194bac62031647d6f07",
+    "created_at": 1771569533.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0bee6d0d5d8baace006998017e10048194babf4ad5e6adb1cb",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**(A) Package and Imports**\n1. There is a package named `VehicleSystem`.\n2. The package privately imports `ScalarValues::*`.\n\n**(B) Port Definitions**\n3. There is a port definition named `ClutchPort`.\n\n**(C) Part Definitions**\n4. There is a part definition named `Engine`.\n5. The `Engine` part has a port named `clutchOut` of type `ClutchPort`.\n6. The `Engine` part has an attribute `torqueAt1000rpm` of type `Real` with default value 200.0.\n7. The `Engine` part has an attribute `torqueAt2000rpm` of type `Real` with default value 250.0.\n8. The `Engine` part has an attribute `torqueAt3000rpm` of type `Real` with default value 300.0.\n\n9. There is a part definition named `Transmission`.\n10. The `Transmission` part has a port named `clutchIn` of type `ClutchPort`.\n\n11. There is a part definition named `Vehicle`.\n12. The `Vehicle` part has an attribute `emptyMass` of type `Real` with default value 1400.0.\n13. The `Vehicle` part has an attribute `fueledMass` of type `Real` with default value 1800.0.\n14. The `Vehicle` part has a part named `engine` of type `Engine`.\n15. The `Vehicle` part has a part named `transmission` of type `Transmission`.\n16. The `Vehicle` part connects `engine.clutchOut` to `transmission.clutchIn`.\n\n17. There is a part named `vehicleInstance` of type `Vehicle`.\n\n---\n\n### 2. For each atomic claim, determine if it is supported by the reference model\n\n**(A) Package and Imports**\n1. **Package named `VehicleSystem`**  \n   - **NOT supported.** Reference model's package is `VehicleRequirementsSatisfaction`. (Naming differences are ignored, but the structure is not equivalent.)\n2. **Private import of `ScalarValues::*`**  \n   - **NOT supported.** Reference model imports `ISQ::*` and `SI::*`, not `ScalarValues::*`.\n\n**(B) Port Definitions**\n3. **Port definition `ClutchPort`**  \n   - **SUPPORTED.** Reference model defines `ClutchPort`.\n\n**(C) Part Definitions**\n4. **Part definition `Engine`**  \n   - **SUPPORTED.** Reference model defines `Engine`.\n5. **`Engine` has port `clutchOut: ClutchPort`**  \n   - **PARTIALLY SUPPORTED.** Reference model's `Engine` has `clutchPort: ClutchPort`. (Naming difference is ignored, so **SUPPORTED**.)\n6. **`Engine` has attribute `torqueAt1000rpm: Real = 200.0`**  \n   - **NOT supported.** Reference model does not define such attributes; torque is modeled as an action/requirement, not as attributes.\n7. **`Engine` has attribute `torqueAt2000rpm: Real = 250.0`**  \n   - **NOT supported.** (Same as above.)\n8. **`Engine` has attribute `torqueAt3000rpm: Real = 300.0`**  \n   - **NOT supported.** (Same as above.)\n\n9. **Part definition `Transmission`**  \n   - **NOT supported.** Reference model does not define a `Transmission` part.\n10. **`Transmission` has port `clutchIn: ClutchPort`**  \n    - **NOT supported.** (No `Transmission` part.)\n\n11. **Part definition `Vehicle`**  \n    - **SUPPORTED.** Reference model defines `Vehicle`.\n12. **`Vehicle` has attribute `emptyMass: Real = 1400.0`**  \n    - **PARTIALLY SUPPORTED.** Reference model has `dryMass: MassValue` and `fuelMass: MassValue`, and an instance with `fuelMass == 0[kg]` is set to 1500[kg]. The generated model's `emptyMass` is 1400.0, which is not the same value, and the attribute name/type is different. **NOT supported.**\n13. **`Vehicle` has attribute `fueledMass: Real = 1800.0`**  \n    - **PARTIALLY SUPPORTED.** Reference model has `dryMass` and `fuelMass`, and an instance with `fuelMass == fuelFullMass` is set to 2000[kg] (not 1800). Attribute name/type is different. **NOT supported.**\n14. **`Vehicle` has part `engine: Engine`**  \n    - **SUPPORTED.** Reference model's `Vehicle` instance contains an `engine_v1: Engine`.\n15. **`Vehicle` has part `transmission: Transmission`**  \n    - **NOT supported.** Reference model does not define a `Transmission` part.\n16. **`Vehicle` connects `engine.clutchOut` to `transmission.clutchIn`**  \n    - **NOT supported.** Reference model does not explicitly define such a connection.\n\n17. **Part `vehicleInstance: Vehicle`**  \n    - **SUPPORTED.** Reference model defines `vehicle_c1: Vehicle`.\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 3. Port definition `ClutchPort`\n- 4. Part definition `Engine`\n- 5. `Engine` has port `clutchOut: ClutchPort` (naming difference ignored)\n- 11. Part definition `Vehicle`\n- 14. `Vehicle` has part `engine: Engine`\n- 17. Part `vehicleInstance: Vehicle`\n\n**Total supported: 6**\n\n**Total claims: 17**\n\n---\n\n**Score: 6/17**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 1023,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1274,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2297
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569546,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**(A) Package and Imports**\n1. There is a package named `VehicleSystem`.\n2. The package privately imports `ScalarValues::*`.\n\n**(B) Port Definitions**\n3. There is a port definition named `ClutchPort`.\n\n**(C) Part Definitions**\n4. There is a part definition named `Engine`.\n5. The `Engine` part has a port named `clutchOut` of type `ClutchPort`.\n6. The `Engine` part has an attribute `torqueAt1000rpm` of type `Real` with default value 200.0.\n7. The `Engine` part has an attribute `torqueAt2000rpm` of type `Real` with default value 250.0.\n8. The `Engine` part has an attribute `torqueAt3000rpm` of type `Real` with default value 300.0.\n\n9. There is a part definition named `Transmission`.\n10. The `Transmission` part has a port named `clutchIn` of type `ClutchPort`.\n\n11. There is a part definition named `Vehicle`.\n12. The `Vehicle` part has an attribute `emptyMass` of type `Real` with default value 1400.0.\n13. The `Vehicle` part has an attribute `fueledMass` of type `Real` with default value 1800.0.\n14. The `Vehicle` part has a part named `engine` of type `Engine`.\n15. The `Vehicle` part has a part named `transmission` of type `Transmission`.\n16. The `Vehicle` part connects `engine.clutchOut` to `transmission.clutchIn`.\n\n17. There is a part named `vehicleInstance` of type `Vehicle`.\n\n---\n\n### 2. For each atomic claim, determine if it is supported by the reference model\n\n**(A) Package and Imports**\n1. **Package named `VehicleSystem`**  \n   - **NOT supported.** Reference model's package is `VehicleRequirementsSatisfaction`. (Naming differences are ignored, but the structure is not equivalent.)\n2. **Private import of `ScalarValues::*`**  \n   - **NOT supported.** Reference model imports `ISQ::*` and `SI::*`, not `ScalarValues::*`.\n\n**(B) Port Definitions**\n3. **Port definition `ClutchPort`**  \n   - **SUPPORTED.** Reference model defines `ClutchPort`.\n\n**(C) Part Definitions**\n4. **Part definition `Engine`**  \n   - **SUPPORTED.** Reference model defines `Engine`.\n5. **`Engine` has port `clutchOut: ClutchPort`**  \n   - **PARTIALLY SUPPORTED.** Reference model's `Engine` has `clutchPort: ClutchPort`. (Naming difference is ignored, so **SUPPORTED**.)\n6. **`Engine` has attribute `torqueAt1000rpm: Real = 200.0`**  \n   - **NOT supported.** Reference model does not define such attributes; torque is modeled as an action/requirement, not as attributes.\n7. **`Engine` has attribute `torqueAt2000rpm: Real = 250.0`**  \n   - **NOT supported.** (Same as above.)\n8. **`Engine` has attribute `torqueAt3000rpm: Real = 300.0`**  \n   - **NOT supported.** (Same as above.)\n\n9. **Part definition `Transmission`**  \n   - **NOT supported.** Reference model does not define a `Transmission` part.\n10. **`Transmission` has port `clutchIn: ClutchPort`**  \n    - **NOT supported.** (No `Transmission` part.)\n\n11. **Part definition `Vehicle`**  \n    - **SUPPORTED.** Reference model defines `Vehicle`.\n12. **`Vehicle` has attribute `emptyMass: Real = 1400.0`**  \n    - **PARTIALLY SUPPORTED.** Reference model has `dryMass: MassValue` and `fuelMass: MassValue`, and an instance with `fuelMass == 0[kg]` is set to 1500[kg]. The generated model's `emptyMass` is 1400.0, which is not the same value, and the attribute name/type is different. **NOT supported.**\n13. **`Vehicle` has attribute `fueledMass: Real = 1800.0`**  \n    - **PARTIALLY SUPPORTED.** Reference model has `dryMass` and `fuelMass`, and an instance with `fuelMass == fuelFullMass` is set to 2000[kg] (not 1800). Attribute name/type is different. **NOT supported.**\n14. **`Vehicle` has part `engine: Engine`**  \n    - **SUPPORTED.** Reference model's `Vehicle` instance contains an `engine_v1: Engine`.\n15. **`Vehicle` has part `transmission: Transmission`**  \n    - **NOT supported.** Reference model does not define a `Transmission` part.\n16. **`Vehicle` connects `engine.clutchOut` to `transmission.clutchIn`**  \n    - **NOT supported.** Reference model does not explicitly define such a connection.\n\n17. **Part `vehicleInstance: Vehicle`**  \n    - **SUPPORTED.** Reference model defines `vehicle_c1: Vehicle`.\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 3. Port definition `ClutchPort`\n- 4. Part definition `Engine`\n- 5. `Engine` has port `clutchOut: ClutchPort` (naming difference ignored)\n- 11. Part definition `Vehicle`\n- 14. `Vehicle` has part `engine: Engine`\n- 17. Part `vehicleInstance: Vehicle`\n\n**Total supported: 6**\n\n**Total claims: 17**\n\n---\n\n**Score: 6/17**"
+  }
+}

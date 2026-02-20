@@ -1,0 +1,85 @@
+{
+  "model_id": 62,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleMassBudgetingConstraints' {\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\tprivate import NumericalFunctions::*;\n\tpart def Engine;\n\tpart def Transmission;\n\tconstraint def MassConstraint {\n\t\tin partMasses : MassValue[0..*];\n\t\tin massLimit : MassValue;\n\t\tsum(partMasses) <= massLimit\n\t}\n\tpart def Vehicle {\n\t\tassert constraint massConstraint : MassConstraint {\n\t\t\tin partMasses = (chassisMass, engine.mass, transmission.mass);\n\t\t\tin massLimit = 2500[kg];\n\t\t}\t\n\t\tattribute chassisMass : MassValue;\n\t\tpart engine : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t\tpart transmission : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t}\t\n}\n\nGenerated Model:\npackage VehicleMassManagement {\n    private import ScalarValues::*;\n\n    part def Chassis {\n        attribute mass : Real;\n    }\n\n    part def Engine {\n        attribute mass : Real;\n    }\n\n    part def Gearbox {\n        attribute mass : Real;\n    }\n\n    part def Vehicle {\n        part chassis : Chassis;\n        part engine : Engine;\n        part gearbox : Gearbox;\n\n        attribute maxMass : Real = 2500;\n        attribute totalMass : Real = chassis.mass + engine.mass + gearbox.mass;\n        attribute overweightWarning : Boolean = totalMass > maxMass;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/62/62_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/62/62.sysml",
+  "response": {
+    "id": "resp_0702d0b324f9f963006998008537bc8190b4bf58b907a1bf13",
+    "created_at": 1771569285.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0702d0b324f9f96300699800859474819083c0f9948ed04c9f",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. There is a package named `VehicleMassManagement`.\n2. The package privately imports `ScalarValues::*`.\n\n**Part Definitions**\n3. There is a part definition `Chassis`.\n4. `Chassis` has an attribute `mass` of type `Real`.\n5. There is a part definition `Engine`.\n6. `Engine` has an attribute `mass` of type `Real`.\n7. There is a part definition `Gearbox`.\n8. `Gearbox` has an attribute `mass` of type `Real`.\n9. There is a part definition `Vehicle`.\n\n**Vehicle Structure**\n10. `Vehicle` has a part `chassis` of type `Chassis`.\n11. `Vehicle` has a part `engine` of type `Engine`.\n12. `Vehicle` has a part `gearbox` of type `Gearbox`.\n13. `Vehicle` has an attribute `maxMass` of type `Real` with default value 2500.\n14. `Vehicle` has an attribute `totalMass` of type `Real` defined as `chassis.mass + engine.mass + gearbox.mass`.\n15. `Vehicle` has an attribute `overweightWarning` of type `Boolean` defined as `totalMass > maxMass`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**1. Package named `VehicleMassManagement`.**  \n*Not supported.* (Reference model's package is `VehicleMassBudgetingConstraints`, but package naming is to be ignored for structure/semantics.)\n\n**2. Private import of `ScalarValues::*`.**  \n*Not supported.* (Reference model imports `ISQ::*`, `SI::*`, and `NumericalFunctions::*`.)\n\n**3. Part definition `Chassis`.**  \n*Not supported.* (Reference model has no `Chassis` part; it has an attribute `chassisMass` in `Vehicle`.)\n\n**4. `Chassis` has attribute `mass: Real`.**  \n*Not supported.* (Reference model has `chassisMass` as an attribute of `Vehicle`, not as a part.)\n\n**5. Part definition `Engine`.**  \n*Supported.* (Reference model defines part `Engine`.)\n\n**6. `Engine` has attribute `mass: Real`.**  \n*Supported.* (Reference model's `Vehicle` part `engine` has attribute `mass: MassValue`.)\n\n**7. Part definition `Gearbox`.**  \n*Not supported.* (Reference model has `Transmission`, not `Gearbox`.)\n\n**8. `Gearbox` has attribute `mass: Real`.**  \n*Not supported.* (Reference model's `Transmission` part has attribute `mass: MassValue`, but the name is different.)\n\n**9. Part definition `Vehicle`.**  \n*Supported.* (Reference model defines part `Vehicle`.)\n\n**10. `Vehicle` has part `chassis: Chassis`.**  \n*Not supported.* (Reference model has `chassisMass` as an attribute, not as a part.)\n\n**11. `Vehicle` has part `engine: Engine`.**  \n*Supported.* (Reference model's `Vehicle` has part `engine: Engine`.)\n\n**12. `Vehicle` has part `gearbox: Gearbox`.**  \n*Not supported.* (Reference model's `Vehicle` has part `transmission: Engine`.)\n\n**13. `Vehicle` has attribute `maxMass: Real = 2500`.**  \n*Partially supported.* (Reference model's `Vehicle` constraint instance sets `massLimit = 2500[kg]`; not an attribute, but a constraint input. We'll count as *not supported* since it's not an attribute.)\n\n**14. `Vehicle` has attribute `totalMass: Real = chassis.mass + engine.mass + gearbox.mass`.**  \n*Partially supported.* (Reference model computes sum of masses for constraint, but not as an attribute. We'll count as *not supported*.)\n\n**15. `Vehicle` has attribute `overweightWarning: Boolean = totalMass > maxMass`.**  \n*Not supported.* (Reference model only asserts a constraint, no such attribute.)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**  \n- 5. Part definition `Engine`\n- 6. `Engine` has attribute `mass: Real`\n- 9. Part definition `Vehicle`\n- 11. `Vehicle` has part `engine: Engine`\n\n**Total supported:** 4\n\n**Total claims:** 15\n\n---\n\n**Score: 4/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 466,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 973,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1439
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569297,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. There is a package named `VehicleMassManagement`.\n2. The package privately imports `ScalarValues::*`.\n\n**Part Definitions**\n3. There is a part definition `Chassis`.\n4. `Chassis` has an attribute `mass` of type `Real`.\n5. There is a part definition `Engine`.\n6. `Engine` has an attribute `mass` of type `Real`.\n7. There is a part definition `Gearbox`.\n8. `Gearbox` has an attribute `mass` of type `Real`.\n9. There is a part definition `Vehicle`.\n\n**Vehicle Structure**\n10. `Vehicle` has a part `chassis` of type `Chassis`.\n11. `Vehicle` has a part `engine` of type `Engine`.\n12. `Vehicle` has a part `gearbox` of type `Gearbox`.\n13. `Vehicle` has an attribute `maxMass` of type `Real` with default value 2500.\n14. `Vehicle` has an attribute `totalMass` of type `Real` defined as `chassis.mass + engine.mass + gearbox.mass`.\n15. `Vehicle` has an attribute `overweightWarning` of type `Boolean` defined as `totalMass > maxMass`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**1. Package named `VehicleMassManagement`.**  \n*Not supported.* (Reference model's package is `VehicleMassBudgetingConstraints`, but package naming is to be ignored for structure/semantics.)\n\n**2. Private import of `ScalarValues::*`.**  \n*Not supported.* (Reference model imports `ISQ::*`, `SI::*`, and `NumericalFunctions::*`.)\n\n**3. Part definition `Chassis`.**  \n*Not supported.* (Reference model has no `Chassis` part; it has an attribute `chassisMass` in `Vehicle`.)\n\n**4. `Chassis` has attribute `mass: Real`.**  \n*Not supported.* (Reference model has `chassisMass` as an attribute of `Vehicle`, not as a part.)\n\n**5. Part definition `Engine`.**  \n*Supported.* (Reference model defines part `Engine`.)\n\n**6. `Engine` has attribute `mass: Real`.**  \n*Supported.* (Reference model's `Vehicle` part `engine` has attribute `mass: MassValue`.)\n\n**7. Part definition `Gearbox`.**  \n*Not supported.* (Reference model has `Transmission`, not `Gearbox`.)\n\n**8. `Gearbox` has attribute `mass: Real`.**  \n*Not supported.* (Reference model's `Transmission` part has attribute `mass: MassValue`, but the name is different.)\n\n**9. Part definition `Vehicle`.**  \n*Supported.* (Reference model defines part `Vehicle`.)\n\n**10. `Vehicle` has part `chassis: Chassis`.**  \n*Not supported.* (Reference model has `chassisMass` as an attribute, not as a part.)\n\n**11. `Vehicle` has part `engine: Engine`.**  \n*Supported.* (Reference model's `Vehicle` has part `engine: Engine`.)\n\n**12. `Vehicle` has part `gearbox: Gearbox`.**  \n*Not supported.* (Reference model's `Vehicle` has part `transmission: Engine`.)\n\n**13. `Vehicle` has attribute `maxMass: Real = 2500`.**  \n*Partially supported.* (Reference model's `Vehicle` constraint instance sets `massLimit = 2500[kg]`; not an attribute, but a constraint input. We'll count as *not supported* since it's not an attribute.)\n\n**14. `Vehicle` has attribute `totalMass: Real = chassis.mass + engine.mass + gearbox.mass`.**  \n*Partially supported.* (Reference model computes sum of masses for constraint, but not as an attribute. We'll count as *not supported*.)\n\n**15. `Vehicle` has attribute `overweightWarning: Boolean = totalMass > maxMass`.**  \n*Not supported.* (Reference model only asserts a constraint, no such attribute.)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**  \n- 5. Part definition `Engine`\n- 6. `Engine` has attribute `mass: Real`\n- 9. Part definition `Vehicle`\n- 11. `Vehicle` has part `engine: Engine`\n\n**Total supported:** 4\n\n**Total claims:** 15\n\n---\n\n**Score: 4/15**"
+  }
+}

@@ -1,11 +1,11 @@
 # SysML Context Examples (for the agent)
 
-Curated, one-per-grammar examples. Each subdirectory pairs a natural-language prompt (`nl.txt`) with its ground-truth SysML (`design.sysml`). Files are copied from the authoritative samples in `DesignBench/dataset/sysml/samples/`.
+Curated, one-per-grammar examples. Each subdirectory pairs a natural-language prompt (`nl.txt`) with its ground-truth SysML (`design.sysml`). Files are copied from the authoritative samples in `sysmbench_original_upstream/dataset/sysml/samples/`.
 
 ## How the agent should use this
 - Always read *all* subdirectories before generation so the full grammar set (47/47) is in context; ingest both `nl.txt` and `design.sysml` together as paired input/output references.
 - Keep pairs intact: never use `nl.txt` without the matching `design.sysml` (or vice versa).
-- Use the directory name to locate the original: `NNN_Grammar_Name` → `DesignBench/dataset/sysml/samples/NN/`.
+- Use the directory name to locate the original: `NNN_Grammar_Name` → `sysmbench_original_upstream/dataset/sysml/samples/NN/`.
 - After loading, infer the grammar patterns demonstrated in each pair and be prepared to apply any grammar type that matches the prompted NL request.
 - If the user asks for structural emphasis, draw from structural grammars (`Part`, `Connection`, `Binding_Connector`, `Package`, `Port`, `Interface`, `Subsetting`, `Redefinition`).
 - If the user asks for behavioral emphasis, draw from behavioral grammars (`Action`, `Action_Definition`, `Opaque_Action`, `State`, `Transition`, `State-based_Behavior`, `SequenceModeling`, `Conditional_Succession`, `Control_Structure`).
@@ -63,4 +63,4 @@ Curated, one-per-grammar examples. Each subdirectory pairs a natural-language pr
 
 ## Tips
 - For quick experiments, select 5–10 grammars aligned to the task; for maximum fidelity, load all 47 pairs.
-- Traceback: the `NN` prefix maps directly to `DesignBench/dataset/sysml/samples/NN/`.
+- Traceback: the `NN` prefix maps directly to `sysmbench_original_upstream/dataset/sysml/samples/NN/`.

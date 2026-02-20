@@ -16,8 +16,7 @@ SCORE_RE = re.compile(
 
 def detect_default_dataset_path() -> Path:
     candidates = [
-        REPO_ROOT / "api_loop" / "DesignBench" / "dataset" / "sysml" / "dataset.json",
-        REPO_ROOT / "DesignBench" / "dataset" / "sysml" / "dataset.json",
+        REPO_ROOT / "sysmbench_original_upstream" / "dataset" / "sysml" / "dataset.json",
     ]
     for path in candidates:
         if path.exists():
@@ -44,7 +43,7 @@ def parse_args() -> argparse.Namespace:
         "--dataset",
         type=Path,
         default=default_dataset,
-        help="Path to DesignBench dataset.json (default: %(default)s).",
+        help="Path to SysMBench dataset.json (default: %(default)s).",
     )
     parser.add_argument(
         "--scores-root",

@@ -3,7 +3,8 @@
 This repository is now organized into two workflow folders:
 
 - `ai_agent/`: assets and outputs for the agent-driven generation workflow.
-- `api_loop/`: datasets/outputs for the API compiler-in-the-loop workflow.
+- `api_loop/`: API compiler-in-the-loop scripts, prompts, and outputs.
+- `sysmbench_original_upstream/`: original SysMBench/DesignBench source repository snapshot (upstream, not our authored work).
 - `evaluation_scripts/`: shared evaluation/analysis scripts for both workflows.
 
 ## Quick Map
@@ -20,9 +21,14 @@ This repository is now organized into two workflow folders:
 ### `api_loop/`
 - `refine_sysml.py`
 - `run_refine_sysml_designbench.py`
-- `DesignBench/`
+- `nl_prompts/`
 - `Generated_from_Prompts_API_LOOP/`
 - `runs/`
+
+### `sysmbench_original_upstream/`
+- Upstream SysMBench/DesignBench repository contents
+- Includes `dataset/`, `src/`, prompts, and original artifacts
+- Treated as external source material, not new benchmark code authored in this repo
 
 ### `evaluation_scripts/`
 - `run_sysml_gpt41_eval.py`
@@ -34,4 +40,4 @@ This repository is now organized into two workflow folders:
 - `backfill_refine_timings.py`
 - `Evaluation_Prompts/`
 
-See `ai_agent/README.md`, `api_loop/README.md`, and `evaluation_scripts/README.md` for details.
+See `ai_agent/README.md`, `api_loop/README.md`, `evaluation_scripts/README.md`, and `sysmbench_original_upstream/UPSTREAM_NOTICE.md` for details.

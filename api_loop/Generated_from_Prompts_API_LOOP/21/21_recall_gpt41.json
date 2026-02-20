@@ -1,0 +1,85 @@
+{
+  "model_id": 21,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PhotographyWorkflow' {\n\titem def Scene;\n\titem def Image;\n\titem def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\n\taction def TakePicture {\n\t\tin item scene : Scene;\n\t\tout item picture : Picture;\n\t\tbind focus.scene = scene;\n\t\taction focus: Focus { in scene; out image; }\n\t\tsuccession flow from focus.image to shoot.image;\n\t\taction shoot: Shoot { in image; out picture; }\n\t\tbind shoot.picture = picture;\n\t}\n}\n\nGenerated Model:\npackage PhotographyAutomation {\n  private import ScalarValues::*;\n\n  item def Scene;\n  item def FocusedImage;\n  item def Photo;\n\n  port def ScenePort {\n    ref item scene : Scene;\n  }\n\n  port def FocusedImagePort {\n    ref item image : FocusedImage;\n  }\n\n  port def PhotoPort {\n    ref item photo : Photo;\n  }\n\n  part def User {\n    port sceneOut : ScenePort;\n    port photoIn : PhotoPort;\n  }\n\n  part def FocusProcessor {\n    port sceneIn : ScenePort;\n    port imageOut : FocusedImagePort;\n  }\n\n  part def ShootingOperator {\n    port imageIn : FocusedImagePort;\n    port photoOut : PhotoPort;\n  }\n\n  part def PhotographySystem {\n    port sceneIn : ScenePort;\n    port photoOut : PhotoPort;\n    part focus : FocusProcessor;\n    part shoot : ShootingOperator;\n    connect sceneIn to focus.sceneIn;\n    connect focus.imageOut to shoot.imageIn;\n    connect shoot.photoOut to photoOut;\n  }\n\n  part def PhotographyEnvironment {\n    part user : User;\n    part system : PhotographySystem;\n    connect user.sceneOut to system.sceneIn;\n    connect system.photoOut to user.photoIn;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/21/21_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/21/21.sysml",
+  "response": {
+    "id": "resp_03323a7d2e6b8611006997ffe4db1c81948cb8545969a22d02",
+    "created_at": 1771569124.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_03323a7d2e6b8611006997ffe50d288194b9eb45b0bfa100b8",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. Definition of item `Scene`.\n2. Definition of item `Image`.\n3. Definition of item `Picture`.\n4. Definition of action `Focus` with:\n   - input parameter `scene` of type `Scene`\n   - output parameter `image` of type `Image`\n5. Definition of action `Shoot` with:\n   - input parameter `image` of type `Image`\n   - output parameter `picture` of type `Picture`\n6. Definition of action `TakePicture` with:\n   - input parameter `scene` of type `Scene`\n   - output parameter `picture` of type `Picture`\n   - internal action `focus` of type `Focus` with input/output bindings\n   - internal action `shoot` of type `Shoot` with input/output bindings\n   - succession/flow from `focus.image` to `shoot.image`\n   - binding: `focus.scene = scene`\n   - binding: `shoot.picture = picture`\n\nLet's break down claim 6 into its atomic elements:\n\n6a. `TakePicture` action has input parameter `scene` of type `Scene`\n6b. `TakePicture` action has output parameter `picture` of type `Picture`\n6c. `TakePicture` contains sub-action `focus` of type `Focus`\n6d. `TakePicture` contains sub-action `shoot` of type `Shoot`\n6e. There is a succession/flow from `focus.image` to `shoot.image`\n6f. Binding: `focus.scene = scene`\n6g. Binding: `shoot.picture = picture`\n\nSo, the full list is:\n\n1. item `Scene`\n2. item `Image`\n3. item `Picture`\n4. action `Focus` (input: `scene: Scene`, output: `image: Image`)\n5. action `Shoot` (input: `image: Image`, output: `picture: Picture`)\n6a. action `TakePicture` (input: `scene: Scene`)\n6b. action `TakePicture` (output: `picture: Picture`)\n6c. `TakePicture` contains sub-action `focus: Focus`\n6d. `TakePicture` contains sub-action `shoot: Shoot`\n6e. succession/flow from `focus.image` to `shoot.image`\n6f. binding: `focus.scene = scene`\n6g. binding: `shoot.picture = picture`\n\n**Total atomic claims: 11**\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### 1. item `Scene`\n- **Covered**: `item def Scene;` exists in the generated model.\n\n#### 2. item `Image`\n- **Not Covered**: The generated model has `item def FocusedImage;` but not `Image`. If we accept `FocusedImage` as equivalent to `Image`, this would be covered, but the reference model distinguishes between `Image` and `Picture`, and the generated model uses `FocusedImage` and `Photo`. The mapping is not exact, but let's be generous and accept `FocusedImage` as equivalent to `Image`.\n- **Covered** (with mapping: `Image` ≈ `FocusedImage`)\n\n#### 3. item `Picture`\n- **Not Covered**: The generated model has `Photo`, which could be considered equivalent to `Picture`.\n- **Covered** (with mapping: `Picture` ≈ `Photo`)\n\n#### 4. action `Focus` (input: `scene: Scene`, output: `image: Image`)\n- **Not Covered**: The generated model does not define an action named `Focus` or an equivalent action. It defines a part `FocusProcessor` with ports for `sceneIn` and `imageOut`, which could be considered as implementing the functionality of `Focus` as a component, but not as an action.\n- **Not Covered**\n\n#### 5. action `Shoot` (input: `image: Image`, output: `picture: Picture`)\n- **Not Covered**: Similarly, the generated model defines a part `ShootingOperator` with ports for `imageIn` and `photoOut`, but not an action `Shoot`.\n- **Not Covered**\n\n#### 6a. action `TakePicture` (input: `scene: Scene`)\n- **Not Covered**: There is no action `TakePicture` in the generated model.\n\n#### 6b. action `TakePicture` (output: `picture: Picture`)\n- **Not Covered**: As above.\n\n#### 6c. `TakePicture` contains sub-action `focus: Focus`\n- **Not Covered**: No such containment.\n\n#### 6d. `TakePicture` contains sub-action `shoot: Shoot`\n- **Not Covered**: No such containment.\n\n#### 6e. succession/flow from `focus.image` to `shoot.image`\n- **Partially Covered**: The generated model connects `focus.imageOut` to `shoot.imageIn`, which is structurally equivalent to the flow from `focus.image` to `shoot.image`.\n- **Covered**\n\n#### 6f. binding: `focus.scene = scene`\n- **Partially Covered**: The generated model connects `sceneIn` to `focus.sceneIn`, which is similar to binding the input scene to the focus component.\n- **Covered**\n\n#### 6g. binding: `shoot.picture = picture`\n- **Partially Covered**: The generated model connects `shoot.photoOut` to `photoOut`, which is similar to binding the output of shoot to the overall output.\n- **Covered**\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n1. item `Scene` — **Covered**\n2. item `Image` — **Covered** (with mapping)\n3. item `Picture` — **Covered** (with mapping)\n4. action `Focus` — **Not Covered**\n5. action `Shoot` — **Not Covered**\n6a. action `TakePicture` (input) — **Not Covered**\n6b. action `TakePicture` (output) — **Not Covered**\n6c. sub-action `focus` in `TakePicture` — **Not Covered**\n6d. sub-action `shoot` in `TakePicture` — **Not Covered**\n6e. succession/flow from `focus.image` to `shoot.image` — **Covered**\n6f. binding: `focus.scene = scene` — **Covered**\n6g. binding: `shoot.picture = picture` — **Covered**\n\n**Total covered: 6/11**\n\n---\n\n## **Score: 6/11**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 571,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1395,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1966
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569140,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. Definition of item `Scene`.\n2. Definition of item `Image`.\n3. Definition of item `Picture`.\n4. Definition of action `Focus` with:\n   - input parameter `scene` of type `Scene`\n   - output parameter `image` of type `Image`\n5. Definition of action `Shoot` with:\n   - input parameter `image` of type `Image`\n   - output parameter `picture` of type `Picture`\n6. Definition of action `TakePicture` with:\n   - input parameter `scene` of type `Scene`\n   - output parameter `picture` of type `Picture`\n   - internal action `focus` of type `Focus` with input/output bindings\n   - internal action `shoot` of type `Shoot` with input/output bindings\n   - succession/flow from `focus.image` to `shoot.image`\n   - binding: `focus.scene = scene`\n   - binding: `shoot.picture = picture`\n\nLet's break down claim 6 into its atomic elements:\n\n6a. `TakePicture` action has input parameter `scene` of type `Scene`\n6b. `TakePicture` action has output parameter `picture` of type `Picture`\n6c. `TakePicture` contains sub-action `focus` of type `Focus`\n6d. `TakePicture` contains sub-action `shoot` of type `Shoot`\n6e. There is a succession/flow from `focus.image` to `shoot.image`\n6f. Binding: `focus.scene = scene`\n6g. Binding: `shoot.picture = picture`\n\nSo, the full list is:\n\n1. item `Scene`\n2. item `Image`\n3. item `Picture`\n4. action `Focus` (input: `scene: Scene`, output: `image: Image`)\n5. action `Shoot` (input: `image: Image`, output: `picture: Picture`)\n6a. action `TakePicture` (input: `scene: Scene`)\n6b. action `TakePicture` (output: `picture: Picture`)\n6c. `TakePicture` contains sub-action `focus: Focus`\n6d. `TakePicture` contains sub-action `shoot: Shoot`\n6e. succession/flow from `focus.image` to `shoot.image`\n6f. binding: `focus.scene = scene`\n6g. binding: `shoot.picture = picture`\n\n**Total atomic claims: 11**\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### 1. item `Scene`\n- **Covered**: `item def Scene;` exists in the generated model.\n\n#### 2. item `Image`\n- **Not Covered**: The generated model has `item def FocusedImage;` but not `Image`. If we accept `FocusedImage` as equivalent to `Image`, this would be covered, but the reference model distinguishes between `Image` and `Picture`, and the generated model uses `FocusedImage` and `Photo`. The mapping is not exact, but let's be generous and accept `FocusedImage` as equivalent to `Image`.\n- **Covered** (with mapping: `Image` ≈ `FocusedImage`)\n\n#### 3. item `Picture`\n- **Not Covered**: The generated model has `Photo`, which could be considered equivalent to `Picture`.\n- **Covered** (with mapping: `Picture` ≈ `Photo`)\n\n#### 4. action `Focus` (input: `scene: Scene`, output: `image: Image`)\n- **Not Covered**: The generated model does not define an action named `Focus` or an equivalent action. It defines a part `FocusProcessor` with ports for `sceneIn` and `imageOut`, which could be considered as implementing the functionality of `Focus` as a component, but not as an action.\n- **Not Covered**\n\n#### 5. action `Shoot` (input: `image: Image`, output: `picture: Picture`)\n- **Not Covered**: Similarly, the generated model defines a part `ShootingOperator` with ports for `imageIn` and `photoOut`, but not an action `Shoot`.\n- **Not Covered**\n\n#### 6a. action `TakePicture` (input: `scene: Scene`)\n- **Not Covered**: There is no action `TakePicture` in the generated model.\n\n#### 6b. action `TakePicture` (output: `picture: Picture`)\n- **Not Covered**: As above.\n\n#### 6c. `TakePicture` contains sub-action `focus: Focus`\n- **Not Covered**: No such containment.\n\n#### 6d. `TakePicture` contains sub-action `shoot: Shoot`\n- **Not Covered**: No such containment.\n\n#### 6e. succession/flow from `focus.image` to `shoot.image`\n- **Partially Covered**: The generated model connects `focus.imageOut` to `shoot.imageIn`, which is structurally equivalent to the flow from `focus.image` to `shoot.image`.\n- **Covered**\n\n#### 6f. binding: `focus.scene = scene`\n- **Partially Covered**: The generated model connects `sceneIn` to `focus.sceneIn`, which is similar to binding the input scene to the focus component.\n- **Covered**\n\n#### 6g. binding: `shoot.picture = picture`\n- **Partially Covered**: The generated model connects `shoot.photoOut` to `photoOut`, which is similar to binding the output of shoot to the overall output.\n- **Covered**\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n1. item `Scene` — **Covered**\n2. item `Image` — **Covered** (with mapping)\n3. item `Picture` — **Covered** (with mapping)\n4. action `Focus` — **Not Covered**\n5. action `Shoot` — **Not Covered**\n6a. action `TakePicture` (input) — **Not Covered**\n6b. action `TakePicture` (output) — **Not Covered**\n6c. sub-action `focus` in `TakePicture` — **Not Covered**\n6d. sub-action `shoot` in `TakePicture` — **Not Covered**\n6e. succession/flow from `focus.image` to `shoot.image` — **Covered**\n6f. binding: `focus.scene = scene` — **Covered**\n6g. binding: `shoot.picture = picture` — **Covered**\n\n**Total covered: 6/11**\n\n---\n\n## **Score: 6/11**"
+  }
+}

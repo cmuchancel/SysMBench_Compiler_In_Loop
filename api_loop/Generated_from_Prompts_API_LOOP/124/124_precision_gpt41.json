@@ -1,0 +1,85 @@
+{
+  "model_id": 124,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleArchitectureStructuralViewpoint' {\n\tpackage SystemModel {\n\t\tprivate import SI::*;\n\t\tpart def Vehicle;\n\t\tpart def AxleAssembly;\n\t\tpart def Axle;\n\t\tpart def Wheel;\n\t\tpart vehicle : Vehicle {\n\t\t\tattribute mass :> ISQ::mass = 2500[SI::kg];\n\t\t\tpart frontAxleAssembly : AxleAssembly[1] {\n\t\t\t\tattribute mass :> ISQ::mass = 150[kg];\n\t\t\t\tpart frontWheel : Wheel[2];\n\t\t\t\tpart frontAxle : Axle[1] {\n\t\t\t\t\tattribute mass;\n\t\t\t\t\tattribute steeringAngle;\n\t\t\t\t}\n\t\t\t}\n\t\t\tpart rearAxleAssembly : AxleAssembly[1] {\n\t\t\t\tattribute mass :> ISQ::mass = 250[kg];\n\t\t\t\tpart rearWheel : Wheel[2];\n\t\t\t\tpart rearAxle : Axle[1] {\n\t\t\t\t\tattribute mass;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\tpackage ViewModel {\n\t\tprivate import Views::*;\n\t\tpart 'systems engineer';\n\t\tconcern 'system breakdown' {\n\t\t\tstakeholder :>> 'systems engineer';\n\t\t}\n\t\tviewpoint 'system structure perspective' {\t\t\n\t\t\tframe 'system breakdown';\n\t\t}\n\t\tview 'system structure generation' {\n\t\t\tsatisfy 'system structure perspective';\n\t\t\texpose SystemModel::vehicle::**[@SysML::PartUsage];\n\t\t\trender asElementTable {\n\t\t\t\tview :>> columnView[1] {\n\t\t\t\t\trender asTextualNotation;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage VehicleSystemModel {\n  private import ScalarValues::*;\n\n  part def Wheel {\n  }\n\n  part def FrontAxle {\n    attribute mass : Real;\n    attribute steeringAngle : Real;\n  }\n\n  part def RearAxle {\n    attribute mass : Real;\n  }\n\n  part def FrontAxleAssembly {\n    attribute mass : Real = 150;\n    part frontLeftWheel : Wheel;\n    part frontRightWheel : Wheel;\n    part frontAxle : FrontAxle;\n  }\n\n  part def RearAxleAssembly {\n    attribute mass : Real = 250;\n    part rearLeftWheel : Wheel;\n    part rearRightWheel : Wheel;\n    part rearAxle : RearAxle;\n  }\n\n  part def Car {\n    attribute totalMass : Real = 2500;\n    part frontAxleAssembly : FrontAxleAssembly;\n    part rearAxleAssembly : RearAxleAssembly;\n  }\n\n  part car : Car;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/124/124_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/124/124.sysml",
+  "response": {
+    "id": "resp_0df2ae1cb1bcff08006997ff20083c8197830b933e3089520b",
+    "created_at": 1771568928.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0df2ae1cb1bcff08006997ff2061c48197ba29fb6195047a04",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's follow the requested steps:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Atomic Claims:**\n\n1. Definition of part type `Wheel`.\n2. Definition of part type `FrontAxle` with attributes `mass` and `steeringAngle` of type `Real`.\n3. Definition of part type `RearAxle` with attribute `mass` of type `Real`.\n4. Definition of part type `FrontAxleAssembly` with:\n   - attribute `mass` of type `Real` with default value 150,\n   - part `frontLeftWheel` of type `Wheel`,\n   - part `frontRightWheel` of type `Wheel`,\n   - part `frontAxle` of type `FrontAxle`.\n5. Definition of part type `RearAxleAssembly` with:\n   - attribute `mass` of type `Real` with default value 250,\n   - part `rearLeftWheel` of type `Wheel`,\n   - part `rearRightWheel` of type `Wheel`,\n   - part `rearAxle` of type `RearAxle`.\n6. Definition of part type `Car` with:\n   - attribute `totalMass` of type `Real` with default value 2500,\n   - part `frontAxleAssembly` of type `FrontAxleAssembly`,\n   - part `rearAxleAssembly` of type `RearAxleAssembly`.\n7. Definition of part `car` of type `Car`.\n8. Use of `private import ScalarValues::*`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**1. Definition of part type `Wheel`.**  \n- **Supported.** Reference model defines `part def Wheel`.\n\n**2. Definition of part type `FrontAxle` with attributes `mass` and `steeringAngle` of type `Real`.**  \n- **Supported (with minor naming difference).** Reference model defines `part def Axle` with attributes `mass` and `steeringAngle` (used as `frontAxle`), so this is equivalent.\n\n**3. Definition of part type `RearAxle` with attribute `mass` of type `Real`.**  \n- **Supported (with minor naming difference).** Reference model defines `part def Axle` with attribute `mass` (used as `rearAxle`), so this is equivalent.\n\n**4. Definition of part type `FrontAxleAssembly` with:**\n   - **attribute `mass` of type `Real` with default value 150,**\n     - **Supported.** Reference model: `attribute mass :> ISQ::mass = 150[kg];`\n   - **part `frontLeftWheel` of type `Wheel`,**\n     - **Supported (structure).** Reference model: `part frontWheel : Wheel[2];` (two wheels, no names; naming difference is ignored).\n   - **part `frontRightWheel` of type `Wheel`,**\n     - **Supported (structure).** See above.\n   - **part `frontAxle` of type `FrontAxle`.**\n     - **Supported (structure and semantics).** Reference model: `part frontAxle : Axle[1]`.\n\n**5. Definition of part type `RearAxleAssembly` with:**\n   - **attribute `mass` of type `Real` with default value 250,**\n     - **Supported.** Reference model: `attribute mass :> ISQ::mass = 250[kg];`\n   - **part `rearLeftWheel` of type `Wheel`,**\n     - **Supported (structure).** Reference model: `part rearWheel : Wheel[2];` (two wheels, no names; naming difference is ignored).\n   - **part `rearRightWheel` of type `Wheel`,**\n     - **Supported (structure).** See above.\n   - **part `rearAxle` of type `RearAxle`.**\n     - **Supported (structure and semantics).** Reference model: `part rearAxle : Axle[1]`.\n\n**6. Definition of part type `Car` with:**\n   - **attribute `totalMass` of type `Real` with default value 2500,**\n     - **Supported (with naming difference).** Reference model: `attribute mass :> ISQ::mass = 2500[SI::kg];`\n   - **part `frontAxleAssembly` of type `FrontAxleAssembly`,**\n     - **Supported.** Reference model: `part frontAxleAssembly : AxleAssembly[1];`\n   - **part `rearAxleAssembly` of type `RearAxleAssembly`.**\n     - **Supported.** Reference model: `part rearAxleAssembly : AxleAssembly[1];`\n\n**7. Definition of part `car` of type `Car`.**\n   - **Supported (with naming difference).** Reference model: `part vehicle : Vehicle`.\n\n**8. Use of `private import ScalarValues::*`.**\n   - **Not supported.** Reference model uses `private import SI::*;` and `private import ISQ::*;` (not `ScalarValues::*`). This is a different import and not present in the reference.\n\n---\n\n### 3. Summarize the results\n\n- **Total atomic claims:** 8\n- **Supported claims:** 7\n\n**Score: 7/8**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 705,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1129,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1834
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568940,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's follow the requested steps:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Atomic Claims:**\n\n1. Definition of part type `Wheel`.\n2. Definition of part type `FrontAxle` with attributes `mass` and `steeringAngle` of type `Real`.\n3. Definition of part type `RearAxle` with attribute `mass` of type `Real`.\n4. Definition of part type `FrontAxleAssembly` with:\n   - attribute `mass` of type `Real` with default value 150,\n   - part `frontLeftWheel` of type `Wheel`,\n   - part `frontRightWheel` of type `Wheel`,\n   - part `frontAxle` of type `FrontAxle`.\n5. Definition of part type `RearAxleAssembly` with:\n   - attribute `mass` of type `Real` with default value 250,\n   - part `rearLeftWheel` of type `Wheel`,\n   - part `rearRightWheel` of type `Wheel`,\n   - part `rearAxle` of type `RearAxle`.\n6. Definition of part type `Car` with:\n   - attribute `totalMass` of type `Real` with default value 2500,\n   - part `frontAxleAssembly` of type `FrontAxleAssembly`,\n   - part `rearAxleAssembly` of type `RearAxleAssembly`.\n7. Definition of part `car` of type `Car`.\n8. Use of `private import ScalarValues::*`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**1. Definition of part type `Wheel`.**  \n- **Supported.** Reference model defines `part def Wheel`.\n\n**2. Definition of part type `FrontAxle` with attributes `mass` and `steeringAngle` of type `Real`.**  \n- **Supported (with minor naming difference).** Reference model defines `part def Axle` with attributes `mass` and `steeringAngle` (used as `frontAxle`), so this is equivalent.\n\n**3. Definition of part type `RearAxle` with attribute `mass` of type `Real`.**  \n- **Supported (with minor naming difference).** Reference model defines `part def Axle` with attribute `mass` (used as `rearAxle`), so this is equivalent.\n\n**4. Definition of part type `FrontAxleAssembly` with:**\n   - **attribute `mass` of type `Real` with default value 150,**\n     - **Supported.** Reference model: `attribute mass :> ISQ::mass = 150[kg];`\n   - **part `frontLeftWheel` of type `Wheel`,**\n     - **Supported (structure).** Reference model: `part frontWheel : Wheel[2];` (two wheels, no names; naming difference is ignored).\n   - **part `frontRightWheel` of type `Wheel`,**\n     - **Supported (structure).** See above.\n   - **part `frontAxle` of type `FrontAxle`.**\n     - **Supported (structure and semantics).** Reference model: `part frontAxle : Axle[1]`.\n\n**5. Definition of part type `RearAxleAssembly` with:**\n   - **attribute `mass` of type `Real` with default value 250,**\n     - **Supported.** Reference model: `attribute mass :> ISQ::mass = 250[kg];`\n   - **part `rearLeftWheel` of type `Wheel`,**\n     - **Supported (structure).** Reference model: `part rearWheel : Wheel[2];` (two wheels, no names; naming difference is ignored).\n   - **part `rearRightWheel` of type `Wheel`,**\n     - **Supported (structure).** See above.\n   - **part `rearAxle` of type `RearAxle`.**\n     - **Supported (structure and semantics).** Reference model: `part rearAxle : Axle[1]`.\n\n**6. Definition of part type `Car` with:**\n   - **attribute `totalMass` of type `Real` with default value 2500,**\n     - **Supported (with naming difference).** Reference model: `attribute mass :> ISQ::mass = 2500[SI::kg];`\n   - **part `frontAxleAssembly` of type `FrontAxleAssembly`,**\n     - **Supported.** Reference model: `part frontAxleAssembly : AxleAssembly[1];`\n   - **part `rearAxleAssembly` of type `RearAxleAssembly`.**\n     - **Supported.** Reference model: `part rearAxleAssembly : AxleAssembly[1];`\n\n**7. Definition of part `car` of type `Car`.**\n   - **Supported (with naming difference).** Reference model: `part vehicle : Vehicle`.\n\n**8. Use of `private import ScalarValues::*`.**\n   - **Not supported.** Reference model uses `private import SI::*;` and `private import ISQ::*;` (not `ScalarValues::*`). This is a different import and not present in the reference.\n\n---\n\n### 3. Summarize the results\n\n- **Total atomic claims:** 8\n- **Supported claims:** 7\n\n**Score: 7/8**"
+  }
+}

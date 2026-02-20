@@ -1,0 +1,85 @@
+{
+  "model_id": 140,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PhysicalQuantitiesSystem' {\n    private import ISQ::*;\n}\n\nGenerated Model:\npackage PhysicalQuantityLibrary {\n    private import ScalarValues::*;\n\n    enum def BaseQuantityKind {\n        enum length;\n        enum mass;\n        enum time;\n        enum electricCurrent;\n        enum temperature;\n        enum amountOfSubstance;\n        enum luminousIntensity;\n    }\n\n    part def Unit {\n        attribute name : String;\n        attribute symbol : String;\n        attribute quantityKind : BaseQuantityKind;\n        attribute conversionFactorToSI : Real;\n    }\n\n    part def Quantity {\n        attribute value : Real;\n        part unit : Unit;\n    }\n\n    part def UnitExtension {\n        part customUnit : Unit;\n        attribute description : String;\n    }\n\n    part def Meter {\n        attribute name : String = \"meter\";\n        attribute symbol : String = \"m\";\n        attribute quantityKind : BaseQuantityKind = BaseQuantityKind::length;\n        attribute conversionFactorToSI : Real = 1.0;\n    }\n\n    part def Kilogram {\n        attribute name : String = \"kilogram\";\n        attribute symbol : String = \"kg\";\n        attribute quantityKind : BaseQuantityKind = BaseQuantityKind::mass;\n        attribute conversionFactorToSI : Real = 1.0;\n    }\n\n    part def Second {\n        attribute name : String = \"second\";\n        attribute symbol : String = \"s\";\n        attribute quantityKind : BaseQuantityKind = BaseQuantityKind::time;\n        attribute conversionFactorToSI : Real = 1.0;\n    }\n\n    part def Ampere {\n        attribute name : String = \"ampere\";\n        attribute symbol : String = \"A\";\n        attribute quantityKind : BaseQuantityKind = BaseQuantityKind::electricCurrent;\n        attribute conversionFactorToSI : Real = 1.0;\n    }\n\n    part def Kelvin {\n        attribute name : String = \"kelvin\";\n        attribute symbol : String = \"K\";\n        attribute quantityKind : BaseQuantityKind = BaseQuantityKind::temperature;\n        attribute conversionFactorToSI : Real = 1.0;\n    }\n\n    part def Mole {\n        attribute name : String = \"mole\";\n        attribute symbol : String = \"mol\";\n        attribute quantityKind : BaseQuantityKind = BaseQuantityKind::amountOfSubstance;\n        attribute conversionFactorToSI : Real = 1.0;\n    }\n\n    part def Candela {\n        attribute name : String = \"candela\";\n        attribute symbol : String = \"cd\";\n        attribute quantityKind : BaseQuantityKind = BaseQuantityKind::luminousIntensity;\n        attribute conversionFactorToSI : Real = 1.0;\n    }\n\n    part def PhysicalQuantitySystem {\n        part lengthUnit : Unit;\n        part massUnit : Unit;\n        part timeUnit : Unit;\n        part electricCurrentUnit : Unit;\n        part temperatureUnit : Unit;\n        part amountOfSubstanceUnit : Unit;\n        part luminousIntensityUnit : Unit;\n        part quantityData : Quantity;\n        part extension : UnitExtension;\n    }\n\n    part def SIQuantitySystem {\n        part lengthUnit : Meter;\n        part massUnit : Kilogram;\n        part timeUnit : Second;\n        part electricCurrentUnit : Ampere;\n        part temperatureUnit : Kelvin;\n        part amountOfSubstanceUnit : Mole;\n        part luminousIntensityUnit : Candela;\n        part quantityData : Quantity;\n        part extension : UnitExtension;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/140/140_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/140/140.sysml",
+  "response": {
+    "id": "resp_011f53d55ec7b14f0069980467f7208190aa401c2cf929c05e",
+    "created_at": 1771570279.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_011f53d55ec7b14f0069980468fcf481908829cda6649919c4",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\nReference Model:\n```plaintext\npackage 'PhysicalQuantitiesSystem' {\n    private import ISQ::*;\n}\n```\n\nAtomic claims:\n1. There is a package named `PhysicalQuantitiesSystem`.\n2. The package contains a private import of `ISQ::*`.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### Claim 1: There is a package named `PhysicalQuantitiesSystem`.\n- **Generated model:** The package is named `PhysicalQuantityLibrary`, not `PhysicalQuantitiesSystem`.\n- **Coverage:** **Not covered** (package name is different; per instructions, naming differences can be ignored only if structure and semantics match, but here the package is the top-level container and its identity is significant).\n\n#### Claim 2: The package contains a private import of `ISQ::*`.\n- **Generated model:** The package contains a private import, but it is of `ScalarValues::*`, not `ISQ::*`.\n- **Coverage:** **Not covered** (imported module is different).\n\n---\n\n### 3. Summarize the results\n\n**Score: 0/2**\n\n---\n\n#### Final Output\n\n**Score: 0/2**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 882,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 273,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1155
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771570284,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\nReference Model:\n```plaintext\npackage 'PhysicalQuantitiesSystem' {\n    private import ISQ::*;\n}\n```\n\nAtomic claims:\n1. There is a package named `PhysicalQuantitiesSystem`.\n2. The package contains a private import of `ISQ::*`.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### Claim 1: There is a package named `PhysicalQuantitiesSystem`.\n- **Generated model:** The package is named `PhysicalQuantityLibrary`, not `PhysicalQuantitiesSystem`.\n- **Coverage:** **Not covered** (package name is different; per instructions, naming differences can be ignored only if structure and semantics match, but here the package is the top-level container and its identity is significant).\n\n#### Claim 2: The package contains a private import of `ISQ::*`.\n- **Generated model:** The package contains a private import, but it is of `ScalarValues::*`, not `ISQ::*`.\n- **Coverage:** **Not covered** (imported module is different).\n\n---\n\n### 3. Summarize the results\n\n**Score: 0/2**\n\n---\n\n#### Final Output\n\n**Score: 0/2**"
+  }
+}

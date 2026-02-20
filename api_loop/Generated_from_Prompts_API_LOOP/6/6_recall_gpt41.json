@@ -1,0 +1,85 @@
+{
+  "model_id": 6,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'TrafficLightDefinition' {\n\tprivate import ScalarValues::*;\n\tenum def TrafficLightColor {\n\t\tenum green;\n\t\tenum yellow;\n\t\tenum red;\n\t}\n\tattribute def ClassificationLevel {\n\t\tattribute code : String;\n\t\tattribute color : TrafficLightColor;\n\t}\n\tenum def ClassificationKind specializes ClassificationLevel {\n\t\tunclassified {\n\t\t\t:>> code = \"uncl\";\n\t\t\t:>> color = TrafficLightColor::green;\n\t\t}\n\t\tconfidential {\n\t\t\t:>> code = \"conf\";\n\t\t\t:>> color = TrafficLightColor::yellow;\n\t\t}\n\t\tsecret {\n\t\t\t:>> code = \"secr\";\n\t\t\t:>> color = TrafficLightColor::red;\n\t\t}\n\t}\n\tenum def GradePoints :> Real {\n\t\tA = 4.0;\n\t\tB = 3.0;\n\t\tC = 2.0;\n\t\tD = 1.0;\n\t\tF = 0.0;\n\t}\n}\n\nGenerated Model:\npackage ClassificationModel {\n  private import ScalarValues::*;\n\n  enum def InfoLevel {\n    enum Unclassified;\n    enum Confidential;\n    enum Secret;\n  }\n\n  enum def GradeLevel {\n    enum A;\n    enum B;\n    enum C;\n    enum D;\n    enum F;\n  }\n\n  part def InfoClassification {\n    attribute level : InfoLevel;\n    attribute code : String;\n    attribute color : String;\n  }\n\n  part def GradeClassification {\n    attribute level : GradeLevel;\n    attribute points : Real;\n  }\n\n  part def ClassificationSystem {\n    part uncl : InfoClassification {\n      attribute level = InfoLevel::Unclassified;\n      attribute code = \"uncl\";\n      attribute color = \"green\";\n    }\n    part conf : InfoClassification {\n      attribute level = InfoLevel::Confidential;\n      attribute code = \"conf\";\n      attribute color = \"yellow\";\n    }\n    part secr : InfoClassification {\n      attribute level = InfoLevel::Secret;\n      attribute code = \"secr\";\n      attribute color = \"red\";\n    }\n\n    part gradeA : GradeClassification {\n      attribute level = GradeLevel::A;\n      attribute points = 4.0;\n    }\n    part gradeB : GradeClassification {\n      attribute level = GradeLevel::B;\n      attribute points = 3.0;\n    }\n    part gradeC : GradeClassification {\n      attribute level = GradeLevel::C;\n      attribute points = 2.0;\n    }\n    part gradeD : GradeClassification {\n      attribute level = GradeLevel::D;\n      attribute points = 1.0;\n    }\n    part gradeF : GradeClassification {\n      attribute level = GradeLevel::F;\n      attribute points = 0.0;\n    }\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/6/6_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/6/6.sysml",
+  "response": {
+    "id": "resp_03e8f14fdeb34c31006997fdc549f081a2adb5234a10abf2f1",
+    "created_at": 1771568581.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_03e8f14fdeb34c31006997fdc5995081a292a98dcdf554705c",
+        "content": [
+          {
+            "annotations": [],
+            "text": "**Step 1: List all atomic modeling claims made by the reference system model.**\n\n1. The package is named 'TrafficLightDefinition'.\n2. There is a private import of ScalarValues::*.\n3. There is an enum definition 'TrafficLightColor' with values: green, yellow, red.\n4. There is an attribute definition 'ClassificationLevel' with:\n   4a. attribute 'code' of type String.\n   4b. attribute 'color' of type TrafficLightColor.\n5. There is an enum definition 'ClassificationKind' that specializes 'ClassificationLevel', with values:\n   5a. 'unclassified' with:\n       - code = \"uncl\"\n       - color = TrafficLightColor::green\n   5b. 'confidential' with:\n       - code = \"conf\"\n       - color = TrafficLightColor::yellow\n   5c. 'secret' with:\n       - code = \"secr\"\n       - color = TrafficLightColor::red\n6. There is an enum definition 'GradePoints' with base type Real, with values:\n   6a. A = 4.0\n   6b. B = 3.0\n   6c. C = 2.0\n   6d. D = 1.0\n   6e. F = 0.0\n\n**Total atomic claims: 1 (package) + 1 (import) + 1 (enum TrafficLightColor) + 2 (attributes in ClassificationLevel) + 1 (enum ClassificationKind) + 3 (values in ClassificationKind) + 1 (enum GradePoints) + 5 (values in GradePoints) = 15**\n\nBut for clarity, let's enumerate them as follows:\n\n1. Package 'TrafficLightDefinition' exists.\n2. Private import of ScalarValues::*.\n3. Enum 'TrafficLightColor' exists.\n4. Enum value 'green' in 'TrafficLightColor'.\n5. Enum value 'yellow' in 'TrafficLightColor'.\n6. Enum value 'red' in 'TrafficLightColor'.\n7. Attribute definition 'ClassificationLevel' exists.\n8. Attribute 'code' of type String in 'ClassificationLevel'.\n9. Attribute 'color' of type TrafficLightColor in 'ClassificationLevel'.\n10. Enum 'ClassificationKind' specializes 'ClassificationLevel'.\n11. Enum value 'unclassified' in 'ClassificationKind' with code = \"uncl\" and color = TrafficLightColor::green.\n12. Enum value 'confidential' in 'ClassificationKind' with code = \"conf\" and color = TrafficLightColor::yellow.\n13. Enum value 'secret' in 'ClassificationKind' with code = \"secr\" and color = TrafficLightColor::red.\n14. Enum 'GradePoints' with base type Real.\n15. Enum value 'A' in 'GradePoints' = 4.0.\n16. Enum value 'B' in 'GradePoints' = 3.0.\n17. Enum value 'C' in 'GradePoints' = 2.0.\n18. Enum value 'D' in 'GradePoints' = 1.0.\n19. Enum value 'F' in 'GradePoints' = 0.0.\n\n**Total atomic claims: 19**\n\n---\n\n**Step 2: For each atomic claim, determine whether it is covered by the generated model.**\n\n1. **Package 'TrafficLightDefinition' exists.**  \n   - **NOT covered** (Generated model uses 'ClassificationModel' instead; package name is not semantically important, so could be ignored if instructed, but not specified here. Let's be strict.)\n2. **Private import of ScalarValues::*.**  \n   - **Covered** (present).\n3. **Enum 'TrafficLightColor' exists.**  \n   - **NOT covered** (No equivalent enum; color is a String attribute in generated model).\n4. **Enum value 'green' in 'TrafficLightColor'.**  \n   - **NOT covered** (No such enum).\n5. **Enum value 'yellow' in 'TrafficLightColor'.**  \n   - **NOT covered**.\n6. **Enum value 'red' in 'TrafficLightColor'.**  \n   - **NOT covered**.\n7. **Attribute definition 'ClassificationLevel' exists.**  \n   - **NOT covered** (No such attribute definition; closest is 'InfoClassification' part).\n8. **Attribute 'code' of type String in 'ClassificationLevel'.**  \n   - **Covered** (in 'InfoClassification').\n9. **Attribute 'color' of type TrafficLightColor in 'ClassificationLevel'.**  \n   - **NOT covered** (attribute 'color' exists, but is of type String, not enum).\n10. **Enum 'ClassificationKind' specializes 'ClassificationLevel'.**  \n    - **NOT covered** (No such enum, and no specialization).\n11. **Enum value 'unclassified' in 'ClassificationKind' with code = \"uncl\" and color = TrafficLightColor::green.**  \n    - **Covered** (as part 'uncl' in 'ClassificationSystem' with code = \"uncl\", color = \"green\").\n12. **Enum value 'confidential' in 'ClassificationKind' with code = \"conf\" and color = TrafficLightColor::yellow.**  \n    - **Covered** (as part 'conf' in 'ClassificationSystem' with code = \"conf\", color = \"yellow\").\n13. **Enum value 'secret' in 'ClassificationKind' with code = \"secr\" and color = TrafficLightColor::red.**  \n    - **Covered** (as part 'secr' in 'ClassificationSystem' with code = \"secr\", color = \"red\").\n14. **Enum 'GradePoints' with base type Real.**  \n    - **NOT covered** (No such enum; instead, there is 'GradeLevel' and 'GradeClassification' with attribute 'points').\n15. **Enum value 'A' in 'GradePoints' = 4.0.**  \n    - **Covered** (as part 'gradeA' in 'ClassificationSystem' with level = GradeLevel::A, points = 4.0).\n16. **Enum value 'B' in 'GradePoints' = 3.0.**  \n    - **Covered** (as part 'gradeB' with points = 3.0).\n17. **Enum value 'C' in 'GradePoints' = 2.0.**  \n    - **Covered** (as part 'gradeC' with points = 2.0).\n18. **Enum value 'D' in 'GradePoints' = 1.0.**  \n    - **Covered** (as part 'gradeD' with points = 1.0).\n19. **Enum value 'F' in 'GradePoints' = 0.0.**  \n    - **Covered** (as part 'gradeF' with points = 0.0).\n\n---\n\n**Step 3: Summarize the results.**\n\n**Covered claims:** 2, 8, 11, 12, 13, 15, 16, 17, 18, 19  \n**Total covered:** 10\n\n**Score: 10/19**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 746,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1520,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2266
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568603,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "**Step 1: List all atomic modeling claims made by the reference system model.**\n\n1. The package is named 'TrafficLightDefinition'.\n2. There is a private import of ScalarValues::*.\n3. There is an enum definition 'TrafficLightColor' with values: green, yellow, red.\n4. There is an attribute definition 'ClassificationLevel' with:\n   4a. attribute 'code' of type String.\n   4b. attribute 'color' of type TrafficLightColor.\n5. There is an enum definition 'ClassificationKind' that specializes 'ClassificationLevel', with values:\n   5a. 'unclassified' with:\n       - code = \"uncl\"\n       - color = TrafficLightColor::green\n   5b. 'confidential' with:\n       - code = \"conf\"\n       - color = TrafficLightColor::yellow\n   5c. 'secret' with:\n       - code = \"secr\"\n       - color = TrafficLightColor::red\n6. There is an enum definition 'GradePoints' with base type Real, with values:\n   6a. A = 4.0\n   6b. B = 3.0\n   6c. C = 2.0\n   6d. D = 1.0\n   6e. F = 0.0\n\n**Total atomic claims: 1 (package) + 1 (import) + 1 (enum TrafficLightColor) + 2 (attributes in ClassificationLevel) + 1 (enum ClassificationKind) + 3 (values in ClassificationKind) + 1 (enum GradePoints) + 5 (values in GradePoints) = 15**\n\nBut for clarity, let's enumerate them as follows:\n\n1. Package 'TrafficLightDefinition' exists.\n2. Private import of ScalarValues::*.\n3. Enum 'TrafficLightColor' exists.\n4. Enum value 'green' in 'TrafficLightColor'.\n5. Enum value 'yellow' in 'TrafficLightColor'.\n6. Enum value 'red' in 'TrafficLightColor'.\n7. Attribute definition 'ClassificationLevel' exists.\n8. Attribute 'code' of type String in 'ClassificationLevel'.\n9. Attribute 'color' of type TrafficLightColor in 'ClassificationLevel'.\n10. Enum 'ClassificationKind' specializes 'ClassificationLevel'.\n11. Enum value 'unclassified' in 'ClassificationKind' with code = \"uncl\" and color = TrafficLightColor::green.\n12. Enum value 'confidential' in 'ClassificationKind' with code = \"conf\" and color = TrafficLightColor::yellow.\n13. Enum value 'secret' in 'ClassificationKind' with code = \"secr\" and color = TrafficLightColor::red.\n14. Enum 'GradePoints' with base type Real.\n15. Enum value 'A' in 'GradePoints' = 4.0.\n16. Enum value 'B' in 'GradePoints' = 3.0.\n17. Enum value 'C' in 'GradePoints' = 2.0.\n18. Enum value 'D' in 'GradePoints' = 1.0.\n19. Enum value 'F' in 'GradePoints' = 0.0.\n\n**Total atomic claims: 19**\n\n---\n\n**Step 2: For each atomic claim, determine whether it is covered by the generated model.**\n\n1. **Package 'TrafficLightDefinition' exists.**  \n   - **NOT covered** (Generated model uses 'ClassificationModel' instead; package name is not semantically important, so could be ignored if instructed, but not specified here. Let's be strict.)\n2. **Private import of ScalarValues::*.**  \n   - **Covered** (present).\n3. **Enum 'TrafficLightColor' exists.**  \n   - **NOT covered** (No equivalent enum; color is a String attribute in generated model).\n4. **Enum value 'green' in 'TrafficLightColor'.**  \n   - **NOT covered** (No such enum).\n5. **Enum value 'yellow' in 'TrafficLightColor'.**  \n   - **NOT covered**.\n6. **Enum value 'red' in 'TrafficLightColor'.**  \n   - **NOT covered**.\n7. **Attribute definition 'ClassificationLevel' exists.**  \n   - **NOT covered** (No such attribute definition; closest is 'InfoClassification' part).\n8. **Attribute 'code' of type String in 'ClassificationLevel'.**  \n   - **Covered** (in 'InfoClassification').\n9. **Attribute 'color' of type TrafficLightColor in 'ClassificationLevel'.**  \n   - **NOT covered** (attribute 'color' exists, but is of type String, not enum).\n10. **Enum 'ClassificationKind' specializes 'ClassificationLevel'.**  \n    - **NOT covered** (No such enum, and no specialization).\n11. **Enum value 'unclassified' in 'ClassificationKind' with code = \"uncl\" and color = TrafficLightColor::green.**  \n    - **Covered** (as part 'uncl' in 'ClassificationSystem' with code = \"uncl\", color = \"green\").\n12. **Enum value 'confidential' in 'ClassificationKind' with code = \"conf\" and color = TrafficLightColor::yellow.**  \n    - **Covered** (as part 'conf' in 'ClassificationSystem' with code = \"conf\", color = \"yellow\").\n13. **Enum value 'secret' in 'ClassificationKind' with code = \"secr\" and color = TrafficLightColor::red.**  \n    - **Covered** (as part 'secr' in 'ClassificationSystem' with code = \"secr\", color = \"red\").\n14. **Enum 'GradePoints' with base type Real.**  \n    - **NOT covered** (No such enum; instead, there is 'GradeLevel' and 'GradeClassification' with attribute 'points').\n15. **Enum value 'A' in 'GradePoints' = 4.0.**  \n    - **Covered** (as part 'gradeA' in 'ClassificationSystem' with level = GradeLevel::A, points = 4.0).\n16. **Enum value 'B' in 'GradePoints' = 3.0.**  \n    - **Covered** (as part 'gradeB' with points = 3.0).\n17. **Enum value 'C' in 'GradePoints' = 2.0.**  \n    - **Covered** (as part 'gradeC' with points = 2.0).\n18. **Enum value 'D' in 'GradePoints' = 1.0.**  \n    - **Covered** (as part 'gradeD' with points = 1.0).\n19. **Enum value 'F' in 'GradePoints' = 0.0.**  \n    - **Covered** (as part 'gradeF' with points = 0.0).\n\n---\n\n**Step 3: Summarize the results.**\n\n**Covered claims:** 2, 8, 11, 12, 13, 15, 16, 17, 18, 19  \n**Total covered:** 10\n\n**Score: 10/19**"
+  }
+}

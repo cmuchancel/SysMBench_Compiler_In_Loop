@@ -1,0 +1,85 @@
+{
+  "model_id": 86,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDynamicsSimulation' {\n\taction computeDynamics {\n\t\tprivate import AnalysisTooling::*;\n\t\tmetadata ToolExecution {\n\t\t\ttoolName = \"ModelCenter\";\n\t\t\turi = \"aserv://localhost/Vehicle/Equation1\";\n\t\t}\n\t\tin dt : ISQ::TimeValue             { @ToolVariable { name = \"deltaT\"; } }\n\t\tin a : ISQ::AccelerationValue      { @ToolVariable { name = \"mass\"; } }\n\t\tin v_in : ISQ::SpeedValue          { @ToolVariable { name = \"v0\"; } }\n\t\tin x_in : ISQ::LengthValue         { @ToolVariable { name = \"x0\"; } }\n\t\tout v_out : ISQ::SpeedValue        { @ToolVariable { name = \"v\"; } }\n\t\tout x_out : ISQ::LengthValue       { @ToolVariable { name = \"x\"; } }\t\t\t\n\t}\n}\n\nGenerated Model:\npackage VehicleDynamicsSimulation {\n    private import ScalarValues::*;\n\n    port def InputPort {\n        attribute initialVelocity : Real;\n        attribute initialPosition : Real;\n        attribute acceleration : Real;\n        attribute timeStep : Real;\n    }\n\n    port def OutputPort {\n        attribute outputVelocity : Real;\n        attribute outputPosition : Real;\n    }\n\n    part def ModelCenterTool {\n        port inPort : InputPort;\n        port outPort : OutputPort;\n    }\n\n    part def SimulationSystem {\n        port inPort : InputPort;\n        port outPort : OutputPort;\n        part modelCenter : ModelCenterTool;\n        connect inPort to modelCenter.inPort;\n        connect modelCenter.outPort to outPort;\n    }\n\n    part vehicleDynamicsSimulation : SimulationSystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/86/86_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/86/86.sysml",
+  "response": {
+    "id": "resp_0203b35133751a17006997fe73982481a282bb4ba5c761ccec",
+    "created_at": 1771568755.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0203b35133751a17006997fe74076481a2ab3fa9f25a34a4da",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model:**\n```plaintext\npackage 'VehicleDynamicsSimulation' {\n\taction computeDynamics {\n\t\tprivate import AnalysisTooling::*;\n\t\tmetadata ToolExecution {\n\t\t\ttoolName = \"ModelCenter\";\n\t\t\turi = \"aserv://localhost/Vehicle/Equation1\";\n\t\t}\n\t\tin dt : ISQ::TimeValue             { @ToolVariable { name = \"deltaT\"; } }\n\t\tin a : ISQ::AccelerationValue      { @ToolVariable { name = \"mass\"; } }\n\t\tin v_in : ISQ::SpeedValue          { @ToolVariable { name = \"v0\"; } }\n\t\tin x_in : ISQ::LengthValue         { @ToolVariable { name = \"x0\"; } }\n\t\tout v_out : ISQ::SpeedValue        { @ToolVariable { name = \"v\"; } }\n\t\tout x_out : ISQ::LengthValue       { @ToolVariable { name = \"x\"; } }\t\t\t\n\t}\n}\n```\n\n#### Atomic Claims:\n\n1. There is a package named `VehicleDynamicsSimulation`.\n2. There is an action named `computeDynamics` defined in the package.\n3. The action has a private import of `AnalysisTooling::*`.\n4. The action has metadata `ToolExecution` with:\n    - 4a. `toolName = \"ModelCenter\"`\n    - 4b. `uri = \"aserv://localhost/Vehicle/Equation1\"`\n5. The action has an input `dt` of type `ISQ::TimeValue` with tool variable name \"deltaT\".\n6. The action has an input `a` of type `ISQ::AccelerationValue` with tool variable name \"mass\".\n7. The action has an input `v_in` of type `ISQ::SpeedValue` with tool variable name \"v0\".\n8. The action has an input `x_in` of type `ISQ::LengthValue` with tool variable name \"x0\".\n9. The action has an output `v_out` of type `ISQ::SpeedValue` with tool variable name \"v\".\n10. The action has an output `x_out` of type `ISQ::LengthValue` with tool variable name \"x\".\n\n**Total atomic claims: 10**\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### Generated Model Analysis\n\n**Generated Model:**\n- Defines a package `VehicleDynamicsSimulation`.\n- Does not define an action named `computeDynamics`.\n- Does not have a private import of `AnalysisTooling::*` (instead, imports `ScalarValues::*`).\n- Does not have explicit metadata `ToolExecution`.\n- Defines input and output ports with attributes:\n    - InputPort: `initialVelocity`, `initialPosition`, `acceleration`, `timeStep` (all `Real`)\n    - OutputPort: `outputVelocity`, `outputPosition` (all `Real`)\n- Defines parts and connections for a simulation system.\n\n#### Coverage Table\n\n| # | Reference Claim | Covered by Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | Package `VehicleDynamicsSimulation` | **Yes** | Package exists |\n| 2 | Action `computeDynamics` | **No** | No action defined |\n| 3 | Private import `AnalysisTooling::*` | **No** | Different import |\n| 4a | Metadata `ToolExecution` toolName | **No** | No metadata present |\n| 4b | Metadata `ToolExecution` uri | **No** | No metadata present |\n| 5 | Input `dt` : ISQ::TimeValue | **Partial** | `timeStep : Real` exists, but type is `Real` not `ISQ::TimeValue`, and no tool variable annotation |\n| 6 | Input `a` : ISQ::AccelerationValue | **Partial** | `acceleration : Real` exists, but type is `Real` not `ISQ::AccelerationValue`, and no tool variable annotation |\n| 7 | Input `v_in` : ISQ::SpeedValue | **Partial** | `initialVelocity : Real` exists, but type is `Real` not `ISQ::SpeedValue`, and no tool variable annotation |\n| 8 | Input `x_in` : ISQ::LengthValue | **Partial** | `initialPosition : Real` exists, but type is `Real` not `ISQ::LengthValue`, and no tool variable annotation |\n| 9 | Output `v_out` : ISQ::SpeedValue | **Partial** | `outputVelocity : Real` exists, but type is `Real` not `ISQ::SpeedValue`, and no tool variable annotation |\n| 10 | Output `x_out` : ISQ::LengthValue | **Partial** | `outputPosition : Real` exists, but type is `Real` not `ISQ::LengthValue`, and no tool variable annotation |\n\n**How to score \"Partial\"?**  \nFor recall, unless the claim is fully covered (i.e., type and semantics match, ignoring only naming), it should not be counted as covered. Here, the attributes correspond in intent, but the types and annotations do not match. If we are strict, these are not fully covered.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- Claim 1: Yes\n\n**Not covered:**\n- Claims 2, 3, 4a, 4b: No\n- Claims 5-10: No (since types and annotations do not match, only intent is similar)\n\n**Score: 1/10**\n\n---\n\n**Final Output:**\n\n---\n\n**Score: 1/10**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 537,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1212,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1749
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568773,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model:**\n```plaintext\npackage 'VehicleDynamicsSimulation' {\n\taction computeDynamics {\n\t\tprivate import AnalysisTooling::*;\n\t\tmetadata ToolExecution {\n\t\t\ttoolName = \"ModelCenter\";\n\t\t\turi = \"aserv://localhost/Vehicle/Equation1\";\n\t\t}\n\t\tin dt : ISQ::TimeValue             { @ToolVariable { name = \"deltaT\"; } }\n\t\tin a : ISQ::AccelerationValue      { @ToolVariable { name = \"mass\"; } }\n\t\tin v_in : ISQ::SpeedValue          { @ToolVariable { name = \"v0\"; } }\n\t\tin x_in : ISQ::LengthValue         { @ToolVariable { name = \"x0\"; } }\n\t\tout v_out : ISQ::SpeedValue        { @ToolVariable { name = \"v\"; } }\n\t\tout x_out : ISQ::LengthValue       { @ToolVariable { name = \"x\"; } }\t\t\t\n\t}\n}\n```\n\n#### Atomic Claims:\n\n1. There is a package named `VehicleDynamicsSimulation`.\n2. There is an action named `computeDynamics` defined in the package.\n3. The action has a private import of `AnalysisTooling::*`.\n4. The action has metadata `ToolExecution` with:\n    - 4a. `toolName = \"ModelCenter\"`\n    - 4b. `uri = \"aserv://localhost/Vehicle/Equation1\"`\n5. The action has an input `dt` of type `ISQ::TimeValue` with tool variable name \"deltaT\".\n6. The action has an input `a` of type `ISQ::AccelerationValue` with tool variable name \"mass\".\n7. The action has an input `v_in` of type `ISQ::SpeedValue` with tool variable name \"v0\".\n8. The action has an input `x_in` of type `ISQ::LengthValue` with tool variable name \"x0\".\n9. The action has an output `v_out` of type `ISQ::SpeedValue` with tool variable name \"v\".\n10. The action has an output `x_out` of type `ISQ::LengthValue` with tool variable name \"x\".\n\n**Total atomic claims: 10**\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n#### Generated Model Analysis\n\n**Generated Model:**\n- Defines a package `VehicleDynamicsSimulation`.\n- Does not define an action named `computeDynamics`.\n- Does not have a private import of `AnalysisTooling::*` (instead, imports `ScalarValues::*`).\n- Does not have explicit metadata `ToolExecution`.\n- Defines input and output ports with attributes:\n    - InputPort: `initialVelocity`, `initialPosition`, `acceleration`, `timeStep` (all `Real`)\n    - OutputPort: `outputVelocity`, `outputPosition` (all `Real`)\n- Defines parts and connections for a simulation system.\n\n#### Coverage Table\n\n| # | Reference Claim | Covered by Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | Package `VehicleDynamicsSimulation` | **Yes** | Package exists |\n| 2 | Action `computeDynamics` | **No** | No action defined |\n| 3 | Private import `AnalysisTooling::*` | **No** | Different import |\n| 4a | Metadata `ToolExecution` toolName | **No** | No metadata present |\n| 4b | Metadata `ToolExecution` uri | **No** | No metadata present |\n| 5 | Input `dt` : ISQ::TimeValue | **Partial** | `timeStep : Real` exists, but type is `Real` not `ISQ::TimeValue`, and no tool variable annotation |\n| 6 | Input `a` : ISQ::AccelerationValue | **Partial** | `acceleration : Real` exists, but type is `Real` not `ISQ::AccelerationValue`, and no tool variable annotation |\n| 7 | Input `v_in` : ISQ::SpeedValue | **Partial** | `initialVelocity : Real` exists, but type is `Real` not `ISQ::SpeedValue`, and no tool variable annotation |\n| 8 | Input `x_in` : ISQ::LengthValue | **Partial** | `initialPosition : Real` exists, but type is `Real` not `ISQ::LengthValue`, and no tool variable annotation |\n| 9 | Output `v_out` : ISQ::SpeedValue | **Partial** | `outputVelocity : Real` exists, but type is `Real` not `ISQ::SpeedValue`, and no tool variable annotation |\n| 10 | Output `x_out` : ISQ::LengthValue | **Partial** | `outputPosition : Real` exists, but type is `Real` not `ISQ::LengthValue`, and no tool variable annotation |\n\n**How to score \"Partial\"?**  \nFor recall, unless the claim is fully covered (i.e., type and semantics match, ignoring only naming), it should not be counted as covered. Here, the attributes correspond in intent, but the types and annotations do not match. If we are strict, these are not fully covered.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- Claim 1: Yes\n\n**Not covered:**\n- Claims 2, 3, 4a, 4b: No\n- Claims 5-10: No (since types and annotations do not match, only intent is similar)\n\n**Score: 1/10**\n\n---\n\n**Final Output:**\n\n---\n\n**Score: 1/10**"
+  }
+}

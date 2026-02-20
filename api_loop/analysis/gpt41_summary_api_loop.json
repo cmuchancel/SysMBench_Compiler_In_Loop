@@ -1,0 +1,26 @@
+{
+  "root": "api_loop/Generated_from_Prompts_API_LOOP",
+  "cases_total": 151,
+  "cases_with_eval_files": 151,
+  "cases_parseable_scores": 141,
+  "cases_with_f1": 139,
+  "avg_precision": 0.4286,
+  "avg_recall": 0.5021,
+  "avg_f1": 0.4152,
+  "unparseable_case_ids": [
+    1,
+    19,
+    28,
+    36,
+    90,
+    94,
+    96,
+    126,
+    130,
+    132
+  ],
+  "zero_precision_plus_recall_case_ids": [
+    92,
+    141
+  ]
+}

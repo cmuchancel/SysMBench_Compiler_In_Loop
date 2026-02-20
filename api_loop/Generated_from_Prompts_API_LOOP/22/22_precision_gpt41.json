@@ -1,0 +1,85 @@
+{
+  "model_id": 22,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PhotographyWorkflow' {\n\tpart def Scene;\n\tpart def Image;\n\tpart def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\n\taction def TakePicture { in scene : Scene; out picture : Picture; }\n\taction takePicture : TakePicture {\n\t\tin item scene;\n\t\tout item picture;\n\t\taction focus : Focus {\n\t\t\tin item scene = takePicture::scene; \n\t\t\tout item image;\n\t\t}\n\t\tflow from focus.image to shoot.image;\n\t\taction shoot : Shoot {\n\t\t\tin item; \n\t\t\tout item picture = takePicture::picture;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage PhotographyWorkflowPackage {\n   private import ScalarValues::*;\n\n   item def Scene;\n   item def Image;\n   item def Picture;\n\n   part def Focus {\n      port sceneIn : Scene;\n      port imageOut : Image;\n   }\n\n   part def Shoot {\n      port imageIn : Image;\n      port pictureOut : Picture;\n   }\n\n   part def PhotographyWorkflow {\n      port sceneIn : Scene;\n      port pictureOut : Picture;\n      part focus : Focus;\n      part shoot : Shoot;\n\n      connect sceneIn to focus.sceneIn;\n      connect focus.imageOut to shoot.imageIn;\n      connect shoot.pictureOut to pictureOut;\n   }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/22/22_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/22/22.sysml",
+  "response": {
+    "id": "resp_0f9601812ef07767006997fff51e2c819ca0d6c1cd6649dd69",
+    "created_at": 1771569141.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0f9601812ef07767006997fff578a0819c916244978a19bd75",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model.\n\n**A. Package and Imports**\n1. Definition of package `PhotographyWorkflowPackage`.\n2. Import of `ScalarValues::*`.\n\n**B. Item/Part Definitions**\n3. Definition of item `Scene`.\n4. Definition of item `Image`.\n5. Definition of item `Picture`.\n\n**C. Part Definitions**\n6. Definition of part `Focus` with:\n   - Port `sceneIn` of type `Scene`.\n   - Port `imageOut` of type `Image`.\n7. Definition of part `Shoot` with:\n   - Port `imageIn` of type `Image`.\n   - Port `pictureOut` of type `Picture`.\n8. Definition of part `PhotographyWorkflow` with:\n   - Port `sceneIn` of type `Scene`.\n   - Port `pictureOut` of type `Picture`.\n   - Part `focus` of type `Focus`.\n   - Part `shoot` of type `Shoot`.\n   - Connection from `sceneIn` to `focus.sceneIn`.\n   - Connection from `focus.imageOut` to `shoot.imageIn`.\n   - Connection from `shoot.pictureOut` to `pictureOut`.\n\n---\n\n### 2. For each atomic claim, determine if it is supported by the reference model.\n\n**A. Package and Imports**\n1. **Definition of package `PhotographyWorkflowPackage`.**  \n   - **Supported?** Equivalent to `package 'PhotographyWorkflow'` (naming difference ignored). **Supported.**\n2. **Import of `ScalarValues::*`.**  \n   - **Supported?** Not present in the reference model. **Not supported.**\n\n**B. Item/Part Definitions**\n3. **Definition of item `Scene`.**  \n   - **Supported?** Reference model has `part def Scene;`. Equivalent. **Supported.**\n4. **Definition of item `Image`.**  \n   - **Supported?** Reference model has `part def Image;`. Equivalent. **Supported.**\n5. **Definition of item `Picture`.**  \n   - **Supported?** Reference model has `part def Picture;`. Equivalent. **Supported.**\n\n**C. Part Definitions**\n6. **Definition of part `Focus` with:**\n   - **Port `sceneIn` of type `Scene`.**\n     - **Supported?** Reference model: `action def Focus { in scene : Scene; ... }`. Equivalent to an input port. **Supported.**\n   - **Port `imageOut` of type `Image`.**\n     - **Supported?** Reference model: `action def Focus { ... out image : Image; }`. Equivalent to an output port. **Supported.**\n7. **Definition of part `Shoot` with:**\n   - **Port `imageIn` of type `Image`.**\n     - **Supported?** Reference model: `action def Shoot { in image: Image; ... }`. Equivalent to an input port. **Supported.**\n   - **Port `pictureOut` of type `Picture`.**\n     - **Supported?** Reference model: `action def Shoot { ... out picture : Picture; }`. Equivalent to an output port. **Supported.**\n8. **Definition of part `PhotographyWorkflow` with:**\n   - **Port `sceneIn` of type `Scene`.**\n     - **Supported?** Reference model: `action def TakePicture { in scene : Scene; ... }`. Equivalent to an input port. **Supported.**\n   - **Port `pictureOut` of type `Picture`.**\n     - **Supported?** Reference model: `action def TakePicture { ... out picture : Picture; }`. Equivalent to an output port. **Supported.**\n   - **Part `focus` of type `Focus`.**\n     - **Supported?** Reference model: `action focus : Focus { ... }` inside `takePicture`. Equivalent. **Supported.**\n   - **Part `shoot` of type `Shoot`.**\n     - **Supported?** Reference model: `action shoot : Shoot { ... }` inside `takePicture`. Equivalent. **Supported.**\n   - **Connection from `sceneIn` to `focus.sceneIn`.**\n     - **Supported?** Reference model: `in item scene = takePicture::scene;` in `focus`. Equivalent. **Supported.**\n   - **Connection from `focus.imageOut` to `shoot.imageIn`.**\n     - **Supported?** Reference model: `flow from focus.image to shoot.image;`. Equivalent. **Supported.**\n   - **Connection from `shoot.pictureOut` to `pictureOut`.**\n     - **Supported?** Reference model: `out item picture = takePicture::picture;` in `shoot`. Equivalent. **Supported.**\n\n---\n\n### 3. Summarize the results\n\n**Total atomic claims:**  \n1. Package definition  \n2. Import  \n3. Scene  \n4. Image  \n5. Picture  \n6. Focus.sceneIn  \n7. Focus.imageOut  \n8. Shoot.imageIn  \n9. Shoot.pictureOut  \n10. PhotographyWorkflow.sceneIn  \n11. PhotographyWorkflow.pictureOut  \n12. PhotographyWorkflow.focus  \n13. PhotographyWorkflow.shoot  \n14. PhotographyWorkflow: connect sceneIn to focus.sceneIn  \n15. PhotographyWorkflow: connect focus.imageOut to shoot.imageIn  \n16. PhotographyWorkflow: connect shoot.pictureOut to pictureOut  \n\n**Total:** 16 claims\n\n**Supported claims:** All except the import (claim 2), so 15.\n\n---\n\n**Score: 15/16**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 459,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1156,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1615
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569158,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model.\n\n**A. Package and Imports**\n1. Definition of package `PhotographyWorkflowPackage`.\n2. Import of `ScalarValues::*`.\n\n**B. Item/Part Definitions**\n3. Definition of item `Scene`.\n4. Definition of item `Image`.\n5. Definition of item `Picture`.\n\n**C. Part Definitions**\n6. Definition of part `Focus` with:\n   - Port `sceneIn` of type `Scene`.\n   - Port `imageOut` of type `Image`.\n7. Definition of part `Shoot` with:\n   - Port `imageIn` of type `Image`.\n   - Port `pictureOut` of type `Picture`.\n8. Definition of part `PhotographyWorkflow` with:\n   - Port `sceneIn` of type `Scene`.\n   - Port `pictureOut` of type `Picture`.\n   - Part `focus` of type `Focus`.\n   - Part `shoot` of type `Shoot`.\n   - Connection from `sceneIn` to `focus.sceneIn`.\n   - Connection from `focus.imageOut` to `shoot.imageIn`.\n   - Connection from `shoot.pictureOut` to `pictureOut`.\n\n---\n\n### 2. For each atomic claim, determine if it is supported by the reference model.\n\n**A. Package and Imports**\n1. **Definition of package `PhotographyWorkflowPackage`.**  \n   - **Supported?** Equivalent to `package 'PhotographyWorkflow'` (naming difference ignored). **Supported.**\n2. **Import of `ScalarValues::*`.**  \n   - **Supported?** Not present in the reference model. **Not supported.**\n\n**B. Item/Part Definitions**\n3. **Definition of item `Scene`.**  \n   - **Supported?** Reference model has `part def Scene;`. Equivalent. **Supported.**\n4. **Definition of item `Image`.**  \n   - **Supported?** Reference model has `part def Image;`. Equivalent. **Supported.**\n5. **Definition of item `Picture`.**  \n   - **Supported?** Reference model has `part def Picture;`. Equivalent. **Supported.**\n\n**C. Part Definitions**\n6. **Definition of part `Focus` with:**\n   - **Port `sceneIn` of type `Scene`.**\n     - **Supported?** Reference model: `action def Focus { in scene : Scene; ... }`. Equivalent to an input port. **Supported.**\n   - **Port `imageOut` of type `Image`.**\n     - **Supported?** Reference model: `action def Focus { ... out image : Image; }`. Equivalent to an output port. **Supported.**\n7. **Definition of part `Shoot` with:**\n   - **Port `imageIn` of type `Image`.**\n     - **Supported?** Reference model: `action def Shoot { in image: Image; ... }`. Equivalent to an input port. **Supported.**\n   - **Port `pictureOut` of type `Picture`.**\n     - **Supported?** Reference model: `action def Shoot { ... out picture : Picture; }`. Equivalent to an output port. **Supported.**\n8. **Definition of part `PhotographyWorkflow` with:**\n   - **Port `sceneIn` of type `Scene`.**\n     - **Supported?** Reference model: `action def TakePicture { in scene : Scene; ... }`. Equivalent to an input port. **Supported.**\n   - **Port `pictureOut` of type `Picture`.**\n     - **Supported?** Reference model: `action def TakePicture { ... out picture : Picture; }`. Equivalent to an output port. **Supported.**\n   - **Part `focus` of type `Focus`.**\n     - **Supported?** Reference model: `action focus : Focus { ... }` inside `takePicture`. Equivalent. **Supported.**\n   - **Part `shoot` of type `Shoot`.**\n     - **Supported?** Reference model: `action shoot : Shoot { ... }` inside `takePicture`. Equivalent. **Supported.**\n   - **Connection from `sceneIn` to `focus.sceneIn`.**\n     - **Supported?** Reference model: `in item scene = takePicture::scene;` in `focus`. Equivalent. **Supported.**\n   - **Connection from `focus.imageOut` to `shoot.imageIn`.**\n     - **Supported?** Reference model: `flow from focus.image to shoot.image;`. Equivalent. **Supported.**\n   - **Connection from `shoot.pictureOut` to `pictureOut`.**\n     - **Supported?** Reference model: `out item picture = takePicture::picture;` in `shoot`. Equivalent. **Supported.**\n\n---\n\n### 3. Summarize the results\n\n**Total atomic claims:**  \n1. Package definition  \n2. Import  \n3. Scene  \n4. Image  \n5. Picture  \n6. Focus.sceneIn  \n7. Focus.imageOut  \n8. Shoot.imageIn  \n9. Shoot.pictureOut  \n10. PhotographyWorkflow.sceneIn  \n11. PhotographyWorkflow.pictureOut  \n12. PhotographyWorkflow.focus  \n13. PhotographyWorkflow.shoot  \n14. PhotographyWorkflow: connect sceneIn to focus.sceneIn  \n15. PhotographyWorkflow: connect focus.imageOut to shoot.imageIn  \n16. PhotographyWorkflow: connect shoot.pictureOut to pictureOut  \n\n**Total:** 16 claims\n\n**Supported claims:** All except the import (claim 2), so 15.\n\n---\n\n**Score: 15/16**"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "model_id": 132,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'SecurityMetadataExtensions' {\n\tprivate import 'User Defined Extensions'::*;\n\tpackage 'User Defined Extensions' {\n\t\tenum def ClassificationLevel {\n\t\t\tuncl;\n\t\t\tconf;\n\t\t\tsecret;\n\t\t}\n\t\tmetadata def Classified {\n\t\t\tref :>> annotatedElement : SysML::PartUsage;\n\t\t\tattribute classificationLevel : ClassificationLevel[1];\n\t\t}\n\t}\n\tpart part_X {\n\t\tmetadata Classified {\n\t\t\tclassificationLevel = ClassificationLevel::conf;\n\t\t}\n\t}\n\tpart part_Y {\n\t\t@Classified {\n\t\t\tclassificationLevel = ClassificationLevel::conf;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage SecurityModel {\n  private import ScalarValues::*;\n\n  enum def SecurityClassification {\n    enum Unclassified;\n    enum Confidential;\n    enum Secret;\n  }\n\n  part def Component {\n    attribute classification : SecurityClassification;\n  }\n\n  part def UnclassifiedComponent {\n    attribute classification : SecurityClassification = SecurityClassification::Unclassified;\n  }\n\n  part def ConfidentialComponent {\n    attribute classification : SecurityClassification = SecurityClassification::Confidential;\n  }\n\n  part def SecretComponent {\n    attribute classification : SecurityClassification = SecurityClassification::Secret;\n  }\n\n  part def System {\n    part compA : UnclassifiedComponent;\n    part compB : ConfidentialComponent;\n    part compC : SecretComponent;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/132/132_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/132/132.sysml",
+  "response": {
+    "id": "resp_0c61397060fcaa270069980066de8c8192b91c9d2c90c1d8c5",
+    "created_at": 1771569254.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0c61397060fcaa2700699800672c8c8192960c880baad4ae7a",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'SecurityMetadataExtensions'.\n2. The package imports 'User Defined Extensions' privately.\n3. There is a nested package named 'User Defined Extensions'.\n4. There is an enumeration named 'ClassificationLevel' with literals: 'uncl', 'conf', 'secret'.\n5. There is a metadata definition named 'Classified'.\n6. 'Classified' metadata has a reference to 'annotatedElement' of type 'SysML::PartUsage'.\n7. 'Classified' metadata has an attribute 'classificationLevel' of type 'ClassificationLevel' with cardinality [1].\n8. There is a part named 'part_X'.\n9. 'part_X' is annotated with 'Classified' metadata, with 'classificationLevel' set to 'ClassificationLevel::conf'.\n10. There is a part named 'part_Y'.\n11. 'part_Y' is annotated with 'Classified' metadata, with 'classificationLevel' set to 'ClassificationLevel::conf'.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model.\n\n**1. There is a package named 'SecurityMetadataExtensions'.**  \n**Not covered.** The generated model has a package named 'SecurityModel', which is not equivalent.\n\n**2. The package imports 'User Defined Extensions' privately.**  \n**Not covered.** The generated model imports 'ScalarValues::*' privately, which is unrelated.\n\n**3. There is a nested package named 'User Defined Extensions'.**  \n**Not covered.** No nested package structure in the generated model.\n\n**4. There is an enumeration named 'ClassificationLevel' with literals: 'uncl', 'conf', 'secret'.**  \n**Partially covered.** The generated model defines an enumeration 'SecurityClassification' with literals 'Unclassified', 'Confidential', 'Secret'. The names differ, but the structure and semantics match. **Covered.**\n\n**5. There is a metadata definition named 'Classified'.**  \n**Not covered.** The generated model does not define a metadata type or annotation named 'Classified'.\n\n**6. 'Classified' metadata has a reference to 'annotatedElement' of type 'SysML::PartUsage'.**  \n**Not covered.** No equivalent reference or annotation mechanism in the generated model.\n\n**7. 'Classified' metadata has an attribute 'classificationLevel' of type 'ClassificationLevel' with cardinality [1].**  \n**Partially covered.** The generated model defines an attribute 'classification' of type 'SecurityClassification' (equivalent to 'ClassificationLevel'). Cardinality is not specified, but default is [1]. **Covered.**\n\n**8. There is a part named 'part_X'.**  \n**Not covered.** No part named 'part_X' in the generated model.\n\n**9. 'part_X' is annotated with 'Classified' metadata, with 'classificationLevel' set to 'ClassificationLevel::conf'.**  \n**Partially covered.** The generated model defines a part 'ConfidentialComponent' with 'classification = SecurityClassification::Confidential', which is equivalent in semantics, but not as an annotation. **Covered (semantics match, despite structural difference).**\n\n**10. There is a part named 'part_Y'.**  \n**Not covered.** No part named 'part_Y' in the generated model.\n\n**11. 'part_Y' is annotated with 'Classified' metadata, with 'classificationLevel' set to 'ClassificationLevel::conf'.**  \n**Partially covered.** As above, the generated model has a part with the equivalent classification, but not as an annotation. **Covered (semantics match, despite structural difference).**\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:** 4 (claims 4, 7, 9, 11)  \n**Total Claims:** 11\n\n---\n\n**Score: 4/11**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 456,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 840,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1296
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569265,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'SecurityMetadataExtensions'.\n2. The package imports 'User Defined Extensions' privately.\n3. There is a nested package named 'User Defined Extensions'.\n4. There is an enumeration named 'ClassificationLevel' with literals: 'uncl', 'conf', 'secret'.\n5. There is a metadata definition named 'Classified'.\n6. 'Classified' metadata has a reference to 'annotatedElement' of type 'SysML::PartUsage'.\n7. 'Classified' metadata has an attribute 'classificationLevel' of type 'ClassificationLevel' with cardinality [1].\n8. There is a part named 'part_X'.\n9. 'part_X' is annotated with 'Classified' metadata, with 'classificationLevel' set to 'ClassificationLevel::conf'.\n10. There is a part named 'part_Y'.\n11. 'part_Y' is annotated with 'Classified' metadata, with 'classificationLevel' set to 'ClassificationLevel::conf'.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model.\n\n**1. There is a package named 'SecurityMetadataExtensions'.**  \n**Not covered.** The generated model has a package named 'SecurityModel', which is not equivalent.\n\n**2. The package imports 'User Defined Extensions' privately.**  \n**Not covered.** The generated model imports 'ScalarValues::*' privately, which is unrelated.\n\n**3. There is a nested package named 'User Defined Extensions'.**  \n**Not covered.** No nested package structure in the generated model.\n\n**4. There is an enumeration named 'ClassificationLevel' with literals: 'uncl', 'conf', 'secret'.**  \n**Partially covered.** The generated model defines an enumeration 'SecurityClassification' with literals 'Unclassified', 'Confidential', 'Secret'. The names differ, but the structure and semantics match. **Covered.**\n\n**5. There is a metadata definition named 'Classified'.**  \n**Not covered.** The generated model does not define a metadata type or annotation named 'Classified'.\n\n**6. 'Classified' metadata has a reference to 'annotatedElement' of type 'SysML::PartUsage'.**  \n**Not covered.** No equivalent reference or annotation mechanism in the generated model.\n\n**7. 'Classified' metadata has an attribute 'classificationLevel' of type 'ClassificationLevel' with cardinality [1].**  \n**Partially covered.** The generated model defines an attribute 'classification' of type 'SecurityClassification' (equivalent to 'ClassificationLevel'). Cardinality is not specified, but default is [1]. **Covered.**\n\n**8. There is a part named 'part_X'.**  \n**Not covered.** No part named 'part_X' in the generated model.\n\n**9. 'part_X' is annotated with 'Classified' metadata, with 'classificationLevel' set to 'ClassificationLevel::conf'.**  \n**Partially covered.** The generated model defines a part 'ConfidentialComponent' with 'classification = SecurityClassification::Confidential', which is equivalent in semantics, but not as an annotation. **Covered (semantics match, despite structural difference).**\n\n**10. There is a part named 'part_Y'.**  \n**Not covered.** No part named 'part_Y' in the generated model.\n\n**11. 'part_Y' is annotated with 'Classified' metadata, with 'classificationLevel' set to 'ClassificationLevel::conf'.**  \n**Partially covered.** As above, the generated model has a part with the equivalent classification, but not as an annotation. **Covered (semantics match, despite structural difference).**\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:** 4 (claims 4, 7, 9, 11)  \n**Total Claims:** 11\n\n---\n\n**Score: 4/11**"
+  }
+}

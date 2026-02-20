@@ -1,0 +1,85 @@
+{
+  "model_id": 10,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'FuelFlowManagement' {\n\tattribute def Temp;\n\tpart def Fuel;\n\tport def FuelOutPort {\n\t\tattribute temperature : Temp;\n\t\tout item fuelSupply : Fuel;\n\t\tin item fuelReturn : Fuel;\n\t}\n\tport def FuelInPort {\n\t\tattribute temperature : Temp;\n\t\tin item fuelSupply : Fuel;\n\t\tout item fuelReturn : Fuel;\n\t}\n\tpart def FuelTankAssembly {\n\t\tport fuelTankPort : FuelOutPort;\n\t}\n\tpart def Engine {\n\t\tport engineFuelPort : FuelInPort;\n\t}\n}\n\nGenerated Model:\npackage FuelManagement {\n   private import ScalarValues::*;\n\n   item def FuelFlow {\n      attribute rate : Real;\n   }\n\n   item def TemperatureInfo {\n      attribute temperature : Real;\n   }\n\n   item def FlowStatus {\n      attribute supplyRate : Real;\n      attribute returnRate : Real;\n      attribute temperature : Real;\n   }\n\n   port def FuelSupplyPort {\n   }\n\n   port def FuelReturnPort {\n   }\n\n   port def TemperaturePort {\n   }\n\n   port def StatusPort {\n   }\n\n   part def FuelTankAssembly {\n      port supplyOut : FuelSupplyPort;\n      port returnIn : FuelReturnPort;\n      port temperature : TemperaturePort;\n      port statusOut : StatusPort;\n      attribute currentSupplyRate : Real;\n      attribute currentReturnRate : Real;\n      attribute currentTemperature : Real;\n      attribute currentStatus : FlowStatus;\n   }\n\n   part def Engine {\n      port fuelIn : FuelSupplyPort;\n      port returnOut : FuelReturnPort;\n      port temperature : TemperaturePort;\n      attribute requiredSupplyRate : Real;\n      attribute excessReturnRate : Real;\n      attribute engineTemperature : Real;\n   }\n\n   part def FuelManagementSystem {\n      part tank : FuelTankAssembly;\n      part engine : Engine;\n      port statusOut : StatusPort;\n\n      connect tank.supplyOut to engine.fuelIn;\n      connect engine.returnOut to tank.returnIn;\n      connect tank.temperature to engine.temperature;\n      connect tank.statusOut to statusOut;\n   }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/10/10_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/10/10.sysml",
+  "response": {
+    "id": "resp_018899335a0de127006997fe35b9a481a0b1a9debca76eb141",
+    "created_at": 1771568693.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_018899335a0de127006997fe360ae481a0a6c5bbdd182307f7",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'FuelFlowManagement'.\n2. There is an attribute type (or definition) named 'Temp'.\n3. There is a part/item type named 'Fuel'.\n4. There is a port type named 'FuelOutPort'.\n5. 'FuelOutPort' has an attribute 'temperature' of type 'Temp'.\n6. 'FuelOutPort' has an out item 'fuelSupply' of type 'Fuel'.\n7. 'FuelOutPort' has an in item 'fuelReturn' of type 'Fuel'.\n8. There is a port type named 'FuelInPort'.\n9. 'FuelInPort' has an attribute 'temperature' of type 'Temp'.\n10. 'FuelInPort' has an in item 'fuelSupply' of type 'Fuel'.\n11. 'FuelInPort' has an out item 'fuelReturn' of type 'Fuel'.\n12. There is a part/item type named 'FuelTankAssembly'.\n13. 'FuelTankAssembly' has a port 'fuelTankPort' of type 'FuelOutPort'.\n14. There is a part/item type named 'Engine'.\n15. 'Engine' has a port 'engineFuelPort' of type 'FuelInPort'.\n\n**Total claims: 15**\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n1. **Package named 'FuelFlowManagement'.**  \n   - **Not covered.** The generated model's package is named 'FuelManagement', which is semantically similar, but not the same. However, per instructions, naming differences can be ignored if the structure and semantics match. So, **covered**.\n\n2. **Attribute type/definition 'Temp'.**  \n   - **Not covered.** The generated model uses 'Real' for temperature, but does not define a 'Temp' type or equivalent. **Not covered.**\n\n3. **Part/item type 'Fuel'.**  \n   - **Not covered.** The generated model does not define a 'Fuel' item; it defines 'FuelFlow', which is not equivalent. **Not covered.**\n\n4. **Port type 'FuelOutPort'.**  \n   - **Not covered.** The generated model defines 'FuelSupplyPort', 'FuelReturnPort', etc., but none matching the structure of 'FuelOutPort'. **Not covered.**\n\n5. **'FuelOutPort' has attribute 'temperature: Temp'.**  \n   - **Not covered.** No such attribute in any port in the generated model. **Not covered.**\n\n6. **'FuelOutPort' has out item 'fuelSupply: Fuel'.**  \n   - **Not covered.** No such item in any port in the generated model. **Not covered.**\n\n7. **'FuelOutPort' has in item 'fuelReturn: Fuel'.**  \n   - **Not covered.** No such item in any port in the generated model. **Not covered.**\n\n8. **Port type 'FuelInPort'.**  \n   - **Not covered.** No such port type in the generated model. **Not covered.**\n\n9. **'FuelInPort' has attribute 'temperature: Temp'.**  \n   - **Not covered.** No such attribute in any port in the generated model. **Not covered.**\n\n10. **'FuelInPort' has in item 'fuelSupply: Fuel'.**  \n    - **Not covered.** No such item in any port in the generated model. **Not covered.**\n\n11. **'FuelInPort' has out item 'fuelReturn: Fuel'.**  \n    - **Not covered.** No such item in any port in the generated model. **Not covered.**\n\n12. **Part/item type 'FuelTankAssembly'.**  \n    - **Covered.** There is a 'FuelTankAssembly' part in the generated model.\n\n13. **'FuelTankAssembly' has port 'fuelTankPort: FuelOutPort'.**  \n    - **Not covered.** 'FuelTankAssembly' in the generated model has several ports, but none of type 'FuelOutPort' or equivalent structure. **Not covered.**\n\n14. **Part/item type 'Engine'.**  \n    - **Covered.** There is an 'Engine' part in the generated model.\n\n15. **'Engine' has port 'engineFuelPort: FuelInPort'.**  \n    - **Not covered.** 'Engine' in the generated model has ports, but none of type 'FuelInPort' or equivalent structure. **Not covered.**\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**  \n1 (package)  \n12 (FuelTankAssembly part)  \n14 (Engine part)  \n\n**Score:** 3/15\n\n---\n\n**Final Output:**\n\nScore: 3/15",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 599,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1030,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1629
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568705,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'FuelFlowManagement'.\n2. There is an attribute type (or definition) named 'Temp'.\n3. There is a part/item type named 'Fuel'.\n4. There is a port type named 'FuelOutPort'.\n5. 'FuelOutPort' has an attribute 'temperature' of type 'Temp'.\n6. 'FuelOutPort' has an out item 'fuelSupply' of type 'Fuel'.\n7. 'FuelOutPort' has an in item 'fuelReturn' of type 'Fuel'.\n8. There is a port type named 'FuelInPort'.\n9. 'FuelInPort' has an attribute 'temperature' of type 'Temp'.\n10. 'FuelInPort' has an in item 'fuelSupply' of type 'Fuel'.\n11. 'FuelInPort' has an out item 'fuelReturn' of type 'Fuel'.\n12. There is a part/item type named 'FuelTankAssembly'.\n13. 'FuelTankAssembly' has a port 'fuelTankPort' of type 'FuelOutPort'.\n14. There is a part/item type named 'Engine'.\n15. 'Engine' has a port 'engineFuelPort' of type 'FuelInPort'.\n\n**Total claims: 15**\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n1. **Package named 'FuelFlowManagement'.**  \n   - **Not covered.** The generated model's package is named 'FuelManagement', which is semantically similar, but not the same. However, per instructions, naming differences can be ignored if the structure and semantics match. So, **covered**.\n\n2. **Attribute type/definition 'Temp'.**  \n   - **Not covered.** The generated model uses 'Real' for temperature, but does not define a 'Temp' type or equivalent. **Not covered.**\n\n3. **Part/item type 'Fuel'.**  \n   - **Not covered.** The generated model does not define a 'Fuel' item; it defines 'FuelFlow', which is not equivalent. **Not covered.**\n\n4. **Port type 'FuelOutPort'.**  \n   - **Not covered.** The generated model defines 'FuelSupplyPort', 'FuelReturnPort', etc., but none matching the structure of 'FuelOutPort'. **Not covered.**\n\n5. **'FuelOutPort' has attribute 'temperature: Temp'.**  \n   - **Not covered.** No such attribute in any port in the generated model. **Not covered.**\n\n6. **'FuelOutPort' has out item 'fuelSupply: Fuel'.**  \n   - **Not covered.** No such item in any port in the generated model. **Not covered.**\n\n7. **'FuelOutPort' has in item 'fuelReturn: Fuel'.**  \n   - **Not covered.** No such item in any port in the generated model. **Not covered.**\n\n8. **Port type 'FuelInPort'.**  \n   - **Not covered.** No such port type in the generated model. **Not covered.**\n\n9. **'FuelInPort' has attribute 'temperature: Temp'.**  \n   - **Not covered.** No such attribute in any port in the generated model. **Not covered.**\n\n10. **'FuelInPort' has in item 'fuelSupply: Fuel'.**  \n    - **Not covered.** No such item in any port in the generated model. **Not covered.**\n\n11. **'FuelInPort' has out item 'fuelReturn: Fuel'.**  \n    - **Not covered.** No such item in any port in the generated model. **Not covered.**\n\n12. **Part/item type 'FuelTankAssembly'.**  \n    - **Covered.** There is a 'FuelTankAssembly' part in the generated model.\n\n13. **'FuelTankAssembly' has port 'fuelTankPort: FuelOutPort'.**  \n    - **Not covered.** 'FuelTankAssembly' in the generated model has several ports, but none of type 'FuelOutPort' or equivalent structure. **Not covered.**\n\n14. **Part/item type 'Engine'.**  \n    - **Covered.** There is an 'Engine' part in the generated model.\n\n15. **'Engine' has port 'engineFuelPort: FuelInPort'.**  \n    - **Not covered.** 'Engine' in the generated model has ports, but none of type 'FuelInPort' or equivalent structure. **Not covered.**\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**  \n1 (package)  \n12 (FuelTankAssembly part)  \n14 (Engine part)  \n\n**Score:** 3/15\n\n---\n\n**Final Output:**\n\nScore: 3/15"
+  }
+}

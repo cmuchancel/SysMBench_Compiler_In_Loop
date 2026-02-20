@@ -1,0 +1,85 @@
+{
+  "model_id": 67,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleMaintenanceTimingConstraints' {\n\tprivate import ISQ::TemperatureValue;\n\tprivate import ISQ::DurationValue;\n\tprivate import Time::TimeInstantValue;\n\tprivate import Time::TimeOf;\n\tprivate import Time::DurationOf;\n\tprivate import SI::h;\n\tprivate import SI::s;\n\tattribute def MaintenanceDone;\n\tpart def Vehicle {\n\t\tattribute maintenanceTime : TimeInstantValue;\n\t\tattribute maintenanceInterval : DurationValue;\n\t\tattribute maxTemperature : TemperatureValue;\n\t}\n\tstate healthStates {\n\t\tin vehicle : Vehicle;\n\t\tentry; then normal;\n\t\tstate normal;\n\t\taccept at vehicle.maintenanceTime\n\t\t\tthen maintenance;\n\t\tstate maintenance {\n\t\t\tassert constraint { TimeOf(maintenance) > vehicle.maintenanceTime }\n\t\t\tassert constraint { TimeOf(maintenance) - TimeOf(normal.done) < 2 [s] }\n\t\t\tentry assign vehicle.maintenanceTime := vehicle.maintenanceTime + vehicle.maintenanceInterval;\n\t\t}\n\t\taccept MaintenanceDone\n\t\t\tthen normal;\n\t\tconstraint { DurationOf(maintenance) <= 48 [h] }\n\t}\n}\n\nGenerated Model:\npackage VehicleMaintenance {\n  private import ScalarValues::*;\n\n  enum def VehicleStatus {\n    enum normal;\n    enum underMaintenance;\n  }\n\n  part def Vehicle {\n    attribute scheduledMaintenanceTime : Real;\n    attribute maintenanceInterval : Real;\n    attribute maxAllowedTemperature : Real;\n    attribute maintenanceTimeReached : Boolean;\n    attribute healthStatus : VehicleStatus = VehicleStatus::normal;\n    attribute actualMaintenanceStartTime : Real;\n    attribute previousHealthyEndTime : Real;\n    attribute maintenanceStartWithin2s : Boolean;\n    attribute maintenanceDuration : Real;\n    attribute maintenanceDurationWithin48h : Boolean;\n    attribute maintenanceCompleted : Boolean;\n    attribute nextMaintenanceTime : Real;\n  }\n\n  part def MaintenanceSystem {\n    part vehicles : Vehicle[0..*];\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/67/67_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/67/67.sysml",
+  "response": {
+    "id": "resp_0cc6892ee85463c0006998011a7be88196b37d7bb92d44b71f",
+    "created_at": 1771569434.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0cc6892ee85463c0006998011aea24819692feaba79a649e00",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model.\n\n**Atomic Claims:**\n\n#### Package and Imports\n1. There is a package named `VehicleMaintenance`.\n2. The package privately imports `ScalarValues::*`.\n\n#### Enum Definition\n3. There is an enum `VehicleStatus`.\n4. `VehicleStatus` has a value `normal`.\n5. `VehicleStatus` has a value `underMaintenance`.\n\n#### Part Definition: Vehicle\n6. There is a part `Vehicle`.\n7. `Vehicle` has an attribute `scheduledMaintenanceTime` of type `Real`.\n8. `Vehicle` has an attribute `maintenanceInterval` of type `Real`.\n9. `Vehicle` has an attribute `maxAllowedTemperature` of type `Real`.\n10. `Vehicle` has an attribute `maintenanceTimeReached` of type `Boolean`.\n11. `Vehicle` has an attribute `healthStatus` of type `VehicleStatus`, default value `VehicleStatus::normal`.\n12. `Vehicle` has an attribute `actualMaintenanceStartTime` of type `Real`.\n13. `Vehicle` has an attribute `previousHealthyEndTime` of type `Real`.\n14. `Vehicle` has an attribute `maintenanceStartWithin2s` of type `Boolean`.\n15. `Vehicle` has an attribute `maintenanceDuration` of type `Real`.\n16. `Vehicle` has an attribute `maintenanceDurationWithin48h` of type `Boolean`.\n17. `Vehicle` has an attribute `maintenanceCompleted` of type `Boolean`.\n18. `Vehicle` has an attribute `nextMaintenanceTime` of type `Real`.\n\n#### Part Definition: MaintenanceSystem\n19. There is a part `MaintenanceSystem`.\n20. `MaintenanceSystem` has a part `vehicles` which is a collection of `Vehicle` (multiplicity [0..*]).\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model.\n\n#### Package and Imports\n1. **Package named `VehicleMaintenance`**  \n   - **Not supported** (Reference model's package is `VehicleMaintenanceTimingConstraints`).\n2. **Private import of `ScalarValues::*`**  \n   - **Not supported** (Reference model imports different packages: ISQ, Time, SI).\n\n#### Enum Definition\n3. **Enum `VehicleStatus`**  \n   - **Not supported** (Reference model uses state machine for health states, not an enum).\n4. **Enum value `normal`**  \n   - **Not supported** (Reference model has a state `normal`, but not as an enum).\n5. **Enum value `underMaintenance`**  \n   - **Not supported** (Reference model has a state `maintenance`, but not as an enum).\n\n#### Part Definition: Vehicle\n6. **Part `Vehicle`**  \n   - **Supported** (Reference model defines a part `Vehicle`).\n7. **Attribute `scheduledMaintenanceTime : Real`**  \n   - **Partially supported** (Reference model has `maintenanceTime : TimeInstantValue`; type and name differ, but semantics are similar. **Supported** if we ignore naming and type differences as per instructions).\n8. **Attribute `maintenanceInterval : Real`**  \n   - **Supported** (Reference model has `maintenanceInterval : DurationValue`; type differs, but semantics match).\n9. **Attribute `maxAllowedTemperature : Real`**  \n   - **Supported** (Reference model has `maxTemperature : TemperatureValue`; name and type differ, but semantics match).\n10. **Attribute `maintenanceTimeReached : Boolean`**  \n    - **Not supported** (No such attribute or equivalent in reference model).\n11. **Attribute `healthStatus : VehicleStatus = VehicleStatus::normal`**  \n    - **Not supported** (Reference model uses state machine, not an attribute).\n12. **Attribute `actualMaintenanceStartTime : Real`**  \n    - **Not supported** (Reference model does not have this attribute).\n13. **Attribute `previousHealthyEndTime : Real`**  \n    - **Not supported** (Reference model does not have this attribute).\n14. **Attribute `maintenanceStartWithin2s : Boolean`**  \n    - **Not supported** (Reference model has a constraint about maintenance start time, but not as an attribute).\n15. **Attribute `maintenanceDuration : Real`**  \n    - **Not supported** (Reference model has a constraint on duration, but not as an attribute).\n16. **Attribute `maintenanceDurationWithin48h : Boolean`**  \n    - **Not supported** (Reference model has a constraint, but not as an attribute).\n17. **Attribute `maintenanceCompleted : Boolean`**  \n    - **Not supported** (Reference model uses event `MaintenanceDone`, not an attribute).\n18. **Attribute `nextMaintenanceTime : Real`**  \n    - **Not supported** (Reference model does not have this attribute).\n\n#### Part Definition: MaintenanceSystem\n19. **Part `MaintenanceSystem`**  \n    - **Not supported** (Reference model does not define this part).\n20. **Part `vehicles : Vehicle[0..*]` in `MaintenanceSystem`**  \n    - **Not supported** (Reference model does not define this structure).\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 6. Part `Vehicle`\n- 7. Attribute `scheduledMaintenanceTime` (matches `maintenanceTime`)\n- 8. Attribute `maintenanceInterval`\n- 9. Attribute `maxAllowedTemperature`\n\n**Total supported claims:** 4  \n**Total claims in generated model:** 20\n\n---\n\n**Score: 4/20**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 563,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1169,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1732
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569452,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model.\n\n**Atomic Claims:**\n\n#### Package and Imports\n1. There is a package named `VehicleMaintenance`.\n2. The package privately imports `ScalarValues::*`.\n\n#### Enum Definition\n3. There is an enum `VehicleStatus`.\n4. `VehicleStatus` has a value `normal`.\n5. `VehicleStatus` has a value `underMaintenance`.\n\n#### Part Definition: Vehicle\n6. There is a part `Vehicle`.\n7. `Vehicle` has an attribute `scheduledMaintenanceTime` of type `Real`.\n8. `Vehicle` has an attribute `maintenanceInterval` of type `Real`.\n9. `Vehicle` has an attribute `maxAllowedTemperature` of type `Real`.\n10. `Vehicle` has an attribute `maintenanceTimeReached` of type `Boolean`.\n11. `Vehicle` has an attribute `healthStatus` of type `VehicleStatus`, default value `VehicleStatus::normal`.\n12. `Vehicle` has an attribute `actualMaintenanceStartTime` of type `Real`.\n13. `Vehicle` has an attribute `previousHealthyEndTime` of type `Real`.\n14. `Vehicle` has an attribute `maintenanceStartWithin2s` of type `Boolean`.\n15. `Vehicle` has an attribute `maintenanceDuration` of type `Real`.\n16. `Vehicle` has an attribute `maintenanceDurationWithin48h` of type `Boolean`.\n17. `Vehicle` has an attribute `maintenanceCompleted` of type `Boolean`.\n18. `Vehicle` has an attribute `nextMaintenanceTime` of type `Real`.\n\n#### Part Definition: MaintenanceSystem\n19. There is a part `MaintenanceSystem`.\n20. `MaintenanceSystem` has a part `vehicles` which is a collection of `Vehicle` (multiplicity [0..*]).\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model.\n\n#### Package and Imports\n1. **Package named `VehicleMaintenance`**  \n   - **Not supported** (Reference model's package is `VehicleMaintenanceTimingConstraints`).\n2. **Private import of `ScalarValues::*`**  \n   - **Not supported** (Reference model imports different packages: ISQ, Time, SI).\n\n#### Enum Definition\n3. **Enum `VehicleStatus`**  \n   - **Not supported** (Reference model uses state machine for health states, not an enum).\n4. **Enum value `normal`**  \n   - **Not supported** (Reference model has a state `normal`, but not as an enum).\n5. **Enum value `underMaintenance`**  \n   - **Not supported** (Reference model has a state `maintenance`, but not as an enum).\n\n#### Part Definition: Vehicle\n6. **Part `Vehicle`**  \n   - **Supported** (Reference model defines a part `Vehicle`).\n7. **Attribute `scheduledMaintenanceTime : Real`**  \n   - **Partially supported** (Reference model has `maintenanceTime : TimeInstantValue`; type and name differ, but semantics are similar. **Supported** if we ignore naming and type differences as per instructions).\n8. **Attribute `maintenanceInterval : Real`**  \n   - **Supported** (Reference model has `maintenanceInterval : DurationValue`; type differs, but semantics match).\n9. **Attribute `maxAllowedTemperature : Real`**  \n   - **Supported** (Reference model has `maxTemperature : TemperatureValue`; name and type differ, but semantics match).\n10. **Attribute `maintenanceTimeReached : Boolean`**  \n    - **Not supported** (No such attribute or equivalent in reference model).\n11. **Attribute `healthStatus : VehicleStatus = VehicleStatus::normal`**  \n    - **Not supported** (Reference model uses state machine, not an attribute).\n12. **Attribute `actualMaintenanceStartTime : Real`**  \n    - **Not supported** (Reference model does not have this attribute).\n13. **Attribute `previousHealthyEndTime : Real`**  \n    - **Not supported** (Reference model does not have this attribute).\n14. **Attribute `maintenanceStartWithin2s : Boolean`**  \n    - **Not supported** (Reference model has a constraint about maintenance start time, but not as an attribute).\n15. **Attribute `maintenanceDuration : Real`**  \n    - **Not supported** (Reference model has a constraint on duration, but not as an attribute).\n16. **Attribute `maintenanceDurationWithin48h : Boolean`**  \n    - **Not supported** (Reference model has a constraint, but not as an attribute).\n17. **Attribute `maintenanceCompleted : Boolean`**  \n    - **Not supported** (Reference model uses event `MaintenanceDone`, not an attribute).\n18. **Attribute `nextMaintenanceTime : Real`**  \n    - **Not supported** (Reference model does not have this attribute).\n\n#### Part Definition: MaintenanceSystem\n19. **Part `MaintenanceSystem`**  \n    - **Not supported** (Reference model does not define this part).\n20. **Part `vehicles : Vehicle[0..*]` in `MaintenanceSystem`**  \n    - **Not supported** (Reference model does not define this structure).\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 6. Part `Vehicle`\n- 7. Attribute `scheduledMaintenanceTime` (matches `maintenanceTime`)\n- 8. Attribute `maintenanceInterval`\n- 9. Attribute `maxAllowedTemperature`\n\n**Total supported claims:** 4  \n**Total claims in generated model:** 20\n\n---\n\n**Score: 4/20**"
+  }
+}

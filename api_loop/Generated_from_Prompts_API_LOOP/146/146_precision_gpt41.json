@@ -1,0 +1,85 @@
+{
+  "model_id": 146,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'AerospaceTrajectorySampling' {\n\tprivate import SampledFunctions::SampledFunction;\n\tprivate import SampledFunctions::SamplePair;\n\tprivate import Collections::Array;\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\tprivate import MeasurementReferences::*;\n\tprivate import Time::*;\n\tattribute def MissionElapsedTimeScale :> TimeScale {\n\t\t:>> unit = s;\n\t\tattribute :>> definitionalEpoch {\n\t\t\t:>> num = 0;\n\t\t\t:>> definition = \"time instant zero at launch\";\n\t\t}\n\t\tattribute definitionalEpochInUTC : Iso8601DateTime;\n\t\tattribute :>> transformation : CoordinateFramePlacement {\n\t\t\t:>> source = UTC;\n\t\t\t:>> origin = definitionalEpochInUTC;\n\t\t\t:>> basisDirections = 1 [UTC];\n\t\t}\n  }\n\n\tattribute mets: MissionElapsedTimeScale { \n\t\t:>> definitionalEpochInUTC { :>> val = \"2020-08-23T22:42:32.924534Z\";}\t\t\n\t}\n\tattribute def MissionElapsedTimeValue :> TimeInstantValue {\n\t \t:>> mRef = mets; \n\t}\n\n\tattribute spatialCF: CartesianSpatial3dCoordinateFrame[1] {\n\t   :>> mRefs = (m, m, m);\n\t}\n\tattribute velocityCF: CartesianVelocity3dCoordinateFrame[1] = spatialCF/s;\n\tattribute def PositionAndVelocity {\n\t\tattribute position : CartesianPosition3dVector[1];\n\t\tattribute velocity : CartesianVelocity3dVector[1];\n\t}\n\tattribute def AscentProfile :> SampledFunction {\n\t\tattribute def AscentSample :> SamplePair {\n\t\t\tattribute :>> domainValue: MissionElapsedTimeValue[1];\n\t\t\tattribute :>> rangeValue: PositionAndVelocity[1];\n\t\t}\n\t\tattribute :>> samples: AscentSample[*] ordered;\n\t}\n\tattribute ascentProfile1: AscentProfile {\n\t\tattribute sample1: AscentSample { :>> domainValue = 0.0 [mets]; :>> rangeValue = pv1;\n\t\t\tattribute pv1: PositionAndVelocity {:>> position = (0, 0, 0) [spatialCF]; :>> velocity = (0, 0, 0) [velocityCF]; } }\n\t\tattribute sample2: AscentSample { :>> domainValue = 2.5 [mets]; :>> rangeValue = pv1;\n\t\t\tattribute pv1: PositionAndVelocity {:>> position = (0.01, 0.03, 8.6) [spatialCF]; :>> velocity = (0, 0, 5.5) [velocityCF]; } }\n\t\tattribute sample3: AscentSample { :>> domainValue = 5.1 [mets]; :>> rangeValue = pv1;\n\t\t\tattribute pv1: PositionAndVelocity {:>> position = (0.04, 0.12, 18.6) [spatialCF]; :>> velocity = (0.05, 0.03, 25.3) [velocityCF]; } }\n\t\tattribute :>> samples = (sample1, sample2, sample3);\n\t}\n}\n\nGenerated Model:\npackage TrajectorySampling {\n    private import ScalarValues::*;\n\n    item def Vector3 {\n        attribute x_m : Real;\n        attribute y_m : Real;\n        attribute z_m : Real;\n    }\n\n    item def TrajectorySample {\n        attribute time_s : Real;\n        attribute position : Vector3;\n        attribute velocity : Vector3;\n    }\n\n    part def TrajectoryRecorder {\n        attribute liftoffUTC : String;\n        attribute liftoffTimeZero_s : Real = 0.0;\n        attribute samples : TrajectorySample[*];\n    }\n\n    part def SpacecraftTrajectorySystem {\n        part recorder : TrajectoryRecorder;\n    }\n\n    part system : SpacecraftTrajectorySystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/146/146_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/146/146.sysml",
+  "response": {
+    "id": "resp_0e8182ed43edf99f00699801cfc4448190992ebaed664606be",
+    "created_at": 1771569615.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0e8182ed43edf99f00699801d02c8881908b1fd783675545a4",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Atomic claims:**\n\n1. The package is named `TrajectorySampling`.\n2. The package privately imports `ScalarValues::*`.\n3. There is a definition of an item `Vector3`.\n4. `Vector3` has an attribute `x_m` of type `Real`.\n5. `Vector3` has an attribute `y_m` of type `Real`.\n6. `Vector3` has an attribute `z_m` of type `Real`.\n7. There is a definition of an item `TrajectorySample`.\n8. `TrajectorySample` has an attribute `time_s` of type `Real`.\n9. `TrajectorySample` has an attribute `position` of type `Vector3`.\n10. `TrajectorySample` has an attribute `velocity` of type `Vector3`.\n11. There is a definition of a part `TrajectoryRecorder`.\n12. `TrajectoryRecorder` has an attribute `liftoffUTC` of type `String`.\n13. `TrajectoryRecorder` has an attribute `liftoffTimeZero_s` of type `Real` with default value `0.0`.\n14. `TrajectoryRecorder` has an attribute `samples` of type `TrajectorySample[*]`.\n15. There is a definition of a part `SpacecraftTrajectorySystem`.\n16. `SpacecraftTrajectorySystem` has a part `recorder` of type `TrajectoryRecorder`.\n17. There is a part `system` of type `SpacecraftTrajectorySystem`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\nLet's check each claim:\n\n| # | Claim | Supported by Reference Model? | Reasoning |\n|---|-------|-------------------------------|-----------|\n| 1 | Package is named `TrajectorySampling` | **No** | Reference model's package is `AerospaceTrajectorySampling`. |\n| 2 | Private import of `ScalarValues::*` | **No** | Reference model does not import `ScalarValues::*`. |\n| 3 | Definition of item `Vector3` | **Partial** | Reference model uses `CartesianPosition3dVector` and `CartesianVelocity3dVector`, which are 3D vectors, but does not define a generic `Vector3`. |\n| 4 | `Vector3` has attribute `x_m: Real` | **Partial** | Reference model's vectors are tuples (e.g., `(x, y, z) [spatialCF]`), not explicit attributes. |\n| 5 | `Vector3` has attribute `y_m: Real` | **Partial** | Same as above. |\n| 6 | `Vector3` has attribute `z_m: Real` | **Partial** | Same as above. |\n| 7 | Definition of item `TrajectorySample` | **Partial** | Reference model defines `AscentSample` with similar structure. |\n| 8 | `TrajectorySample` has attribute `time_s: Real` | **Partial** | Reference model's `AscentSample` has `domainValue: MissionElapsedTimeValue[1]`, which is a time value, but not a raw `Real`. |\n| 9 | `TrajectorySample` has attribute `position: Vector3` | **Partial** | Reference model's `rangeValue: PositionAndVelocity[1]` contains a position vector. |\n| 10 | `TrajectorySample` has attribute `velocity: Vector3` | **Partial** | Reference model's `rangeValue: PositionAndVelocity[1]` contains a velocity vector. |\n| 11 | Definition of part `TrajectoryRecorder` | **No** | No such part in reference model; closest is the grouping of attributes and samples. |\n| 12 | `TrajectoryRecorder` has attribute `liftoffUTC: String` | **Partial** | Reference model has `definitionalEpochInUTC: Iso8601DateTime` and a value for it, but not as a `String` attribute. |\n| 13 | `TrajectoryRecorder` has attribute `liftoffTimeZero_s: Real = 0.0` | **Partial** | Reference model defines `definitionalEpoch` with `num = 0`, but not as a direct attribute. |\n| 14 | `TrajectoryRecorder` has attribute `samples: TrajectorySample[*]` | **Partial** | Reference model has `samples: AscentSample[*] ordered`. |\n| 15 | Definition of part `SpacecraftTrajectorySystem` | **No** | No such part in reference model. |\n| 16 | `SpacecraftTrajectorySystem` has part `recorder: TrajectoryRecorder` | **No** | No such composition in reference model. |\n| 17 | Part `system: SpacecraftTrajectorySystem` | **No** | No such part in reference model. |\n\nNow, let's clarify what counts as \"supported\". The instructions say to ignore naming differences if the structure and semantics match. Let's be generous and count \"partial\" matches as \"supported\" if the structure and semantics are equivalent, even if the naming or typing is different.\n\n#### Re-evaluating with this in mind:\n\n- Claims 3-6: The reference model uses tuples for vectors, but the concept of a 3D vector is present. **Supported**.\n- Claims 7: `TrajectorySample` ≈ `AscentSample`. **Supported**.\n- Claim 8: `time_s: Real` ≈ `domainValue: MissionElapsedTimeValue[1]`. Both represent time, though the reference model uses a more structured type. **Supported**.\n- Claims 9-10: `position` and `velocity` as 3D vectors are present in both. **Supported**.\n- Claim 12: `liftoffUTC: String` ≈ `definitionalEpochInUTC: Iso8601DateTime`. Both represent the UTC liftoff time. **Supported**.\n- Claim 13: `liftoffTimeZero_s: Real = 0.0` ≈ `definitionalEpoch { num = 0 }`. Both represent the zero time instant. **Supported**.\n- Claim 14: `samples: TrajectorySample[*]` ≈ `samples: AscentSample[*] ordered`. Both represent a collection of samples. **Supported**.\n\nClaims 1, 2, 11, 15, 16, 17: These are not present in the reference model, nor are their semantics.\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14\n\n**Total supported:** 11  \n**Total claims:** 17\n\n---\n\n**Score: 11/17**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 999,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1431,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2430
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569631,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Atomic claims:**\n\n1. The package is named `TrajectorySampling`.\n2. The package privately imports `ScalarValues::*`.\n3. There is a definition of an item `Vector3`.\n4. `Vector3` has an attribute `x_m` of type `Real`.\n5. `Vector3` has an attribute `y_m` of type `Real`.\n6. `Vector3` has an attribute `z_m` of type `Real`.\n7. There is a definition of an item `TrajectorySample`.\n8. `TrajectorySample` has an attribute `time_s` of type `Real`.\n9. `TrajectorySample` has an attribute `position` of type `Vector3`.\n10. `TrajectorySample` has an attribute `velocity` of type `Vector3`.\n11. There is a definition of a part `TrajectoryRecorder`.\n12. `TrajectoryRecorder` has an attribute `liftoffUTC` of type `String`.\n13. `TrajectoryRecorder` has an attribute `liftoffTimeZero_s` of type `Real` with default value `0.0`.\n14. `TrajectoryRecorder` has an attribute `samples` of type `TrajectorySample[*]`.\n15. There is a definition of a part `SpacecraftTrajectorySystem`.\n16. `SpacecraftTrajectorySystem` has a part `recorder` of type `TrajectoryRecorder`.\n17. There is a part `system` of type `SpacecraftTrajectorySystem`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\nLet's check each claim:\n\n| # | Claim | Supported by Reference Model? | Reasoning |\n|---|-------|-------------------------------|-----------|\n| 1 | Package is named `TrajectorySampling` | **No** | Reference model's package is `AerospaceTrajectorySampling`. |\n| 2 | Private import of `ScalarValues::*` | **No** | Reference model does not import `ScalarValues::*`. |\n| 3 | Definition of item `Vector3` | **Partial** | Reference model uses `CartesianPosition3dVector` and `CartesianVelocity3dVector`, which are 3D vectors, but does not define a generic `Vector3`. |\n| 4 | `Vector3` has attribute `x_m: Real` | **Partial** | Reference model's vectors are tuples (e.g., `(x, y, z) [spatialCF]`), not explicit attributes. |\n| 5 | `Vector3` has attribute `y_m: Real` | **Partial** | Same as above. |\n| 6 | `Vector3` has attribute `z_m: Real` | **Partial** | Same as above. |\n| 7 | Definition of item `TrajectorySample` | **Partial** | Reference model defines `AscentSample` with similar structure. |\n| 8 | `TrajectorySample` has attribute `time_s: Real` | **Partial** | Reference model's `AscentSample` has `domainValue: MissionElapsedTimeValue[1]`, which is a time value, but not a raw `Real`. |\n| 9 | `TrajectorySample` has attribute `position: Vector3` | **Partial** | Reference model's `rangeValue: PositionAndVelocity[1]` contains a position vector. |\n| 10 | `TrajectorySample` has attribute `velocity: Vector3` | **Partial** | Reference model's `rangeValue: PositionAndVelocity[1]` contains a velocity vector. |\n| 11 | Definition of part `TrajectoryRecorder` | **No** | No such part in reference model; closest is the grouping of attributes and samples. |\n| 12 | `TrajectoryRecorder` has attribute `liftoffUTC: String` | **Partial** | Reference model has `definitionalEpochInUTC: Iso8601DateTime` and a value for it, but not as a `String` attribute. |\n| 13 | `TrajectoryRecorder` has attribute `liftoffTimeZero_s: Real = 0.0` | **Partial** | Reference model defines `definitionalEpoch` with `num = 0`, but not as a direct attribute. |\n| 14 | `TrajectoryRecorder` has attribute `samples: TrajectorySample[*]` | **Partial** | Reference model has `samples: AscentSample[*] ordered`. |\n| 15 | Definition of part `SpacecraftTrajectorySystem` | **No** | No such part in reference model. |\n| 16 | `SpacecraftTrajectorySystem` has part `recorder: TrajectoryRecorder` | **No** | No such composition in reference model. |\n| 17 | Part `system: SpacecraftTrajectorySystem` | **No** | No such part in reference model. |\n\nNow, let's clarify what counts as \"supported\". The instructions say to ignore naming differences if the structure and semantics match. Let's be generous and count \"partial\" matches as \"supported\" if the structure and semantics are equivalent, even if the naming or typing is different.\n\n#### Re-evaluating with this in mind:\n\n- Claims 3-6: The reference model uses tuples for vectors, but the concept of a 3D vector is present. **Supported**.\n- Claims 7: `TrajectorySample` ≈ `AscentSample`. **Supported**.\n- Claim 8: `time_s: Real` ≈ `domainValue: MissionElapsedTimeValue[1]`. Both represent time, though the reference model uses a more structured type. **Supported**.\n- Claims 9-10: `position` and `velocity` as 3D vectors are present in both. **Supported**.\n- Claim 12: `liftoffUTC: String` ≈ `definitionalEpochInUTC: Iso8601DateTime`. Both represent the UTC liftoff time. **Supported**.\n- Claim 13: `liftoffTimeZero_s: Real = 0.0` ≈ `definitionalEpoch { num = 0 }`. Both represent the zero time instant. **Supported**.\n- Claim 14: `samples: TrajectorySample[*]` ≈ `samples: AscentSample[*] ordered`. Both represent a collection of samples. **Supported**.\n\nClaims 1, 2, 11, 15, 16, 17: These are not present in the reference model, nor are their semantics.\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14\n\n**Total supported:** 11  \n**Total claims:** 17\n\n---\n\n**Score: 11/17**"
+  }
+}

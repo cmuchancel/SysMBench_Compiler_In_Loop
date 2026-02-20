@@ -1,0 +1,85 @@
+{
+  "model_id": 151,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'TransportationUseCases' {\n\tpart def Vehicle;\n\tpart def Person;\n\tpart def Environment;\n\tpart def 'Fuel Station';\n\tuse case 'provide transportation' {\n\t\tsubject vehicle : Vehicle;\n\t\tactor driver : Person;\n\t\tactor passengers : Person[0..4];\n\t\tactor environment : Environment;\n\t\tobjective {\n\t\t}\n\t\tref :>> start {\n\t\t\tassert constraint {\n\t\t\t}\n\t\t}\n\t\tfirst start;\n\t\tthen include 'enter vehicle' {\n\t\t\tactor :>> driver = 'provide transportation'::driver;\n\t\t\tactor :>> passengers = 'provide transportation'::passengers;\n\t\t}\n\t\tthen use case 'drive vehicle' {\n\t\t\tinclude 'add fuel'[0..*] {\n\t\t\t\tactor :>> fueler = driver;\n\t\t\t\tref :>> start {\n\t\t\t\t\tdoc /* Fuel level < 10% max fuel */\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\tthen include 'exit vehicle' {\n\t\t\tactor :>> driver = 'provide transportation'::driver;\n\t\t\tactor :>> passengers = 'provide transportation'::passengers;\n\t\t}\n\t\tthen done;\n\t\tref :>> done {\n\t\t\tassert constraint {\n\t\t\t}\n\t\t}\n\t}\n\tuse case 'enter vehicle' {\n\t\tsubject vehicle : Vehicle;\n\t\tactor driver : Person;\n\t\tactor passengers : Person[0..4];\n\t}\n\tuse case 'exit vehicle' {\n\t\tsubject vehicle : Vehicle;\n\t\tactor driver : Person;\n\t\tactor passengers : Person[0..4];\n\t}\n\tuse case 'add fuel' {\n\t\tsubject vehicle : Vehicle;\n\t\tactor fueler : Person;\n\t\tactor 'fuel station' : 'Fuel Station';\n\t}\n}\n\nGenerated Model:\npackage TransportationService {\n  private import ScalarValues::*;\n\n  enum def VehicleUseStatus {\n    enum idle;\n    enum inUse;\n  }\n\n  part def Environment {\n    attribute roadCondition : String;\n    attribute weather : String;\n  }\n\n  part def Driver {\n    attribute licensed : Boolean;\n    attribute inVehicle : Boolean;\n  }\n\n  part def Passenger {\n    attribute inVehicle : Boolean;\n  }\n\n  part def GasStation {\n    attribute available : Boolean;\n  }\n\n  part def Vehicle {\n    attribute maxFuelCapacity : Real;\n    attribute fuelLevel : Real;\n    attribute fuelLowThreshold : Real = 0.1;\n    attribute seats : Integer = 5;\n  }\n\n  part def TransportationSystem {\n    part vehicle : Vehicle;\n    part driver : Driver;\n    part passengers : Passenger [0..4];\n    part environment : Environment;\n    part gasStation : GasStation;\n    attribute status : VehicleUseStatus;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/151/151_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/151/151.sysml",
+  "response": {
+    "id": "resp_03db9b283e1c018800699802982750819eb9026c220733251c",
+    "created_at": 1771569816.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_03db9b283e1c018800699802986fb4819eaf45c71293a93d8e",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n#### Enumerations\n1. Definition of enum `VehicleUseStatus`.\n2. Enum literal `idle` in `VehicleUseStatus`.\n3. Enum literal `inUse` in `VehicleUseStatus`.\n\n#### Parts (Class/Type Definitions)\n4. Definition of part `Environment`.\n5. Definition of part `Driver`.\n6. Definition of part `Passenger`.\n7. Definition of part `GasStation`.\n8. Definition of part `Vehicle`.\n9. Definition of part `TransportationSystem`.\n\n#### Attributes in Parts\n10. `Environment` has attribute `roadCondition : String`.\n11. `Environment` has attribute `weather : String`.\n12. `Driver` has attribute `licensed : Boolean`.\n13. `Driver` has attribute `inVehicle : Boolean`.\n14. `Passenger` has attribute `inVehicle : Boolean`.\n15. `GasStation` has attribute `available : Boolean`.\n16. `Vehicle` has attribute `maxFuelCapacity : Real`.\n17. `Vehicle` has attribute `fuelLevel : Real`.\n18. `Vehicle` has attribute `fuelLowThreshold : Real = 0.1`.\n19. `Vehicle` has attribute `seats : Integer = 5`.\n20. `TransportationSystem` has attribute `status : VehicleUseStatus`.\n\n#### Structural Relations (Parts within Parts)\n21. `TransportationSystem` has part `vehicle : Vehicle`.\n22. `TransportationSystem` has part `driver : Driver`.\n23. `TransportationSystem` has part `passengers : Passenger [0..4]`.\n24. `TransportationSystem` has part `environment : Environment`.\n25. `TransportationSystem` has part `gasStation : GasStation`.\n\n#### Imports\n26. Import of `ScalarValues::*`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n#### Enumerations\n1. **enum `VehicleUseStatus`**  \n   - **NOT SUPPORTED** (No such enum in reference model)\n2. **enum literal `idle`**  \n   - **NOT SUPPORTED**\n3. **enum literal `inUse`**  \n   - **NOT SUPPORTED**\n\n#### Parts (Class/Type Definitions)\n4. **part `Environment`**  \n   - **SUPPORTED** (`part def Environment;`)\n5. **part `Driver`**  \n   - **NOT SUPPORTED** (Reference model uses `Person` as both driver and passenger)\n6. **part `Passenger`**  \n   - **NOT SUPPORTED** (Reference model uses `Person`)\n7. **part `GasStation`**  \n   - **NOT SUPPORTED** (Reference model uses `'Fuel Station'`)\n8. **part `Vehicle`**  \n   - **SUPPORTED** (`part def Vehicle;`)\n9. **part `TransportationSystem`**  \n   - **NOT SUPPORTED** (No such part in reference model)\n\n#### Attributes in Parts\n10. **`Environment.roadCondition : String`**  \n    - **NOT SUPPORTED** (No attributes in `Environment` in reference)\n11. **`Environment.weather : String`**  \n    - **NOT SUPPORTED**\n12. **`Driver.licensed : Boolean`**  \n    - **NOT SUPPORTED**\n13. **`Driver.inVehicle : Boolean`**  \n    - **NOT SUPPORTED**\n14. **`Passenger.inVehicle : Boolean`**  \n    - **NOT SUPPORTED**\n15. **`GasStation.available : Boolean`**  \n    - **NOT SUPPORTED**\n16. **`Vehicle.maxFuelCapacity : Real`**  \n    - **NOT SUPPORTED**\n17. **`Vehicle.fuelLevel : Real`**  \n    - **NOT SUPPORTED**\n18. **`Vehicle.fuelLowThreshold : Real = 0.1`**  \n    - **NOT SUPPORTED**\n19. **`Vehicle.seats : Integer = 5`**  \n    - **NOT SUPPORTED**\n20. **`TransportationSystem.status : VehicleUseStatus`**  \n    - **NOT SUPPORTED**\n\n#### Structural Relations (Parts within Parts)\n21. **`TransportationSystem.vehicle : Vehicle`**  \n    - **NOT SUPPORTED**\n22. **`TransportationSystem.driver : Driver`**  \n    - **NOT SUPPORTED**\n23. **`TransportationSystem.passengers : Passenger [0..4]`**  \n    - **NOT SUPPORTED**\n24. **`TransportationSystem.environment : Environment`**  \n    - **NOT SUPPORTED**\n25. **`TransportationSystem.gasStation : GasStation`**  \n    - **NOT SUPPORTED**\n\n#### Imports\n26. **Import of `ScalarValues::*`**  \n    - **NOT SUPPORTED** (No imports in reference model, but this is a technicality and not a modeling claim about the system itself; can be ignored for precision)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**  \n- 4. Definition of part `Environment`\n- 8. Definition of part `Vehicle`\n\n**Total supported claims:** 2\n\n**Total claims:** 25 (excluding the import, which is not a modeling claim about the system structure)\n\n---\n\n**Score: 2/25**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 732,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1088,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1820
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569828,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n#### Enumerations\n1. Definition of enum `VehicleUseStatus`.\n2. Enum literal `idle` in `VehicleUseStatus`.\n3. Enum literal `inUse` in `VehicleUseStatus`.\n\n#### Parts (Class/Type Definitions)\n4. Definition of part `Environment`.\n5. Definition of part `Driver`.\n6. Definition of part `Passenger`.\n7. Definition of part `GasStation`.\n8. Definition of part `Vehicle`.\n9. Definition of part `TransportationSystem`.\n\n#### Attributes in Parts\n10. `Environment` has attribute `roadCondition : String`.\n11. `Environment` has attribute `weather : String`.\n12. `Driver` has attribute `licensed : Boolean`.\n13. `Driver` has attribute `inVehicle : Boolean`.\n14. `Passenger` has attribute `inVehicle : Boolean`.\n15. `GasStation` has attribute `available : Boolean`.\n16. `Vehicle` has attribute `maxFuelCapacity : Real`.\n17. `Vehicle` has attribute `fuelLevel : Real`.\n18. `Vehicle` has attribute `fuelLowThreshold : Real = 0.1`.\n19. `Vehicle` has attribute `seats : Integer = 5`.\n20. `TransportationSystem` has attribute `status : VehicleUseStatus`.\n\n#### Structural Relations (Parts within Parts)\n21. `TransportationSystem` has part `vehicle : Vehicle`.\n22. `TransportationSystem` has part `driver : Driver`.\n23. `TransportationSystem` has part `passengers : Passenger [0..4]`.\n24. `TransportationSystem` has part `environment : Environment`.\n25. `TransportationSystem` has part `gasStation : GasStation`.\n\n#### Imports\n26. Import of `ScalarValues::*`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n#### Enumerations\n1. **enum `VehicleUseStatus`**  \n   - **NOT SUPPORTED** (No such enum in reference model)\n2. **enum literal `idle`**  \n   - **NOT SUPPORTED**\n3. **enum literal `inUse`**  \n   - **NOT SUPPORTED**\n\n#### Parts (Class/Type Definitions)\n4. **part `Environment`**  \n   - **SUPPORTED** (`part def Environment;`)\n5. **part `Driver`**  \n   - **NOT SUPPORTED** (Reference model uses `Person` as both driver and passenger)\n6. **part `Passenger`**  \n   - **NOT SUPPORTED** (Reference model uses `Person`)\n7. **part `GasStation`**  \n   - **NOT SUPPORTED** (Reference model uses `'Fuel Station'`)\n8. **part `Vehicle`**  \n   - **SUPPORTED** (`part def Vehicle;`)\n9. **part `TransportationSystem`**  \n   - **NOT SUPPORTED** (No such part in reference model)\n\n#### Attributes in Parts\n10. **`Environment.roadCondition : String`**  \n    - **NOT SUPPORTED** (No attributes in `Environment` in reference)\n11. **`Environment.weather : String`**  \n    - **NOT SUPPORTED**\n12. **`Driver.licensed : Boolean`**  \n    - **NOT SUPPORTED**\n13. **`Driver.inVehicle : Boolean`**  \n    - **NOT SUPPORTED**\n14. **`Passenger.inVehicle : Boolean`**  \n    - **NOT SUPPORTED**\n15. **`GasStation.available : Boolean`**  \n    - **NOT SUPPORTED**\n16. **`Vehicle.maxFuelCapacity : Real`**  \n    - **NOT SUPPORTED**\n17. **`Vehicle.fuelLevel : Real`**  \n    - **NOT SUPPORTED**\n18. **`Vehicle.fuelLowThreshold : Real = 0.1`**  \n    - **NOT SUPPORTED**\n19. **`Vehicle.seats : Integer = 5`**  \n    - **NOT SUPPORTED**\n20. **`TransportationSystem.status : VehicleUseStatus`**  \n    - **NOT SUPPORTED**\n\n#### Structural Relations (Parts within Parts)\n21. **`TransportationSystem.vehicle : Vehicle`**  \n    - **NOT SUPPORTED**\n22. **`TransportationSystem.driver : Driver`**  \n    - **NOT SUPPORTED**\n23. **`TransportationSystem.passengers : Passenger [0..4]`**  \n    - **NOT SUPPORTED**\n24. **`TransportationSystem.environment : Environment`**  \n    - **NOT SUPPORTED**\n25. **`TransportationSystem.gasStation : GasStation`**  \n    - **NOT SUPPORTED**\n\n#### Imports\n26. **Import of `ScalarValues::*`**  \n    - **NOT SUPPORTED** (No imports in reference model, but this is a technicality and not a modeling claim about the system itself; can be ignored for precision)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**  \n- 4. Definition of part `Environment`\n- 8. Definition of part `Vehicle`\n\n**Total supported claims:** 2\n\n**Total claims:** 25 (excluding the import, which is not a modeling claim about the system structure)\n\n---\n\n**Score: 2/25**"
+  }
+}

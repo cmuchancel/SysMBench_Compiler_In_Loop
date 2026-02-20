@@ -1,0 +1,85 @@
+{
+  "model_id": 101,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleTrailerCouplingSystemModeling' {\n\tpackage Definitions {\n\t\tpart def Vehicle;\n\t\tpart def Trailer;\n\t\tpart def TrailerHitch;\n\t\tpart def HitchBall;\n\t\tpart def TrailerCoupler;\n\t}\n\tpackage Usages {\n\t\tprivate import Definitions::*;\n\t\tpart vehicle_trailer_system {\n\t\t\tpart vehicle1_c1: Vehicle {\n\t\t\t\tref hitchBall : HitchBall {\n\t\t\t\t\t/*\n\t\t\t\t\t * 'vehicle1_c1'::'hitchBall' is a reference property that\n\t\t\t\t\t * references a hitch ball that is not part of this vehicle. \n\t\t\t\t\t * If 'vehicle1_c1' is removed or destroyed, this does not\n\t\t\t\t\t * effect the hitchBall referenced here.\n\t\t\t\t\t */\n\t\t\t\t}\n\t\t\t}\n\t\t\tbind vehicle1_c1.hitchBall = trailerHitch.hitchBall {\n\t\t\t\t/*\n\t\t\t\t * This is a binding connector between the 'hitchBall' in 'vehicle1_c1'\n\t\t\t\t * and the 'hitchBall' in 'trailerHitch'.\n\t\t\t\t */\t\t\t\n\t\t\t}\n\t\t\tpart trailerHitch: TrailerHitch {\t\t\t\t\n\t\t\t\tpart hitchBall: HitchBall;\n\t\t\t\tpart trailerCoupler: TrailerCoupler;\n\t\t\t}\n\t\t\tpart trailer1: Trailer {\n\t\t\t\tref trailerCoupler : TrailerCoupler = trailerHitch.trailerCoupler {\n\t\t\t\t\t/*\n\t\t\t\t\t * This is a shorthand for a binding connector between the\n\t\t\t\t\t * 'trailerCoupler' here and the 'trailerCoupler' in 'trailerHitch'.\n\t\t\t\t\t * The binding connector is now contained within the 'trailer1'\n\t\t\t\t\t * part, though, rather than being at the system level. \n\t\t\t\t\t */\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage CouplingSystemModel {\n    private import ScalarValues::*;\n\n    port def CouplingPort;\n\n    part def Ball;\n\n    part def Hitch {\n        part ball: Ball;\n        port couplingPort: CouplingPort;\n    }\n\n    part def Vehicle {\n        port hitchPort: CouplingPort;\n    }\n\n    part def Trailer {\n        port couplingPort: CouplingPort;\n    }\n\n    part def CouplingSystem {\n        part vehicle: Vehicle;\n        part trailer: Trailer;\n        part hitch: Hitch;\n        connect vehicle.hitchPort to hitch.couplingPort;\n        connect trailer.couplingPort to hitch.couplingPort;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/101/101_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/101/101.sysml",
+  "response": {
+    "id": "resp_0e597864f682adef006998019bf5f081a1afe44501bf31cd78",
+    "created_at": 1771569563.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0e597864f682adef006998019c532881a189317e56c226feb2",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Definitions package:**\n1. Definition of part `Vehicle`.\n2. Definition of part `Trailer`.\n3. Definition of part `TrailerHitch`.\n4. Definition of part `HitchBall`.\n5. Definition of part `TrailerCoupler`.\n\n**Usages package (vehicle_trailer_system):**\n6. Declaration of part `vehicle1_c1` of type `Vehicle`.\n7. Declaration of reference property `hitchBall` in `vehicle1_c1`, of type `HitchBall`.\n8. Declaration of part `trailerHitch` of type `TrailerHitch`.\n9. Declaration of part `hitchBall` in `trailerHitch`, of type `HitchBall`.\n10. Declaration of part `trailerCoupler` in `trailerHitch`, of type `TrailerCoupler`.\n11. Declaration of part `trailer1` of type `Trailer`.\n12. Declaration of reference property `trailerCoupler` in `trailer1`, of type `TrailerCoupler`, bound to `trailerHitch.trailerCoupler`.\n13. Binding connector between `vehicle1_c1.hitchBall` and `trailerHitch.hitchBall`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Definition of part `Vehicle` | **Yes** | `part def Vehicle` exists. |\n| 2 | Definition of part `Trailer` | **Yes** | `part def Trailer` exists. |\n| 3 | Definition of part `TrailerHitch` | **Partial/No** | There is a `part def Hitch`, but not `TrailerHitch`. The intent is similar, but the name is different. Let's accept as equivalent for recall (structure/semantics match). |\n| 4 | Definition of part `HitchBall` | **Yes** | `part def Ball` exists; equivalent to `HitchBall`. |\n| 5 | Definition of part `TrailerCoupler` | **No** | No `TrailerCoupler` part definition. |\n| 6 | Declaration of part `vehicle1_c1` of type `Vehicle` | **Yes** | `part vehicle: Vehicle` in `CouplingSystem`. |\n| 7 | Declaration of reference property `hitchBall` in `vehicle1_c1`, of type `HitchBall` | **No** | No reference property in `Vehicle` to a `Ball` or `HitchBall`. |\n| 8 | Declaration of part `trailerHitch` of type `TrailerHitch` | **Yes** | `part hitch: Hitch` in `CouplingSystem`. |\n| 9 | Declaration of part `hitchBall` in `trailerHitch`, of type `HitchBall` | **Yes** | `part ball: Ball` in `Hitch`. |\n| 10 | Declaration of part `trailerCoupler` in `trailerHitch`, of type `TrailerCoupler` | **No** | No `trailerCoupler` in `Hitch`. |\n| 11 | Declaration of part `trailer1` of type `Trailer` | **Yes** | `part trailer: Trailer` in `CouplingSystem`. |\n| 12 | Declaration of reference property `trailerCoupler` in `trailer1`, of type `TrailerCoupler`, bound to `trailerHitch.trailerCoupler` | **No** | No such reference or binding in `Trailer`. |\n| 13 | Binding connector between `vehicle1_c1.hitchBall` and `trailerHitch.hitchBall` | **No** | No such binding or connection between a property of `Vehicle` and `Hitch`. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- Covered: 1, 2, 3, 4, 6, 8, 9, 11 (**8 claims**)\n- Not covered: 5, 7, 10, 12, 13 (**5 claims**)\n\n**Score: 8/13**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 679,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 915,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1594
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569577,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Definitions package:**\n1. Definition of part `Vehicle`.\n2. Definition of part `Trailer`.\n3. Definition of part `TrailerHitch`.\n4. Definition of part `HitchBall`.\n5. Definition of part `TrailerCoupler`.\n\n**Usages package (vehicle_trailer_system):**\n6. Declaration of part `vehicle1_c1` of type `Vehicle`.\n7. Declaration of reference property `hitchBall` in `vehicle1_c1`, of type `HitchBall`.\n8. Declaration of part `trailerHitch` of type `TrailerHitch`.\n9. Declaration of part `hitchBall` in `trailerHitch`, of type `HitchBall`.\n10. Declaration of part `trailerCoupler` in `trailerHitch`, of type `TrailerCoupler`.\n11. Declaration of part `trailer1` of type `Trailer`.\n12. Declaration of reference property `trailerCoupler` in `trailer1`, of type `TrailerCoupler`, bound to `trailerHitch.trailerCoupler`.\n13. Binding connector between `vehicle1_c1.hitchBall` and `trailerHitch.hitchBall`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Definition of part `Vehicle` | **Yes** | `part def Vehicle` exists. |\n| 2 | Definition of part `Trailer` | **Yes** | `part def Trailer` exists. |\n| 3 | Definition of part `TrailerHitch` | **Partial/No** | There is a `part def Hitch`, but not `TrailerHitch`. The intent is similar, but the name is different. Let's accept as equivalent for recall (structure/semantics match). |\n| 4 | Definition of part `HitchBall` | **Yes** | `part def Ball` exists; equivalent to `HitchBall`. |\n| 5 | Definition of part `TrailerCoupler` | **No** | No `TrailerCoupler` part definition. |\n| 6 | Declaration of part `vehicle1_c1` of type `Vehicle` | **Yes** | `part vehicle: Vehicle` in `CouplingSystem`. |\n| 7 | Declaration of reference property `hitchBall` in `vehicle1_c1`, of type `HitchBall` | **No** | No reference property in `Vehicle` to a `Ball` or `HitchBall`. |\n| 8 | Declaration of part `trailerHitch` of type `TrailerHitch` | **Yes** | `part hitch: Hitch` in `CouplingSystem`. |\n| 9 | Declaration of part `hitchBall` in `trailerHitch`, of type `HitchBall` | **Yes** | `part ball: Ball` in `Hitch`. |\n| 10 | Declaration of part `trailerCoupler` in `trailerHitch`, of type `TrailerCoupler` | **No** | No `trailerCoupler` in `Hitch`. |\n| 11 | Declaration of part `trailer1` of type `Trailer` | **Yes** | `part trailer: Trailer` in `CouplingSystem`. |\n| 12 | Declaration of reference property `trailerCoupler` in `trailer1`, of type `TrailerCoupler`, bound to `trailerHitch.trailerCoupler` | **No** | No such reference or binding in `Trailer`. |\n| 13 | Binding connector between `vehicle1_c1.hitchBall` and `trailerHitch.hitchBall` | **No** | No such binding or connection between a property of `Vehicle` and `Hitch`. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- Covered: 1, 2, 3, 4, 6, 8, 9, 11 (**8 claims**)\n- Not covered: 5, 7, 10, 12, 13 (**5 claims**)\n\n**Score: 8/13**"
+  }
+}

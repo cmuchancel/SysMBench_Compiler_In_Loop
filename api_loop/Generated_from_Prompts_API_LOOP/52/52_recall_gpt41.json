@@ -1,0 +1,85 @@
+{
+  "model_id": 52,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleComposition' {\n\tprivate import ScalarValues::*;\n\tpart def Vehicle {\n\t\tattribute mass : Real;\n\t\tattribute status : VehicleStatus;\n\t\tpart eng : Engine;\n\t\tref part driver : Person;\n\t}\n\tattribute def VehicleStatus {\n\t\tattribute gearSetting : Integer;\n\t\tattribute acceleratorPosition : Real;\n\t}\n\tpart def Engine;\t\n\tpart def Person;\n\tindividual part def Vehicle_1 :> Vehicle {\n\t\tsnapshot part vehicle_1_t0 {\n\t\t\t:>> mass = 2000.0;\n\t\t\t:>> status {\n\t\t\t\t:>> gearSetting = 0;\n\t\t\t\t:>> acceleratorPosition = 0.0;\n\t\t\t}\n\t\t}\n\t\tsnapshot part vehicle_1_t1 {\n\t\t\t:>> mass = 1500.0;\n\t\t\t:>> status {\n\t\t\t\t:>> gearSetting = 2;\n\t\t\t\t:>> acceleratorPosition = 0.5;\n\t\t\t}\n\t\t}\n\t\tfirst vehicle_1_t0 then vehicle_1_t1;\n\t}\n}\n\nGenerated Model:\npackage VehicleComposite {\n  private import ScalarValues::*;\n\n  part def Engine {\n  }\n\n  part def Driver {\n  }\n\n  part def Vehicle {\n    attribute mass : Real;\n    attribute gear : Integer;\n    attribute accelerator : Real;\n  }\n\n  part def VehicleTimeline {\n    part initial : Vehicle;\n    part next : Vehicle;\n  }\n\n  part def CompositeSystem {\n    part vehicle_1 : VehicleTimeline;\n    part engine_1 : Engine;\n    part driver_1 : Driver;\n  }\n\n  part SystemInstance : CompositeSystem {\n    part vehicle_1 : VehicleTimeline {\n      part initial : Vehicle {\n        attribute mass = 2000.0;\n        attribute gear = 0;\n        attribute accelerator = 0.0;\n      }\n      part next : Vehicle {\n        attribute mass = 1500.0;\n        attribute gear = 2;\n        attribute accelerator = 0.5;\n      }\n    }\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/52/52_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/52/52.sysml",
+  "response": {
+    "id": "resp_0e1704a63713efa2006997ff36d9948195bccc9c19908dfe67",
+    "created_at": 1771568950.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0e1704a63713efa2006997ff37104081959374e2060a86fb2f",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is named 'VehicleComposition'.\n2. There is a private import of ScalarValues::*.\n3. There is a part definition named Vehicle.\n4. Vehicle has an attribute 'mass' of type Real.\n5. Vehicle has an attribute 'status' of type VehicleStatus.\n6. Vehicle has a part 'eng' of type Engine.\n7. Vehicle has a reference part 'driver' of type Person.\n8. There is an attribute definition named VehicleStatus.\n9. VehicleStatus has an attribute 'gearSetting' of type Integer.\n10. VehicleStatus has an attribute 'acceleratorPosition' of type Real.\n11. There is a part definition named Engine.\n12. There is a part definition named Person.\n13. There is an individual part definition Vehicle_1 of type Vehicle.\n14. Vehicle_1 has a snapshot 'vehicle_1_t0' with:\n    - mass = 2000.0\n    - status.gearSetting = 0\n    - status.acceleratorPosition = 0.0\n15. Vehicle_1 has a snapshot 'vehicle_1_t1' with:\n    - mass = 1500.0\n    - status.gearSetting = 2\n    - status.acceleratorPosition = 0.5\n16. The snapshots are ordered: first vehicle_1_t0 then vehicle_1_t1.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package named 'VehicleComposition' | **Yes** | Name is 'VehicleComposite', but semantics match. |\n| 2 | Private import ScalarValues::* | **Yes** | Present. |\n| 3 | part def Vehicle | **Yes** | Present. |\n| 4 | Vehicle.mass : Real | **Yes** | Present. |\n| 5 | Vehicle.status : VehicleStatus | **Partial/No** | Not present as a structured attribute; instead, gear/accelerator are direct attributes. |\n| 6 | Vehicle.eng : Engine | **No** | No 'eng' part in Vehicle; Engine exists elsewhere. |\n| 7 | Vehicle.driver : Person (reference part) | **No** | No 'driver' part in Vehicle; Driver exists elsewhere. |\n| 8 | attribute def VehicleStatus | **No** | Not present as a type. |\n| 9 | VehicleStatus.gearSetting : Integer | **Partial/Yes** | 'gear' attribute in Vehicle; flattened, but semantically present. |\n| 10 | VehicleStatus.acceleratorPosition : Real | **Partial/Yes** | 'accelerator' attribute in Vehicle; flattened, but semantically present. |\n| 11 | part def Engine | **Yes** | Present. |\n| 12 | part def Person | **Partial/Yes** | 'Driver' part exists; naming difference only. |\n| 13 | individual part def Vehicle_1 :> Vehicle | **Partial/Yes** | 'vehicle_1' instance exists in CompositeSystem. |\n| 14 | Vehicle_1 snapshot vehicle_1_t0: mass=2000.0, status.gearSetting=0, status.acceleratorPosition=0.0 | **Yes** | 'initial' Vehicle instance with these values. |\n| 15 | Vehicle_1 snapshot vehicle_1_t1: mass=1500.0, status.gearSetting=2, status.acceleratorPosition=0.5 | **Yes** | 'next' Vehicle instance with these values. |\n| 16 | Snapshots ordered: t0 then t1 | **Yes** | 'initial' then 'next' in VehicleTimeline. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Fully Covered:** 1, 2, 3, 4, 11, 14, 15, 16 (8 claims)\n- **Partially Covered (count as covered if semantics match):** 9, 10, 12, 13 (4 claims)\n- **Not Covered:** 5, 6, 7, 8 (4 claims)\n\nTotal claims: 16  \nCovered claims: 12\n\n---\n\n**Score: 12/16**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 597,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 934,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1531
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568967,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The package is named 'VehicleComposition'.\n2. There is a private import of ScalarValues::*.\n3. There is a part definition named Vehicle.\n4. Vehicle has an attribute 'mass' of type Real.\n5. Vehicle has an attribute 'status' of type VehicleStatus.\n6. Vehicle has a part 'eng' of type Engine.\n7. Vehicle has a reference part 'driver' of type Person.\n8. There is an attribute definition named VehicleStatus.\n9. VehicleStatus has an attribute 'gearSetting' of type Integer.\n10. VehicleStatus has an attribute 'acceleratorPosition' of type Real.\n11. There is a part definition named Engine.\n12. There is a part definition named Person.\n13. There is an individual part definition Vehicle_1 of type Vehicle.\n14. Vehicle_1 has a snapshot 'vehicle_1_t0' with:\n    - mass = 2000.0\n    - status.gearSetting = 0\n    - status.acceleratorPosition = 0.0\n15. Vehicle_1 has a snapshot 'vehicle_1_t1' with:\n    - mass = 1500.0\n    - status.gearSetting = 2\n    - status.acceleratorPosition = 0.5\n16. The snapshots are ordered: first vehicle_1_t0 then vehicle_1_t1.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|-----------------------------|-------|\n| 1 | Package named 'VehicleComposition' | **Yes** | Name is 'VehicleComposite', but semantics match. |\n| 2 | Private import ScalarValues::* | **Yes** | Present. |\n| 3 | part def Vehicle | **Yes** | Present. |\n| 4 | Vehicle.mass : Real | **Yes** | Present. |\n| 5 | Vehicle.status : VehicleStatus | **Partial/No** | Not present as a structured attribute; instead, gear/accelerator are direct attributes. |\n| 6 | Vehicle.eng : Engine | **No** | No 'eng' part in Vehicle; Engine exists elsewhere. |\n| 7 | Vehicle.driver : Person (reference part) | **No** | No 'driver' part in Vehicle; Driver exists elsewhere. |\n| 8 | attribute def VehicleStatus | **No** | Not present as a type. |\n| 9 | VehicleStatus.gearSetting : Integer | **Partial/Yes** | 'gear' attribute in Vehicle; flattened, but semantically present. |\n| 10 | VehicleStatus.acceleratorPosition : Real | **Partial/Yes** | 'accelerator' attribute in Vehicle; flattened, but semantically present. |\n| 11 | part def Engine | **Yes** | Present. |\n| 12 | part def Person | **Partial/Yes** | 'Driver' part exists; naming difference only. |\n| 13 | individual part def Vehicle_1 :> Vehicle | **Partial/Yes** | 'vehicle_1' instance exists in CompositeSystem. |\n| 14 | Vehicle_1 snapshot vehicle_1_t0: mass=2000.0, status.gearSetting=0, status.acceleratorPosition=0.0 | **Yes** | 'initial' Vehicle instance with these values. |\n| 15 | Vehicle_1 snapshot vehicle_1_t1: mass=1500.0, status.gearSetting=2, status.acceleratorPosition=0.5 | **Yes** | 'next' Vehicle instance with these values. |\n| 16 | Snapshots ordered: t0 then t1 | **Yes** | 'initial' then 'next' in VehicleTimeline. |\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Fully Covered:** 1, 2, 3, 4, 11, 14, 15, 16 (8 claims)\n- **Partially Covered (count as covered if semantics match):** 9, 10, 12, 13 (4 claims)\n- **Not Covered:** 5, 6, 7, 8 (4 claims)\n\nTotal claims: 16  \nCovered claims: 12\n\n---\n\n**Score: 12/16**"
+  }
+}

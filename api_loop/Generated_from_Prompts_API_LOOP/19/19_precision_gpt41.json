@@ -1,0 +1,85 @@
+{
+  "model_id": 19,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'PhotographyWorkflow' {\n\titem def Scene;\n\titem def Image;\n\titem def Picture;\n\taction def Focus { in scene : Scene; out image : Image; }\n\taction def Shoot { in image: Image; out picture : Picture; }\t\t\t\n\taction def TakePicture {\n\t\tin item scene : Scene;\n\t\tout item picture : Picture;\n\t\taction focus: Focus {\n\t\t\tin item scene = TakePicture::scene;\n\t\t\tout item image;\n\t\t}\n\t\tflow from focus.image to shoot.image;\n\t\tthen action shoot: Shoot {\n\t\t\tin item;\n\t\t\tout item picture = TakePicture::picture;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage PhotographyWorkflow {\n  private import ScalarValues::*;\n\n  enum def WorkflowStep {\n    enum Selecting;\n    enum Focusing;\n    enum Shooting;\n    enum Completed;\n  }\n\n  item def Scene;\n  item def FocusedImage;\n  item def FinalPhoto;\n\n  port def ScenePort;\n  port def FocusedImagePort;\n  port def PhotoPort;\n\n  part def SceneSelector {\n    port outScene : ScenePort;\n  }\n\n  part def FocusingModule {\n    port inScene : ScenePort;\n    port outFocused : FocusedImagePort;\n    attribute autoFocusEnabled : Boolean = true;\n  }\n\n  part def ShootingModule {\n    port inFocused : FocusedImagePort;\n    port outPhoto : PhotoPort;\n  }\n\n  part def CameraSystem {\n    part selector : SceneSelector;\n    part focusing : FocusingModule;\n    part shooting : ShootingModule;\n    port outPhoto : PhotoPort;\n    attribute currentStep : WorkflowStep = WorkflowStep::Selecting;\n\n    connect selector.outScene to focusing.inScene;\n    connect focusing.outFocused to shooting.inFocused;\n    connect shooting.outPhoto to outPhoto;\n  }\n\n  part system : CameraSystem;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/19/19_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/19/19.sysml",
+  "response": {
+    "id": "resp_08758993a4d0efc8006997ffa074488190a72449a2f15df1e6",
+    "created_at": 1771569056.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_08758993a4d0efc8006997ffa0db2881908ad4d29a05bdc3bf",
+        "content": [
+          {
+            "annotations": [],
+            "text": "**Step 1: List all atomic modeling claims made by the generated system model.**\n\n1. Definition of package PhotographyWorkflow.\n2. Import of ScalarValues::*.\n3. Definition of enum WorkflowStep.\n4. Definition of enum value WorkflowStep::Selecting.\n5. Definition of enum value WorkflowStep::Focusing.\n6. Definition of enum value WorkflowStep::Shooting.\n7. Definition of enum value WorkflowStep::Completed.\n8. Definition of item Scene.\n9. Definition of item FocusedImage.\n10. Definition of item FinalPhoto.\n11. Definition of port ScenePort.\n12. Definition of port FocusedImagePort.\n13. Definition of port PhotoPort.\n14. Definition of part SceneSelector.\n15. SceneSelector has port outScene of type ScenePort.\n16. Definition of part FocusingModule.\n17. FocusingModule has port inScene of type ScenePort.\n18. FocusingModule has port outFocused of type FocusedImagePort.\n19. FocusingModule has attribute autoFocusEnabled of type Boolean, default true.\n20. Definition of part ShootingModule.\n21. ShootingModule has port inFocused of type FocusedImagePort.\n22. ShootingModule has port outPhoto of type PhotoPort.\n23. Definition of part CameraSystem.\n24. CameraSystem has part selector of type SceneSelector.\n25. CameraSystem has part focusing of type FocusingModule.\n26. CameraSystem has part shooting of type ShootingModule.\n27. CameraSystem has port outPhoto of type PhotoPort.\n28. CameraSystem has attribute currentStep of type WorkflowStep, default WorkflowStep::Selecting.\n29. CameraSystem connects selector.outScene to focusing.inScene.\n30. CameraSystem connects focusing.outFocused to shooting.inFocused.\n31. CameraSystem connects shooting.outPhoto to outPhoto.\n32. Definition of part system of type CameraSystem.\n\n**Step 2: For each atomic claim, determine whether it is supported by the reference model.**\n\n1. **Supported** (package exists)\n2. **Not Supported** (import not present in reference)\n3. **Not Supported** (enum WorkflowStep not present)\n4. **Not Supported** (enum value Selecting not present)\n5. **Not Supported** (enum value Focusing not present)\n6. **Not Supported** (enum value Shooting not present)\n7. **Not Supported** (enum value Completed not present)\n8. **Supported** (item Scene exists)\n9. **Not Supported** (item FocusedImage does not exist; closest is Image)\n10. **Not Supported** (item FinalPhoto does not exist; closest is Picture)\n11. **Not Supported** (port ScenePort not present)\n12. **Not Supported** (port FocusedImagePort not present)\n13. **Not Supported** (port PhotoPort not present)\n14. **Not Supported** (part SceneSelector not present)\n15. **Not Supported** (SceneSelector.outScene not present)\n16. **Not Supported** (part FocusingModule not present)\n17. **Not Supported** (FocusingModule.inScene not present)\n18. **Not Supported** (FocusingModule.outFocused not present)\n19. **Not Supported** (FocusingModule.autoFocusEnabled not present)\n20. **Not Supported** (part ShootingModule not present)\n21. **Not Supported** (ShootingModule.inFocused not present)\n22. **Not Supported** (ShootingModule.outPhoto not present)\n23. **Not Supported** (part CameraSystem not present)\n24. **Not Supported** (CameraSystem.selector not present)\n25. **Not Supported** (CameraSystem.focusing not present)\n26. **Not Supported** (CameraSystem.shooting not present)\n27. **Not Supported** (CameraSystem.outPhoto not present)\n28. **Not Supported** (CameraSystem.currentStep not present)\n29. **Not Supported** (connect selector.outScene to focusing.inScene not present)\n30. **Not Supported** (connect focusing.outFocused to shooting.inFocused not present)\n31. **Not Supported** (connect shooting.outPhoto to outPhoto not present)\n32. **Not Supported** (part system : CameraSystem not present)\n\n**Step 3: Summarize the results.**\n\nScore: **2/32**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 553,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 874,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1427
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569068,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "**Step 1: List all atomic modeling claims made by the generated system model.**\n\n1. Definition of package PhotographyWorkflow.\n2. Import of ScalarValues::*.\n3. Definition of enum WorkflowStep.\n4. Definition of enum value WorkflowStep::Selecting.\n5. Definition of enum value WorkflowStep::Focusing.\n6. Definition of enum value WorkflowStep::Shooting.\n7. Definition of enum value WorkflowStep::Completed.\n8. Definition of item Scene.\n9. Definition of item FocusedImage.\n10. Definition of item FinalPhoto.\n11. Definition of port ScenePort.\n12. Definition of port FocusedImagePort.\n13. Definition of port PhotoPort.\n14. Definition of part SceneSelector.\n15. SceneSelector has port outScene of type ScenePort.\n16. Definition of part FocusingModule.\n17. FocusingModule has port inScene of type ScenePort.\n18. FocusingModule has port outFocused of type FocusedImagePort.\n19. FocusingModule has attribute autoFocusEnabled of type Boolean, default true.\n20. Definition of part ShootingModule.\n21. ShootingModule has port inFocused of type FocusedImagePort.\n22. ShootingModule has port outPhoto of type PhotoPort.\n23. Definition of part CameraSystem.\n24. CameraSystem has part selector of type SceneSelector.\n25. CameraSystem has part focusing of type FocusingModule.\n26. CameraSystem has part shooting of type ShootingModule.\n27. CameraSystem has port outPhoto of type PhotoPort.\n28. CameraSystem has attribute currentStep of type WorkflowStep, default WorkflowStep::Selecting.\n29. CameraSystem connects selector.outScene to focusing.inScene.\n30. CameraSystem connects focusing.outFocused to shooting.inFocused.\n31. CameraSystem connects shooting.outPhoto to outPhoto.\n32. Definition of part system of type CameraSystem.\n\n**Step 2: For each atomic claim, determine whether it is supported by the reference model.**\n\n1. **Supported** (package exists)\n2. **Not Supported** (import not present in reference)\n3. **Not Supported** (enum WorkflowStep not present)\n4. **Not Supported** (enum value Selecting not present)\n5. **Not Supported** (enum value Focusing not present)\n6. **Not Supported** (enum value Shooting not present)\n7. **Not Supported** (enum value Completed not present)\n8. **Supported** (item Scene exists)\n9. **Not Supported** (item FocusedImage does not exist; closest is Image)\n10. **Not Supported** (item FinalPhoto does not exist; closest is Picture)\n11. **Not Supported** (port ScenePort not present)\n12. **Not Supported** (port FocusedImagePort not present)\n13. **Not Supported** (port PhotoPort not present)\n14. **Not Supported** (part SceneSelector not present)\n15. **Not Supported** (SceneSelector.outScene not present)\n16. **Not Supported** (part FocusingModule not present)\n17. **Not Supported** (FocusingModule.inScene not present)\n18. **Not Supported** (FocusingModule.outFocused not present)\n19. **Not Supported** (FocusingModule.autoFocusEnabled not present)\n20. **Not Supported** (part ShootingModule not present)\n21. **Not Supported** (ShootingModule.inFocused not present)\n22. **Not Supported** (ShootingModule.outPhoto not present)\n23. **Not Supported** (part CameraSystem not present)\n24. **Not Supported** (CameraSystem.selector not present)\n25. **Not Supported** (CameraSystem.focusing not present)\n26. **Not Supported** (CameraSystem.shooting not present)\n27. **Not Supported** (CameraSystem.outPhoto not present)\n28. **Not Supported** (CameraSystem.currentStep not present)\n29. **Not Supported** (connect selector.outScene to focusing.inScene not present)\n30. **Not Supported** (connect focusing.outFocused to shooting.inFocused not present)\n31. **Not Supported** (connect shooting.outPhoto to outPhoto not present)\n32. **Not Supported** (part system : CameraSystem not present)\n\n**Step 3: Summarize the results.**\n\nScore: **2/32**"
+  }
+}

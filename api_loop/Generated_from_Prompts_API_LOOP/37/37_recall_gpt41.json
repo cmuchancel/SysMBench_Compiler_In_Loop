@@ -1,0 +1,85 @@
+{
+  "model_id": 37,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehiclePowerManagement' {\n\tattribute def VehicleStartSignal;\n\tattribute def VehicleOnSignal;\n\tattribute def VehicleOffSignal;\n\tpart def Vehicle;\n\taction performSelfTest { in vehicle : Vehicle; }\n\tstate def VehicleStates { in operatingVehicle : Vehicle; }\n\tstate vehicleStates : VehicleStates {\n\t\tin operatingVehicle : Vehicle;\n\t\tentry; then off;\n\t\tstate off;\n\t\taccept VehicleStartSignal \n\t\t\tthen starting;\n\t\tstate starting;\n\t\taccept VehicleOnSignal\n\t\t\tthen on;\n\t\tstate on {\n\t\t\tentry performSelfTest{ in vehicle = operatingVehicle; }\n\t\t\tdo action providePower { /* ... */ }\n\t\t\texit action applyParkingBrake { /* ... */ }\n\t\t}\n\t\taccept VehicleOffSignal\n\t\t\tthen off;\n\t}\t\n}\n\nGenerated Model:\npackage VehiclePowerManagement {\n  private import ScalarValues::*;\n\n  enum def PowerState {\n    enum Off;\n    enum StartPhase;\n    enum PoweredOn;\n  }\n\n  port def ControlPort {\n    attribute startCommand : Boolean;\n    attribute startedSignal : Boolean;\n    attribute shutdownCommand : Boolean;\n  }\n\n  port def PowerPort {\n    attribute supplyOn : Boolean;\n  }\n\n  part def User {\n    port controlOut : ControlPort;\n  }\n\n  part def FunctionalUnit {\n    port powerIn : PowerPort;\n    attribute unitName : String;\n  }\n\n  part def VehiclePowerSystem {\n    port controlIn : ControlPort;\n    port powerOut : PowerPort;\n    attribute powerState : PowerState = PowerState::Off;\n    attribute selfDiagnosisActive : Boolean = false;\n    attribute parkingBrakeEngaged : Boolean = false;\n    attribute powerSupplyOn : Boolean = false;\n  }\n\n  part def Vehicle {\n    part powerSystem : VehiclePowerSystem;\n    part propulsionUnit : FunctionalUnit;\n    part infotainmentUnit : FunctionalUnit;\n    part safetyUnit : FunctionalUnit;\n\n    connect powerSystem.powerOut to propulsionUnit.powerIn;\n    connect powerSystem.powerOut to infotainmentUnit.powerIn;\n    connect powerSystem.powerOut to safetyUnit.powerIn;\n  }\n\n  part def VehiclePowerManagementSystem {\n    part user : User;\n    part vehicle : Vehicle;\n\n    connect user.controlOut to vehicle.powerSystem.controlIn;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/37/37_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/37/37.sysml",
+  "response": {
+    "id": "resp_03b185292f99b37400699801a95cbc81909485ec1486a6e455",
+    "created_at": 1771569577.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_03b185292f99b37400699801a993b88190aea740a11946ac8d",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehiclePowerManagement'.\n2. There is an attribute definition: VehicleStartSignal.\n3. There is an attribute definition: VehicleOnSignal.\n4. There is an attribute definition: VehicleOffSignal.\n5. There is a part definition: Vehicle.\n6. There is an action definition: performSelfTest with input parameter vehicle of type Vehicle.\n7. There is a state definition: VehicleStates with input parameter operatingVehicle of type Vehicle.\n8. There is a state instance: vehicleStates of type VehicleStates, with input parameter operatingVehicle of type Vehicle.\n9. The state vehicleStates has an entry action that transitions to state 'off'.\n10. The state vehicleStates has a substate 'off'.\n11. The state vehicleStates accepts VehicleStartSignal and transitions to 'starting'.\n12. The state vehicleStates has a substate 'starting'.\n13. The state vehicleStates accepts VehicleOnSignal and transitions to 'on'.\n14. The state vehicleStates has a substate 'on'.\n15. The state 'on' has an entry action: performSelfTest with vehicle = operatingVehicle.\n16. The state 'on' has a do action: providePower.\n17. The state 'on' has an exit action: applyParkingBrake.\n18. The state vehicleStates accepts VehicleOffSignal and transitions to 'off'.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model\n\n**1. Package named 'VehiclePowerManagement'**\n- **Covered** (Generated model has the same package.)\n\n**2. Attribute definition: VehicleStartSignal**\n- **Not Covered** (No attribute or equivalent signal named VehicleStartSignal.)\n\n**3. Attribute definition: VehicleOnSignal**\n- **Not Covered** (No attribute or equivalent signal named VehicleOnSignal.)\n\n**4. Attribute definition: VehicleOffSignal**\n- **Not Covered** (No attribute or equivalent signal named VehicleOffSignal.)\n\n**5. Part definition: Vehicle**\n- **Covered** (Generated model defines a part 'Vehicle'.)\n\n**6. Action definition: performSelfTest with input parameter vehicle of type Vehicle**\n- **Partially Covered** (There is an attribute 'selfDiagnosisActive' and a state 'PoweredOn', but no explicit action performSelfTest. Not covered as an action.)\n\n**7. State definition: VehicleStates with input parameter operatingVehicle of type Vehicle**\n- **Not Covered** (No explicit state definition with this structure.)\n\n**8. State instance: vehicleStates of type VehicleStates, with input parameter operatingVehicle of type Vehicle**\n- **Not Covered** (No such state instance.)\n\n**9. State vehicleStates has an entry action that transitions to state 'off'**\n- **Not Covered** (No explicit state machine or entry action.)\n\n**10. State vehicleStates has a substate 'off'**\n- **Partially Covered** (There is an enum state 'Off' in PowerState, but not as a substate in a state machine.)\n\n**11. State vehicleStates accepts VehicleStartSignal and transitions to 'starting'**\n- **Not Covered** (No such event or transition.)\n\n**12. State vehicleStates has a substate 'starting'**\n- **Partially Covered** (There is an enum 'StartPhase' in PowerState, but not as a substate.)\n\n**13. State vehicleStates accepts VehicleOnSignal and transitions to 'on'**\n- **Not Covered** (No such event or transition.)\n\n**14. State vehicleStates has a substate 'on'**\n- **Partially Covered** (There is an enum 'PoweredOn' in PowerState, but not as a substate.)\n\n**15. State 'on' has an entry action: performSelfTest with vehicle = operatingVehicle**\n- **Not Covered** (No such entry action.)\n\n**16. State 'on' has a do action: providePower**\n- **Not Covered** (No such do action.)\n\n**17. State 'on' has an exit action: applyParkingBrake**\n- **Not Covered** (No such exit action.)\n\n**18. State vehicleStates accepts VehicleOffSignal and transitions to 'off'**\n- **Not Covered** (No such event or transition.)\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 1 (package)\n- 5 (Vehicle part)\n\n**Partially covered (not counted as fully covered):**\n- 10, 12, 14 (enum states exist, but not as substates in a state machine)\n\n**Total covered:** 2  \n**Total claims:** 18\n\n---\n\n**Score: 2/18**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 645,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 988,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1633
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569586,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehiclePowerManagement'.\n2. There is an attribute definition: VehicleStartSignal.\n3. There is an attribute definition: VehicleOnSignal.\n4. There is an attribute definition: VehicleOffSignal.\n5. There is a part definition: Vehicle.\n6. There is an action definition: performSelfTest with input parameter vehicle of type Vehicle.\n7. There is a state definition: VehicleStates with input parameter operatingVehicle of type Vehicle.\n8. There is a state instance: vehicleStates of type VehicleStates, with input parameter operatingVehicle of type Vehicle.\n9. The state vehicleStates has an entry action that transitions to state 'off'.\n10. The state vehicleStates has a substate 'off'.\n11. The state vehicleStates accepts VehicleStartSignal and transitions to 'starting'.\n12. The state vehicleStates has a substate 'starting'.\n13. The state vehicleStates accepts VehicleOnSignal and transitions to 'on'.\n14. The state vehicleStates has a substate 'on'.\n15. The state 'on' has an entry action: performSelfTest with vehicle = operatingVehicle.\n16. The state 'on' has a do action: providePower.\n17. The state 'on' has an exit action: applyParkingBrake.\n18. The state vehicleStates accepts VehicleOffSignal and transitions to 'off'.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model\n\n**1. Package named 'VehiclePowerManagement'**\n- **Covered** (Generated model has the same package.)\n\n**2. Attribute definition: VehicleStartSignal**\n- **Not Covered** (No attribute or equivalent signal named VehicleStartSignal.)\n\n**3. Attribute definition: VehicleOnSignal**\n- **Not Covered** (No attribute or equivalent signal named VehicleOnSignal.)\n\n**4. Attribute definition: VehicleOffSignal**\n- **Not Covered** (No attribute or equivalent signal named VehicleOffSignal.)\n\n**5. Part definition: Vehicle**\n- **Covered** (Generated model defines a part 'Vehicle'.)\n\n**6. Action definition: performSelfTest with input parameter vehicle of type Vehicle**\n- **Partially Covered** (There is an attribute 'selfDiagnosisActive' and a state 'PoweredOn', but no explicit action performSelfTest. Not covered as an action.)\n\n**7. State definition: VehicleStates with input parameter operatingVehicle of type Vehicle**\n- **Not Covered** (No explicit state definition with this structure.)\n\n**8. State instance: vehicleStates of type VehicleStates, with input parameter operatingVehicle of type Vehicle**\n- **Not Covered** (No such state instance.)\n\n**9. State vehicleStates has an entry action that transitions to state 'off'**\n- **Not Covered** (No explicit state machine or entry action.)\n\n**10. State vehicleStates has a substate 'off'**\n- **Partially Covered** (There is an enum state 'Off' in PowerState, but not as a substate in a state machine.)\n\n**11. State vehicleStates accepts VehicleStartSignal and transitions to 'starting'**\n- **Not Covered** (No such event or transition.)\n\n**12. State vehicleStates has a substate 'starting'**\n- **Partially Covered** (There is an enum 'StartPhase' in PowerState, but not as a substate.)\n\n**13. State vehicleStates accepts VehicleOnSignal and transitions to 'on'**\n- **Not Covered** (No such event or transition.)\n\n**14. State vehicleStates has a substate 'on'**\n- **Partially Covered** (There is an enum 'PoweredOn' in PowerState, but not as a substate.)\n\n**15. State 'on' has an entry action: performSelfTest with vehicle = operatingVehicle**\n- **Not Covered** (No such entry action.)\n\n**16. State 'on' has a do action: providePower**\n- **Not Covered** (No such do action.)\n\n**17. State 'on' has an exit action: applyParkingBrake**\n- **Not Covered** (No such exit action.)\n\n**18. State vehicleStates accepts VehicleOffSignal and transitions to 'off'**\n- **Not Covered** (No such event or transition.)\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:**\n- 1 (package)\n- 5 (Vehicle part)\n\n**Partially covered (not counted as fully covered):**\n- 10, 12, 14 (enum states exist, but not as substates in a state machine)\n\n**Total covered:** 2  \n**Total claims:** 18\n\n---\n\n**Score: 2/18**"
+  }
+}

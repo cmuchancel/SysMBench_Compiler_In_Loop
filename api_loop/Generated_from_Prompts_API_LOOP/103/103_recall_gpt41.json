@@ -1,0 +1,85 @@
+{
+  "model_id": 103,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'Multi-ArchitectureSystemIntegration' {\n\tpart def A1;\n\tpart def B11 {\n\t\tport pe;\n\t}\n\tpart def B12 {\n\t\tport pf;\n\t}\n\tpart def B21 {\n\t\tport pg;\n\t}\n\tpart def B22 {\n\t\tport ph;\n\t}\n\tpart def C1 {\n\t\tport pa;\n\t\tport pb;\n\t}\t\n\tpart def C2 {\n\t\tport pc;\n\t}\n\tpart def C3 {\n\t\tport pd;\n\t}\n\tpart def C4;\n\tpart a11: A1 {\n\tdoc\n\t/*\n\t * Decomposition 1 - Subsystems b11, b12\n\t */\n\t\tpart b11: B11 {\n\t\t\tpart c1: C1;\t\t\t\n\t\t\tpart c2: C2;\t\n\t\t\tconnect c1.pa to c2.pc;\n\t\t\tport :>> pe = c1.pb {\n\t\t\t\tdoc\n\t\t\t\t/*\n\t\t\t\t * This combines the definition of a port with a binding\n\t\t\t\t * connector. (It is the same notation used to bind a\n\t\t\t\t * attribute to a attribute property or a reference to a reference\n\t\t\t\t * property.)\n\t\t\t\t */\n\t\t\t}\n\t\t}\n\t\tpart b12: B12 {\n\t\t\tpart c3: C3;\t\t\t\n\t\t\tpart c4: C4;\t\n\t\t\tport :>> pf = c3.pd;\n\t\t}\n\t\tconnect b11.pe to b12.pf;\n\t}\n\tpart a12: A1 {\n\t\tdoc\n\t\t/*\n\t\t * Decomposition 2 - Assemblies b21, b22\n\t\t */\n\t\tpart b21: B21 {\n\t\t\t/*\n\t\t\t * The c-level entities are already composite parts within\n\t\t\t * a11, so they cannot also be composite parts within a12.\n\t\t\t */ \n\t\t\tref c1: C1 = a11.b11.c1;\t\t\t\n\t\t\tref c3: C3 = a11.b12.c3;\n\t\t\tconnect c1.pb to c3.pd;\n\t\t\tport :>> pg = c1.pa;\n\t\t}\n\t\tpart b22: B22 {\n\t\t\tref c2: C2 = a11.b11.c2;\t\t\t\n\t\t\tref c4: C4 = a11.b12.c4;\t\n\t\t\tport :>> ph = c2.pc;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage ArchitectureModel {\n    private import ScalarValues::*;\n\n    port def SigPort {\n    }\n\n    part def C1 {\n        port pb : SigPort;\n    }\n\n    part def C2 {\n        port pc : SigPort;\n    }\n\n    part def C3 {\n        port pd : SigPort;\n    }\n\n    part def C4 {\n    }\n\n    part def B11 {\n        part c1 : C1;\n        part c2 : C2;\n        port pe : SigPort;\n\n        connect c1.pb to c2.pc;\n        connect pe to c1.pb;\n    }\n\n    part def B12 {\n        part c3 : C3;\n        part c4 : C4;\n        port pf : SigPort;\n\n        connect pf to c3.pd;\n    }\n\n    part def A11 {\n        part b11 : B11;\n        part b12 : B12;\n\n        connect b11.pe to b12.pf;\n    }\n\n    part def B21 {\n        part c1 : C1;\n        part c2 : C2;\n        port p21 : SigPort;\n\n        connect c1.pb to c2.pc;\n        connect p21 to c1.pb;\n    }\n\n    part def B22 {\n        part c3 : C3;\n        part c4 : C4;\n        port p22 : SigPort;\n\n        connect p22 to c3.pd;\n    }\n\n    part def A21 {\n        part b21 : B21;\n        part b22 : B22;\n\n        connect b21.p21 to b22.p22;\n    }\n\n    part def System {\n        part a11 : A11;\n        part a21 : A21;\n    }\n\n    part system : System;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/103/103_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/103/103.sysml",
+  "response": {
+    "id": "resp_0d0befb377d7abe40069980207cab88197ad6a772cb4442b15",
+    "created_at": 1771569671.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0d0befb377d7abe400699802080b9c8197a67accc4221cf436",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### Package and Imports\n1. The model is contained in a package.\n\n#### Part Definitions (Types)\n2. Definition of part A1.\n3. Definition of part B11.\n4. Definition of part B12.\n5. Definition of part B21.\n6. Definition of part B22.\n7. Definition of part C1.\n8. Definition of part C2.\n9. Definition of part C3.\n10. Definition of part C4.\n\n#### Port Definitions (on part types)\n11. B11 has port pe.\n12. B12 has port pf.\n13. B21 has port pg.\n14. B22 has port ph.\n15. C1 has port pa.\n16. C1 has port pb.\n17. C2 has port pc.\n18. C3 has port pd.\n\n#### Part Instances and Structure (within A1 instances)\n##### a11: A1\n19. a11 is a part of type A1.\n20. a11 contains part b11 of type B11.\n21. a11 contains part b12 of type B12.\n\n###### b11: B11 (within a11)\n22. b11 contains part c1 of type C1.\n23. b11 contains part c2 of type C2.\n24. b11 connects c1.pa to c2.pc.\n25. b11 binds port pe to c1.pb (port :>> pe = c1.pb).\n\n###### b12: B12 (within a11)\n26. b12 contains part c3 of type C3.\n27. b12 contains part c4 of type C4.\n28. b12 binds port pf to c3.pd (port :>> pf = c3.pd).\n\n##### a11 connects b11.pe to b12.pf.\n29. a11 connects b11.pe to b12.pf.\n\n##### a12: A1\n30. a12 is a part of type A1.\n31. a12 contains part b21 of type B21.\n32. a12 contains part b22 of type B22.\n\n###### b21: B21 (within a12)\n33. b21 references c1: C1 = a11.b11.c1.\n34. b21 references c3: C3 = a11.b12.c3.\n35. b21 connects c1.pb to c3.pd.\n36. b21 binds port pg to c1.pa (port :>> pg = c1.pa).\n\n###### b22: B22 (within a12)\n37. b22 references c2: C2 = a11.b11.c2.\n38. b22 references c4: C4 = a11.b12.c4.\n39. b22 binds port ph to c2.pc (port :>> ph = c2.pc).\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n#### Package and Imports\n1. **Covered** (Both are in a package; import differences are irrelevant.)\n\n#### Part Definitions (Types)\n2. **A1**: **Not covered** (No part def A1 in generated model.)\n3. **B11**: **Covered** (part def B11 exists.)\n4. **B12**: **Covered** (part def B12 exists.)\n5. **B21**: **Covered** (part def B21 exists.)\n6. **B22**: **Covered** (part def B22 exists.)\n7. **C1**: **Covered** (part def C1 exists.)\n8. **C2**: **Covered** (part def C2 exists.)\n9. **C3**: **Covered** (part def C3 exists.)\n10. **C4**: **Covered** (part def C4 exists.)\n\n#### Port Definitions (on part types)\n11. **B11 has port pe**: **Covered** (B11 has port pe.)\n12. **B12 has port pf**: **Covered** (B12 has port pf.)\n13. **B21 has port pg**: **Not covered** (B21 has port p21 instead of pg.)\n14. **B22 has port ph**: **Not covered** (B22 has port p22 instead of ph.)\n15. **C1 has port pa**: **Not covered** (C1 only has pb.)\n16. **C1 has port pb**: **Covered** (C1 has pb.)\n17. **C2 has port pc**: **Covered** (C2 has pc.)\n18. **C3 has port pd**: **Covered** (C3 has pd.)\n\n#### Part Instances and Structure (within A1 instances)\n##### a11: A1\n19. **a11 is a part of type A1**: **Not covered** (No part a11: A1; instead, a11: A11.)\n20. **a11 contains part b11: B11**: **Covered** (A11 has b11: B11.)\n21. **a11 contains part b12: B12**: **Covered** (A11 has b12: B12.)\n\n###### b11: B11 (within a11)\n22. **b11 contains part c1: C1**: **Covered** (B11 has c1: C1.)\n23. **b11 contains part c2: C2**: **Covered** (B11 has c2: C2.)\n24. **b11 connects c1.pa to c2.pc**: **Not covered** (No connect c1.pa to c2.pc; only c1.pb to c2.pc.)\n25. **b11 binds port pe to c1.pb**: **Covered** (connect pe to c1.pb.)\n\n###### b12: B12 (within a11)\n26. **b12 contains part c3: C3**: **Covered** (B12 has c3: C3.)\n27. **b12 contains part c4: C4**: **Covered** (B12 has c4: C4.)\n28. **b12 binds port pf to c3.pd**: **Covered** (connect pf to c3.pd.)\n\n##### a11 connects b11.pe to b12.pf.\n29. **a11 connects b11.pe to b12.pf**: **Covered** (A11 connects b11.pe to b12.pf.)\n\n##### a12: A1\n30. **a12 is a part of type A1**: **Not covered** (No part a12: A1; instead, a21: A21.)\n31. **a12 contains part b21: B21**: **Covered** (A21 has b21: B21.)\n32. **a12 contains part b22: B22**: **Covered** (A21 has b22: B22.)\n\n###### b21: B21 (within a12)\n33. **b21 references c1: C1 = a11.b11.c1**: **Not covered** (No reference; B21 has its own c1.)\n34. **b21 references c3: C3 = a11.b12.c3**: **Not covered** (No reference; B21 has its own c3.)\n35. **b21 connects c1.pb to c3.pd**: **Not covered** (B21 connects c1.pb to c2.pc.)\n36. **b21 binds port pg to c1.pa**: **Not covered** (No port pg, no c1.pa.)\n\n###### b22: B22 (within a12)\n37. **b22 references c2: C2 = a11.b11.c2**: **Not covered** (No reference; B22 has its own c2.)\n38. **b22 references c4: C4 = a11.b12.c4**: **Not covered** (No reference; B22 has its own c4.)\n39. **b22 binds port ph to c2.pc**: **Not covered** (No port ph, no c2.pc.)\n\n---\n\n### 3. Summarize the results\n\nLet's count the number of covered claims:\n\n**Covered claims:**\n1 (package)\n3 (B11)\n4 (B12)\n5 (B21)\n6 (B22)\n7 (C1)\n8 (C2)\n9 (C3)\n10 (C4)\n11 (B11.pe)\n12 (B12.pf)\n16 (C1.pb)\n17 (C2.pc)\n18 (C3.pd)\n20 (a11.b11)\n21 (a11.b12)\n22 (b11.c1)\n23 (b11.c2)\n25 (b11.pe = c1.pb)\n26 (b12.c3)\n27 (b12.c4)\n28 (b12.pf = c3.pd)\n29 (a11 connects b11.pe to b12.pf)\n31 (a12.b21)\n32 (a12.b22)\n\nTotal covered: **24**\n\n**Total claims:** 39\n\n---\n\n## Final Score\n\n**Score: 24/39**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 1012,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1922,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2934
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569701,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested.\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### Package and Imports\n1. The model is contained in a package.\n\n#### Part Definitions (Types)\n2. Definition of part A1.\n3. Definition of part B11.\n4. Definition of part B12.\n5. Definition of part B21.\n6. Definition of part B22.\n7. Definition of part C1.\n8. Definition of part C2.\n9. Definition of part C3.\n10. Definition of part C4.\n\n#### Port Definitions (on part types)\n11. B11 has port pe.\n12. B12 has port pf.\n13. B21 has port pg.\n14. B22 has port ph.\n15. C1 has port pa.\n16. C1 has port pb.\n17. C2 has port pc.\n18. C3 has port pd.\n\n#### Part Instances and Structure (within A1 instances)\n##### a11: A1\n19. a11 is a part of type A1.\n20. a11 contains part b11 of type B11.\n21. a11 contains part b12 of type B12.\n\n###### b11: B11 (within a11)\n22. b11 contains part c1 of type C1.\n23. b11 contains part c2 of type C2.\n24. b11 connects c1.pa to c2.pc.\n25. b11 binds port pe to c1.pb (port :>> pe = c1.pb).\n\n###### b12: B12 (within a11)\n26. b12 contains part c3 of type C3.\n27. b12 contains part c4 of type C4.\n28. b12 binds port pf to c3.pd (port :>> pf = c3.pd).\n\n##### a11 connects b11.pe to b12.pf.\n29. a11 connects b11.pe to b12.pf.\n\n##### a12: A1\n30. a12 is a part of type A1.\n31. a12 contains part b21 of type B21.\n32. a12 contains part b22 of type B22.\n\n###### b21: B21 (within a12)\n33. b21 references c1: C1 = a11.b11.c1.\n34. b21 references c3: C3 = a11.b12.c3.\n35. b21 connects c1.pb to c3.pd.\n36. b21 binds port pg to c1.pa (port :>> pg = c1.pa).\n\n###### b22: B22 (within a12)\n37. b22 references c2: C2 = a11.b11.c2.\n38. b22 references c4: C4 = a11.b12.c4.\n39. b22 binds port ph to c2.pc (port :>> ph = c2.pc).\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\n#### Package and Imports\n1. **Covered** (Both are in a package; import differences are irrelevant.)\n\n#### Part Definitions (Types)\n2. **A1**: **Not covered** (No part def A1 in generated model.)\n3. **B11**: **Covered** (part def B11 exists.)\n4. **B12**: **Covered** (part def B12 exists.)\n5. **B21**: **Covered** (part def B21 exists.)\n6. **B22**: **Covered** (part def B22 exists.)\n7. **C1**: **Covered** (part def C1 exists.)\n8. **C2**: **Covered** (part def C2 exists.)\n9. **C3**: **Covered** (part def C3 exists.)\n10. **C4**: **Covered** (part def C4 exists.)\n\n#### Port Definitions (on part types)\n11. **B11 has port pe**: **Covered** (B11 has port pe.)\n12. **B12 has port pf**: **Covered** (B12 has port pf.)\n13. **B21 has port pg**: **Not covered** (B21 has port p21 instead of pg.)\n14. **B22 has port ph**: **Not covered** (B22 has port p22 instead of ph.)\n15. **C1 has port pa**: **Not covered** (C1 only has pb.)\n16. **C1 has port pb**: **Covered** (C1 has pb.)\n17. **C2 has port pc**: **Covered** (C2 has pc.)\n18. **C3 has port pd**: **Covered** (C3 has pd.)\n\n#### Part Instances and Structure (within A1 instances)\n##### a11: A1\n19. **a11 is a part of type A1**: **Not covered** (No part a11: A1; instead, a11: A11.)\n20. **a11 contains part b11: B11**: **Covered** (A11 has b11: B11.)\n21. **a11 contains part b12: B12**: **Covered** (A11 has b12: B12.)\n\n###### b11: B11 (within a11)\n22. **b11 contains part c1: C1**: **Covered** (B11 has c1: C1.)\n23. **b11 contains part c2: C2**: **Covered** (B11 has c2: C2.)\n24. **b11 connects c1.pa to c2.pc**: **Not covered** (No connect c1.pa to c2.pc; only c1.pb to c2.pc.)\n25. **b11 binds port pe to c1.pb**: **Covered** (connect pe to c1.pb.)\n\n###### b12: B12 (within a11)\n26. **b12 contains part c3: C3**: **Covered** (B12 has c3: C3.)\n27. **b12 contains part c4: C4**: **Covered** (B12 has c4: C4.)\n28. **b12 binds port pf to c3.pd**: **Covered** (connect pf to c3.pd.)\n\n##### a11 connects b11.pe to b12.pf.\n29. **a11 connects b11.pe to b12.pf**: **Covered** (A11 connects b11.pe to b12.pf.)\n\n##### a12: A1\n30. **a12 is a part of type A1**: **Not covered** (No part a12: A1; instead, a21: A21.)\n31. **a12 contains part b21: B21**: **Covered** (A21 has b21: B21.)\n32. **a12 contains part b22: B22**: **Covered** (A21 has b22: B22.)\n\n###### b21: B21 (within a12)\n33. **b21 references c1: C1 = a11.b11.c1**: **Not covered** (No reference; B21 has its own c1.)\n34. **b21 references c3: C3 = a11.b12.c3**: **Not covered** (No reference; B21 has its own c3.)\n35. **b21 connects c1.pb to c3.pd**: **Not covered** (B21 connects c1.pb to c2.pc.)\n36. **b21 binds port pg to c1.pa**: **Not covered** (No port pg, no c1.pa.)\n\n###### b22: B22 (within a12)\n37. **b22 references c2: C2 = a11.b11.c2**: **Not covered** (No reference; B22 has its own c2.)\n38. **b22 references c4: C4 = a11.b12.c4**: **Not covered** (No reference; B22 has its own c4.)\n39. **b22 binds port ph to c2.pc**: **Not covered** (No port ph, no c2.pc.)\n\n---\n\n### 3. Summarize the results\n\nLet's count the number of covered claims:\n\n**Covered claims:**\n1 (package)\n3 (B11)\n4 (B12)\n5 (B21)\n6 (B22)\n7 (C1)\n8 (C2)\n9 (C3)\n10 (C4)\n11 (B11.pe)\n12 (B12.pf)\n16 (C1.pb)\n17 (C2.pc)\n18 (C3.pd)\n20 (a11.b11)\n21 (a11.b12)\n22 (b11.c1)\n23 (b11.c2)\n25 (b11.pe = c1.pb)\n26 (b12.c3)\n27 (b12.c4)\n28 (b12.pf = c3.pd)\n29 (a11 connects b11.pe to b12.pf)\n31 (a12.b21)\n32 (a12.b22)\n\nTotal covered: **24**\n\n**Total claims:** 39\n\n---\n\n## Final Score\n\n**Score: 24/39**"
+  }
+}

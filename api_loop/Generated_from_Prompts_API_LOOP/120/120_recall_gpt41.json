@@ -1,0 +1,85 @@
+{
+  "model_id": 120,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleMassProperty' {\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\tprivate import NumericalFunctions::*;\n\tpackage VehicleDesignModel {\n\t\tpart def Vehicle {\n\t\t\tmass : MassValue;\n\t\t}\n\t\tpart vehicle {\n\t\t\t:>> mass : MassValue = sum((\n\t\t\t\tvehicle.engine.mass, \n\t\t\t\tvehicle.transmission.mass, \n\t\t\t\tvehicle.frontAxleAssembly.mass, \n\t\t\t\tvehicle.rearAxleAssembly.mass\n\t\t\t));\n\t\t\tpart engine {\n\t\t\t\tmass : MassValue;\n\t\t\t}\n\t\t\tpart transmission {\n\t\t\t    mass : MassValue;\n\t\t\t}\n\t\t\tpart frontAxleAssembly {\n\t\t\t\tmass : MassValue;\n\t\t\t}\n\t\t\tpart rearAxleAssembly {\n\t\t\t\tmass : MassValue;\n\t\t\t}\n\t\t}\n\t}\n\tpackage VehicleAnalysisModel {\n\t\tprivate import VehicleDesignModel::Vehicle;\n\t\trequirement def MassAnalysisObjective {\n\t\t\tsubject mass : MassValue;\n\t\t}\n\t\tanalysis def MassAnalysisCase {\n\t\t\tsubject vehicle : Vehicle;\n\t\t\tobjective : MassAnalysisObjective;\n\t\t\tvehicle.mass\n\t\t}\n\t\tanalysis def AnalysisPlan {\n\t\t\tsubject vehicle : Vehicle;\t\t\t\n\t\t\tobjective {\n\t\t\t}\n\t\t\tanalysis massAnalysisCase : MassAnalysisCase {\n\t\t\t \treturn mass; \n\t\t\t }\n\t\t}\n\t\tpart massAnalysisContext {\n\t\t\tanalysis analysisPlan : AnalysisPlan {\n\t\t\t\tsubject vehicle = VehicleDesignModel::vehicle;\n\t\t\t}\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage VehicleQualityAnalysis {\n  private import ScalarValues::*;\n\n  enum def QualityStatus {\n    enum GOOD;\n    enum WARNING;\n    enum FAILED;\n  }\n\n  item def QualityData {\n    attribute defectCount : Integer;\n    attribute inspectionScore : Real;\n    attribute status : QualityStatus;\n  }\n\n  part def Engine {\n    attribute mass : Real;\n    attribute quality : QualityData;\n  }\n\n  part def Transmission {\n    attribute mass : Real;\n    attribute quality : QualityData;\n  }\n\n  part def FrontAxleAssembly {\n    attribute mass : Real;\n    attribute quality : QualityData;\n  }\n\n  part def RearAxleAssembly {\n    attribute mass : Real;\n    attribute quality : QualityData;\n  }\n\n  part def Vehicle {\n    part engine : Engine;\n    part transmission : Transmission;\n    part frontAxle : FrontAxleAssembly;\n    part rearAxle : RearAxleAssembly;\n    attribute totalMass : Real = engine.mass + transmission.mass + frontAxle.mass + rearAxle.mass;\n  }\n\n  part def QualityAnalysisRequirement {\n    attribute objectiveText : String;\n    attribute threshold : Real;\n    attribute status : QualityStatus;\n  }\n\n  part def AnalysisUseCase {\n    attribute useCaseName : String;\n    attribute goalText : String;\n  }\n\n  part def AnalysisTask {\n    attribute taskName : String;\n    attribute description : String;\n    attribute owner : String;\n  }\n\n  part def AnalysisPlan {\n    attribute planName : String;\n    part task : AnalysisTask;\n  }\n\n  part def QualityAnalysisSystem {\n    part vehicle : Vehicle;\n    part qaRequirement : QualityAnalysisRequirement;\n    part analysisUseCase : AnalysisUseCase;\n    part analysisTask : AnalysisTask;\n    part analysisPlan : AnalysisPlan;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/120/120_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/120/120.sysml",
+  "response": {
+    "id": "resp_09941e9eeabda159006997fe6a4efc8191ba46564e4466dce1",
+    "created_at": 1771568746.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_09941e9eeabda159006997fe6b5c588191b754c477963b9b29",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### Imports and Packages\n1. The model imports ISQ, SI, and NumericalFunctions packages.\n2. There is a package named `VehicleDesignModel`.\n3. There is a package named `VehicleAnalysisModel`.\n\n#### VehicleDesignModel\n4. There is a part definition `Vehicle` with an attribute `mass` of type `MassValue`.\n5. There is a part instance `vehicle` of type `Vehicle`.\n6. The `vehicle` part has an overridden `mass` attribute, computed as the sum of the masses of its subparts: engine, transmission, frontAxleAssembly, rearAxleAssembly.\n7. The `vehicle` part contains a part `engine` with attribute `mass: MassValue`.\n8. The `vehicle` part contains a part `transmission` with attribute `mass: MassValue`.\n9. The `vehicle` part contains a part `frontAxleAssembly` with attribute `mass: MassValue`.\n10. The `vehicle` part contains a part `rearAxleAssembly` with attribute `mass: MassValue`.\n\n#### VehicleAnalysisModel\n11. The model imports `VehicleDesignModel::Vehicle`.\n12. There is a requirement definition `MassAnalysisObjective` with subject `mass: MassValue`.\n13. There is an analysis definition `MassAnalysisCase` with subject `vehicle: Vehicle`, objective `MassAnalysisObjective`, and uses `vehicle.mass`.\n14. There is an analysis definition `AnalysisPlan` with subject `vehicle: Vehicle`, an (empty) objective, and an analysis `massAnalysisCase: MassAnalysisCase` that returns `mass`.\n15. There is a part `massAnalysisContext` containing an analysis `analysisPlan: AnalysisPlan` with subject `vehicle = VehicleDesignModel::vehicle`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n#### Imports and Packages\n1. **NOT COVERED**: ISQ, SI, NumericalFunctions are not imported.\n2. **NOT COVERED**: No `VehicleDesignModel` package.\n3. **NOT COVERED**: No `VehicleAnalysisModel` package.\n\n#### VehicleDesignModel\n4. **COVERED**: There is a `Vehicle` part definition with a `mass` attribute (called `totalMass: Real` in the generated model). The type is `Real` instead of `MassValue`, but this is a naming/typing difference and can be considered equivalent for recall.\n5. **COVERED**: There is a `vehicle` part instance (as part of `QualityAnalysisSystem`).\n6. **COVERED**: The `totalMass` attribute is computed as the sum of the masses of engine, transmission, frontAxle, and rearAxle (matches the reference model's formula).\n7. **COVERED**: The `engine` part exists with a `mass` attribute.\n8. **COVERED**: The `transmission` part exists with a `mass` attribute.\n9. **COVERED**: The `frontAxleAssembly` part exists as `FrontAxleAssembly` with a `mass` attribute (named `frontAxle` in the vehicle, but the structure is equivalent).\n10. **COVERED**: The `rearAxleAssembly` part exists as `RearAxleAssembly` with a `mass` attribute (named `rearAxle` in the vehicle, but the structure is equivalent).\n\n#### VehicleAnalysisModel\n11. **NOT COVERED**: No import of `VehicleDesignModel::Vehicle`.\n12. **NOT COVERED**: No requirement definition for `MassAnalysisObjective` with subject `mass: MassValue`.\n13. **NOT COVERED**: No analysis definition for `MassAnalysisCase` with subject `vehicle: Vehicle`, objective, and use of `vehicle.mass`.\n14. **NOT COVERED**: No analysis definition for `AnalysisPlan` with subject `vehicle: Vehicle`, objective, and analysis `massAnalysisCase`.\n15. **NOT COVERED**: No part `massAnalysisContext` containing an analysis plan with subject `vehicle = VehicleDesignModel::vehicle`.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:** 4, 5, 6, 7, 8, 9, 10  \n**Total claims:** 15\n\n**Score:** 7/15\n\n---\n\n## Final Output\n\n**Score: 7/15**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 855,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 937,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1792
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568758,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n#### Imports and Packages\n1. The model imports ISQ, SI, and NumericalFunctions packages.\n2. There is a package named `VehicleDesignModel`.\n3. There is a package named `VehicleAnalysisModel`.\n\n#### VehicleDesignModel\n4. There is a part definition `Vehicle` with an attribute `mass` of type `MassValue`.\n5. There is a part instance `vehicle` of type `Vehicle`.\n6. The `vehicle` part has an overridden `mass` attribute, computed as the sum of the masses of its subparts: engine, transmission, frontAxleAssembly, rearAxleAssembly.\n7. The `vehicle` part contains a part `engine` with attribute `mass: MassValue`.\n8. The `vehicle` part contains a part `transmission` with attribute `mass: MassValue`.\n9. The `vehicle` part contains a part `frontAxleAssembly` with attribute `mass: MassValue`.\n10. The `vehicle` part contains a part `rearAxleAssembly` with attribute `mass: MassValue`.\n\n#### VehicleAnalysisModel\n11. The model imports `VehicleDesignModel::Vehicle`.\n12. There is a requirement definition `MassAnalysisObjective` with subject `mass: MassValue`.\n13. There is an analysis definition `MassAnalysisCase` with subject `vehicle: Vehicle`, objective `MassAnalysisObjective`, and uses `vehicle.mass`.\n14. There is an analysis definition `AnalysisPlan` with subject `vehicle: Vehicle`, an (empty) objective, and an analysis `massAnalysisCase: MassAnalysisCase` that returns `mass`.\n15. There is a part `massAnalysisContext` containing an analysis `analysisPlan: AnalysisPlan` with subject `vehicle = VehicleDesignModel::vehicle`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n#### Imports and Packages\n1. **NOT COVERED**: ISQ, SI, NumericalFunctions are not imported.\n2. **NOT COVERED**: No `VehicleDesignModel` package.\n3. **NOT COVERED**: No `VehicleAnalysisModel` package.\n\n#### VehicleDesignModel\n4. **COVERED**: There is a `Vehicle` part definition with a `mass` attribute (called `totalMass: Real` in the generated model). The type is `Real` instead of `MassValue`, but this is a naming/typing difference and can be considered equivalent for recall.\n5. **COVERED**: There is a `vehicle` part instance (as part of `QualityAnalysisSystem`).\n6. **COVERED**: The `totalMass` attribute is computed as the sum of the masses of engine, transmission, frontAxle, and rearAxle (matches the reference model's formula).\n7. **COVERED**: The `engine` part exists with a `mass` attribute.\n8. **COVERED**: The `transmission` part exists with a `mass` attribute.\n9. **COVERED**: The `frontAxleAssembly` part exists as `FrontAxleAssembly` with a `mass` attribute (named `frontAxle` in the vehicle, but the structure is equivalent).\n10. **COVERED**: The `rearAxleAssembly` part exists as `RearAxleAssembly` with a `mass` attribute (named `rearAxle` in the vehicle, but the structure is equivalent).\n\n#### VehicleAnalysisModel\n11. **NOT COVERED**: No import of `VehicleDesignModel::Vehicle`.\n12. **NOT COVERED**: No requirement definition for `MassAnalysisObjective` with subject `mass: MassValue`.\n13. **NOT COVERED**: No analysis definition for `MassAnalysisCase` with subject `vehicle: Vehicle`, objective, and use of `vehicle.mass`.\n14. **NOT COVERED**: No analysis definition for `AnalysisPlan` with subject `vehicle: Vehicle`, objective, and analysis `massAnalysisCase`.\n15. **NOT COVERED**: No part `massAnalysisContext` containing an analysis plan with subject `vehicle = VehicleDesignModel::vehicle`.\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:** 4, 5, 6, 7, 8, 9, 10  \n**Total claims:** 15\n\n**Score:** 7/15\n\n---\n\n## Final Output\n\n**Score: 7/15**"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "model_id": 32,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'CameraMessagingSystem' {\n\titem def Scene;\n\titem def Image;\n\titem def Picture;\n\tattribute def Show {\n\t\titem picture : Picture;\n\t}\n\taction def Focus { in item scene : Scene; out item image : Image; }\n\taction def Shoot { in item image : Image; out item picture : Picture; }\n\taction def TakePicture;\n\taction screen;\n\taction takePicture : TakePicture {\n\t\taction trigger accept scene : Scene;\n\t\tthen action focus : Focus {\n\t\t\tin item scene = trigger.scene;\n\t\t\tout item image;\n\t\t}\n\t\tflow from focus.image to shoot.image;\n\t\tthen action shoot : Shoot {\n\t\t\tin item image; \n\t\t\tout item picture;\n\t\t}\n\t\tthen send Show(shoot.picture) to screen;\n\t}\n}\n\nGenerated Model:\npackage CameraSystemModel {\n  private import ScalarValues::*;\n\n  item def Scene;\n  item def Image;\n  item def Photo;\n\n  port def ScenePort;\n  port def ImagePort;\n  port def PhotoPort;\n\n  part def User {\n    port sceneOut : ScenePort;\n    port viewIn : PhotoPort;\n  }\n\n  part def Focuser {\n    port sceneIn : ScenePort;\n    port imageOut : ImagePort;\n  }\n\n  part def Capturer {\n    port imageIn : ImagePort;\n    port photoOut : PhotoPort;\n  }\n\n  part def Display {\n    port photoIn : PhotoPort;\n    port photoOut : PhotoPort;\n  }\n\n  part def CameraSystem {\n    port sceneIn : ScenePort;\n    port photoOut : PhotoPort;\n    part focuser : Focuser;\n    part capturer : Capturer;\n    part display : Display;\n\n    connect sceneIn to focuser.sceneIn;\n    connect focuser.imageOut to capturer.imageIn;\n    connect capturer.photoOut to display.photoIn;\n    connect display.photoOut to photoOut;\n  }\n\n  part def ShootingExperience {\n    part user : User;\n    part system : CameraSystem;\n\n    connect user.sceneOut to system.sceneIn;\n    connect system.photoOut to user.viewIn;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/32/32_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/32/32.sysml",
+  "response": {
+    "id": "resp_0d3ab8cceaa4cb5d006998011e981081a38431ab1b96499dab",
+    "created_at": 1771569438.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0d3ab8cceaa4cb5d006998011edd3c81a39687e9443f3374e5",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's follow the steps as requested:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**A. Package and Imports**\n1. Definition of package `CameraSystemModel`.\n2. Import of `ScalarValues::*`.\n\n**B. Item Definitions**\n3. Definition of item `Scene`.\n4. Definition of item `Image`.\n5. Definition of item `Photo`.\n\n**C. Port Definitions**\n6. Definition of port `ScenePort`.\n7. Definition of port `ImagePort`.\n8. Definition of port `PhotoPort`.\n\n**D. Part Definitions and Structure**\n9. Definition of part `User`.\n10. `User` has port `sceneOut` of type `ScenePort`.\n11. `User` has port `viewIn` of type `PhotoPort`.\n\n12. Definition of part `Focuser`.\n13. `Focuser` has port `sceneIn` of type `ScenePort`.\n14. `Focuser` has port `imageOut` of type `ImagePort`.\n\n15. Definition of part `Capturer`.\n16. `Capturer` has port `imageIn` of type `ImagePort`.\n17. `Capturer` has port `photoOut` of type `PhotoPort`.\n\n18. Definition of part `Display`.\n19. `Display` has port `photoIn` of type `PhotoPort`.\n20. `Display` has port `photoOut` of type `PhotoPort`.\n\n21. Definition of part `CameraSystem`.\n22. `CameraSystem` has port `sceneIn` of type `ScenePort`.\n23. `CameraSystem` has port `photoOut` of type `PhotoPort`.\n24. `CameraSystem` has part `focuser` of type `Focuser`.\n25. `CameraSystem` has part `capturer` of type `Capturer`.\n26. `CameraSystem` has part `display` of type `Display`.\n27. `CameraSystem` connects `sceneIn` to `focuser.sceneIn`.\n28. `CameraSystem` connects `focuser.imageOut` to `capturer.imageIn`.\n29. `CameraSystem` connects `capturer.photoOut` to `display.photoIn`.\n30. `CameraSystem` connects `display.photoOut` to `photoOut`.\n\n31. Definition of part `ShootingExperience`.\n32. `ShootingExperience` has part `user` of type `User`.\n33. `ShootingExperience` has part `system` of type `CameraSystem`.\n34. `ShootingExperience` connects `user.sceneOut` to `system.sceneIn`.\n35. `ShootingExperience` connects `system.photoOut` to `user.viewIn`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n#### A. Package and Imports\n1. **Package definition**: Not supported (different package name, but this is typically ignored).\n2. **Import**: Not supported (no imports in reference).\n\n#### B. Item Definitions\n3. **item def Scene**: Supported (reference has `item def Scene`).\n4. **item def Image**: Supported (reference has `item def Image`).\n5. **item def Photo**: Not supported (reference has `item def Picture`; if we ignore naming, this could be considered supported, but the instructions say to ignore naming only if structure and semantics match. Let's treat Photo and Picture as equivalent for this context, so **Supported**).\n\n#### C. Port Definitions\n6. **port def ScenePort**: Not supported (no ports in reference).\n7. **port def ImagePort**: Not supported.\n8. **port def PhotoPort**: Not supported.\n\n#### D. Part Definitions and Structure\n\n**User**\n9. **part def User**: Not supported (no such part in reference).\n10. **User.sceneOut : ScenePort**: Not supported.\n11. **User.viewIn : PhotoPort**: Not supported.\n\n**Focuser**\n12. **part def Focuser**: Not supported.\n13. **Focuser.sceneIn : ScenePort**: Not supported.\n14. **Focuser.imageOut : ImagePort**: Not supported.\n\n**Capturer**\n15. **part def Capturer**: Not supported.\n16. **Capturer.imageIn : ImagePort**: Not supported.\n17. **Capturer.photoOut : PhotoPort**: Not supported.\n\n**Display**\n18. **part def Display**: Not supported.\n19. **Display.photoIn : PhotoPort**: Not supported.\n20. **Display.photoOut : PhotoPort**: Not supported.\n\n**CameraSystem**\n21. **part def CameraSystem**: Not supported.\n22. **CameraSystem.sceneIn : ScenePort**: Not supported.\n23. **CameraSystem.photoOut : PhotoPort**: Not supported.\n24. **CameraSystem.focuser : Focuser**: Not supported.\n25. **CameraSystem.capturer : Capturer**: Not supported.\n26. **CameraSystem.display : Display**: Not supported.\n27. **CameraSystem connects sceneIn to focuser.sceneIn**: Not supported.\n28. **CameraSystem connects focuser.imageOut to capturer.imageIn**: Not supported.\n29. **CameraSystem connects capturer.photoOut to display.photoIn**: Not supported.\n30. **CameraSystem connects display.photoOut to photoOut**: Not supported.\n\n**ShootingExperience**\n31. **part def ShootingExperience**: Not supported.\n32. **ShootingExperience.user : User**: Not supported.\n33. **ShootingExperience.system : CameraSystem**: Not supported.\n34. **ShootingExperience connects user.sceneOut to system.sceneIn**: Not supported.\n35. **ShootingExperience connects system.photoOut to user.viewIn**: Not supported.\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 3. item def Scene\n- 4. item def Image\n- 5. item def Photo (treated as equivalent to Picture)\n\n**Total supported claims:** 3\n\n**Total claims:** 35\n\n---\n\n**Score: 3/35**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 611,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1280,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1891
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569448,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's follow the steps as requested:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**A. Package and Imports**\n1. Definition of package `CameraSystemModel`.\n2. Import of `ScalarValues::*`.\n\n**B. Item Definitions**\n3. Definition of item `Scene`.\n4. Definition of item `Image`.\n5. Definition of item `Photo`.\n\n**C. Port Definitions**\n6. Definition of port `ScenePort`.\n7. Definition of port `ImagePort`.\n8. Definition of port `PhotoPort`.\n\n**D. Part Definitions and Structure**\n9. Definition of part `User`.\n10. `User` has port `sceneOut` of type `ScenePort`.\n11. `User` has port `viewIn` of type `PhotoPort`.\n\n12. Definition of part `Focuser`.\n13. `Focuser` has port `sceneIn` of type `ScenePort`.\n14. `Focuser` has port `imageOut` of type `ImagePort`.\n\n15. Definition of part `Capturer`.\n16. `Capturer` has port `imageIn` of type `ImagePort`.\n17. `Capturer` has port `photoOut` of type `PhotoPort`.\n\n18. Definition of part `Display`.\n19. `Display` has port `photoIn` of type `PhotoPort`.\n20. `Display` has port `photoOut` of type `PhotoPort`.\n\n21. Definition of part `CameraSystem`.\n22. `CameraSystem` has port `sceneIn` of type `ScenePort`.\n23. `CameraSystem` has port `photoOut` of type `PhotoPort`.\n24. `CameraSystem` has part `focuser` of type `Focuser`.\n25. `CameraSystem` has part `capturer` of type `Capturer`.\n26. `CameraSystem` has part `display` of type `Display`.\n27. `CameraSystem` connects `sceneIn` to `focuser.sceneIn`.\n28. `CameraSystem` connects `focuser.imageOut` to `capturer.imageIn`.\n29. `CameraSystem` connects `capturer.photoOut` to `display.photoIn`.\n30. `CameraSystem` connects `display.photoOut` to `photoOut`.\n\n31. Definition of part `ShootingExperience`.\n32. `ShootingExperience` has part `user` of type `User`.\n33. `ShootingExperience` has part `system` of type `CameraSystem`.\n34. `ShootingExperience` connects `user.sceneOut` to `system.sceneIn`.\n35. `ShootingExperience` connects `system.photoOut` to `user.viewIn`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n#### A. Package and Imports\n1. **Package definition**: Not supported (different package name, but this is typically ignored).\n2. **Import**: Not supported (no imports in reference).\n\n#### B. Item Definitions\n3. **item def Scene**: Supported (reference has `item def Scene`).\n4. **item def Image**: Supported (reference has `item def Image`).\n5. **item def Photo**: Not supported (reference has `item def Picture`; if we ignore naming, this could be considered supported, but the instructions say to ignore naming only if structure and semantics match. Let's treat Photo and Picture as equivalent for this context, so **Supported**).\n\n#### C. Port Definitions\n6. **port def ScenePort**: Not supported (no ports in reference).\n7. **port def ImagePort**: Not supported.\n8. **port def PhotoPort**: Not supported.\n\n#### D. Part Definitions and Structure\n\n**User**\n9. **part def User**: Not supported (no such part in reference).\n10. **User.sceneOut : ScenePort**: Not supported.\n11. **User.viewIn : PhotoPort**: Not supported.\n\n**Focuser**\n12. **part def Focuser**: Not supported.\n13. **Focuser.sceneIn : ScenePort**: Not supported.\n14. **Focuser.imageOut : ImagePort**: Not supported.\n\n**Capturer**\n15. **part def Capturer**: Not supported.\n16. **Capturer.imageIn : ImagePort**: Not supported.\n17. **Capturer.photoOut : PhotoPort**: Not supported.\n\n**Display**\n18. **part def Display**: Not supported.\n19. **Display.photoIn : PhotoPort**: Not supported.\n20. **Display.photoOut : PhotoPort**: Not supported.\n\n**CameraSystem**\n21. **part def CameraSystem**: Not supported.\n22. **CameraSystem.sceneIn : ScenePort**: Not supported.\n23. **CameraSystem.photoOut : PhotoPort**: Not supported.\n24. **CameraSystem.focuser : Focuser**: Not supported.\n25. **CameraSystem.capturer : Capturer**: Not supported.\n26. **CameraSystem.display : Display**: Not supported.\n27. **CameraSystem connects sceneIn to focuser.sceneIn**: Not supported.\n28. **CameraSystem connects focuser.imageOut to capturer.imageIn**: Not supported.\n29. **CameraSystem connects capturer.photoOut to display.photoIn**: Not supported.\n30. **CameraSystem connects display.photoOut to photoOut**: Not supported.\n\n**ShootingExperience**\n31. **part def ShootingExperience**: Not supported.\n32. **ShootingExperience.user : User**: Not supported.\n33. **ShootingExperience.system : CameraSystem**: Not supported.\n34. **ShootingExperience connects user.sceneOut to system.sceneIn**: Not supported.\n35. **ShootingExperience connects system.photoOut to user.viewIn**: Not supported.\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 3. item def Scene\n- 4. item def Image\n- 5. item def Photo (treated as equivalent to Picture)\n\n**Total supported claims:** 3\n\n**Total claims:** 35\n\n---\n\n**Score: 3/35**"
+  }
+}

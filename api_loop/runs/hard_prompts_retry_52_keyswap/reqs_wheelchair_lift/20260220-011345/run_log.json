@@ -1,0 +1,21 @@
+[
+  {
+    "iteration": 1,
+    "iteration_start": "2026-02-20T06:13:46.423023Z",
+    "iteration_end": "2026-02-20T06:14:28.102880Z",
+    "iteration_duration_seconds": 41.68058225000277,
+    "sysml_path": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/api_loop/runs/hard_prompts_retry_52_keyswap/reqs_wheelchair_lift/20260220-011345/iteration_01.sysml",
+    "prompt_path": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/api_loop/runs/hard_prompts_retry_52_keyswap/reqs_wheelchair_lift/20260220-011345/iteration_01_prompt.txt",
+    "response_path": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/api_loop/runs/hard_prompts_retry_52_keyswap/reqs_wheelchair_lift/20260220-011345/iteration_01_response.json",
+    "success": true,
+    "compiler_stdout": "",
+    "compiler_stderr": "1 out of 1 files formatted.",
+    "return_code": 0,
+    "tokens_used_this_iter": {
+      "input_tokens": 1765,
+      "output_tokens": 2720,
+      "total_tokens": 4485
+    },
+    "tokens_used_total": 4485
+  }
+]

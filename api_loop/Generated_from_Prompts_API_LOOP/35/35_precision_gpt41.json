@@ -1,0 +1,85 @@
+{
+  "model_id": 35,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleStateManagement' {\n\tattribute def VehicleStartSignal;\n\tattribute def VehicleOnSignal;\n\tattribute def VehicleOffSignal;\n\tstate def VehicleStates {\n\t\tentry; then off;\n\t\tstate off;\n\t\ttransition off_to_starting\n\t\t\tfirst off\n\t\t\taccept VehicleStartSignal \n\t\t\tthen starting;\n\t\tstate starting;\n\t\ttransition starting_to_on\n\t\t\tfirst starting\n\t\t\taccept VehicleOnSignal\n\t\t\tthen on;\n\t\tstate on;\n\t\ttransition on_to_off\n\t\t\tfirst on\n\t\t\taccept VehicleOffSignal\n\t\t\tthen off;\n\t}\n}\n\nGenerated Model:\npackage VehicleStateManagement {\n  private import ScalarValues::*;\n\n  enum def VehicleState {\n    enum off;\n    enum starting;\n    enum on;\n  }\n\n  part def VehicleController {\n    attribute currentState : VehicleState = VehicleState::off;\n    attribute vehicleStartSignal : Boolean = false;\n    attribute vehiclePowerOnSignal : Boolean = false;\n    attribute vehicleShutdownSignal : Boolean = false;\n  }\n\n  part vehicle : VehicleController;\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/35/35_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/35/35.sysml",
+  "response": {
+    "id": "resp_03ba5528617d7f74006998017433a08191841bb074a79e558d",
+    "created_at": 1771569524.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_03ba5528617d7f740069980174e0fc8191881e2526efc0faf4",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the generated system model.\n\n**Atomic Claims:**\n\n1. There is a package named VehicleStateManagement.\n2. There is a private import of ScalarValues::*.\n3. There is an enum type VehicleState.\n4. VehicleState has an enum value off.\n5. VehicleState has an enum value starting.\n6. VehicleState has an enum value on.\n7. There is a part definition VehicleController.\n8. VehicleController has an attribute currentState of type VehicleState, default value VehicleState::off.\n9. VehicleController has an attribute vehicleStartSignal of type Boolean, default value false.\n10. VehicleController has an attribute vehiclePowerOnSignal of type Boolean, default value false.\n11. VehicleController has an attribute vehicleShutdownSignal of type Boolean, default value false.\n12. There is a part named vehicle of type VehicleController.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model.\n\n1. **Package named VehicleStateManagement:**  \n   **Supported** (Reference model has the same package.)\n\n2. **Private import of ScalarValues::*:**  \n   **Not Supported** (No such import in the reference model.)\n\n3. **Enum type VehicleState:**  \n   **Partially Supported** (Reference model defines states, not an explicit enum, but the states off, starting, on are present.)\n\n4. **VehicleState has enum value off:**  \n   **Supported** (Reference model has state off.)\n\n5. **VehicleState has enum value starting:**  \n   **Supported** (Reference model has state starting.)\n\n6. **VehicleState has enum value on:**  \n   **Supported** (Reference model has state on.)\n\n7. **Part definition VehicleController:**  \n   **Not Supported** (No such part in the reference model.)\n\n8. **VehicleController has attribute currentState of type VehicleState, default VehicleState::off:**  \n   **Not Supported** (No such attribute in the reference model.)\n\n9. **VehicleController has attribute vehicleStartSignal : Boolean = false:**  \n   **Partially Supported** (Reference model has VehicleStartSignal as an attribute, but not as a Boolean attribute of a part.)\n\n10. **VehicleController has attribute vehiclePowerOnSignal : Boolean = false:**  \n    **Partially Supported** (Reference model has VehicleOnSignal as an attribute, but not as a Boolean attribute of a part.)\n\n11. **VehicleController has attribute vehicleShutdownSignal : Boolean = false:**  \n    **Partially Supported** (Reference model has VehicleOffSignal as an attribute, but not as a Boolean attribute of a part.)\n\n12. **Part named vehicle of type VehicleController:**  \n    **Not Supported** (No such part in the reference model.)\n\n---\n\n### 3. Summarize the results\n\nLet’s count only **fully supported** claims (i.e., the element or its clear equivalent is present in the reference model):\n\n- Supported: 1 (package), 4 (enum value off), 5 (enum value starting), 6 (enum value on)\n- Partially Supported: 3 (enum type), 9, 10, 11 (attributes corresponding to signals, but not as attributes of a part)\n- Not Supported: 2 (import), 7 (part VehicleController), 8 (currentState), 12 (part vehicle)\n\nIf we count only **fully supported** claims, the score is **4/12**.\n\nIf you wish to count **partially supported** claims as well (where the semantics are present but the structure is different), then claims 3, 9, 10, 11 could be considered as supported, making the score **8/12**.\n\n**Final Output (strict interpretation):**\n\nScore: 4/12\n\n**(If partial matches are accepted: Score: 8/12)**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 396,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 803,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1199
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569532,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the generated system model.\n\n**Atomic Claims:**\n\n1. There is a package named VehicleStateManagement.\n2. There is a private import of ScalarValues::*.\n3. There is an enum type VehicleState.\n4. VehicleState has an enum value off.\n5. VehicleState has an enum value starting.\n6. VehicleState has an enum value on.\n7. There is a part definition VehicleController.\n8. VehicleController has an attribute currentState of type VehicleState, default value VehicleState::off.\n9. VehicleController has an attribute vehicleStartSignal of type Boolean, default value false.\n10. VehicleController has an attribute vehiclePowerOnSignal of type Boolean, default value false.\n11. VehicleController has an attribute vehicleShutdownSignal of type Boolean, default value false.\n12. There is a part named vehicle of type VehicleController.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model.\n\n1. **Package named VehicleStateManagement:**  \n   **Supported** (Reference model has the same package.)\n\n2. **Private import of ScalarValues::*:**  \n   **Not Supported** (No such import in the reference model.)\n\n3. **Enum type VehicleState:**  \n   **Partially Supported** (Reference model defines states, not an explicit enum, but the states off, starting, on are present.)\n\n4. **VehicleState has enum value off:**  \n   **Supported** (Reference model has state off.)\n\n5. **VehicleState has enum value starting:**  \n   **Supported** (Reference model has state starting.)\n\n6. **VehicleState has enum value on:**  \n   **Supported** (Reference model has state on.)\n\n7. **Part definition VehicleController:**  \n   **Not Supported** (No such part in the reference model.)\n\n8. **VehicleController has attribute currentState of type VehicleState, default VehicleState::off:**  \n   **Not Supported** (No such attribute in the reference model.)\n\n9. **VehicleController has attribute vehicleStartSignal : Boolean = false:**  \n   **Partially Supported** (Reference model has VehicleStartSignal as an attribute, but not as a Boolean attribute of a part.)\n\n10. **VehicleController has attribute vehiclePowerOnSignal : Boolean = false:**  \n    **Partially Supported** (Reference model has VehicleOnSignal as an attribute, but not as a Boolean attribute of a part.)\n\n11. **VehicleController has attribute vehicleShutdownSignal : Boolean = false:**  \n    **Partially Supported** (Reference model has VehicleOffSignal as an attribute, but not as a Boolean attribute of a part.)\n\n12. **Part named vehicle of type VehicleController:**  \n    **Not Supported** (No such part in the reference model.)\n\n---\n\n### 3. Summarize the results\n\nLet’s count only **fully supported** claims (i.e., the element or its clear equivalent is present in the reference model):\n\n- Supported: 1 (package), 4 (enum value off), 5 (enum value starting), 6 (enum value on)\n- Partially Supported: 3 (enum type), 9, 10, 11 (attributes corresponding to signals, but not as attributes of a part)\n- Not Supported: 2 (import), 7 (part VehicleController), 8 (currentState), 12 (part vehicle)\n\nIf we count only **fully supported** claims, the score is **4/12**.\n\nIf you wish to count **partially supported** claims as well (where the semantics are present but the structure is different), then claims 3, 9, 10, 11 could be considered as supported, making the score **8/12**.\n\n**Final Output (strict interpretation):**\n\nScore: 4/12\n\n**(If partial matches are accepted: Score: 8/12)**"
+  }
+}

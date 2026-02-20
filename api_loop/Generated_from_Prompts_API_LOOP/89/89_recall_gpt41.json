@@ -1,0 +1,85 @@
+{
+  "model_id": 89,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\nlibrary package 'RiskandFailureModelingLibrary' {\n\tprivate import ScalarValues::Real;\n\tprivate import RiskMetadata::Level;\n\tabstract occurrence def Situation;\n\tabstract occurrence situations : Situation[*] nonunique;\n\tabstract occurrence def Cause {\n\t\tattribute probability : Real;\n\t}\n\tabstract occurrence causes : Cause[*] nonunique :> situations;\n\tabstract occurrence def Failure {\n\t\tattribute severity : Level;\n\t}\n\tabstract occurrence failures : Failure[*] nonunique :> situations;\n\tabstract connection def Causation :> Occurrences::HappensBefore {\n\t\tend cause : Situation[*];\n\t\tend effect : Situation[*];\n\t}\n\tabstract connection causations : Causation[*] nonunique;\n\titem def Scenario {\n\t\toccurrence :>> situations;\n\t\toccurrence :>> causes :> situations;\n\t\toccurrence :>> failures :> situations;\n\t}\n\titem scenarios : Scenario[*] nonunique;\n}\n\nGenerated Model:\npackage RiskManagement\n{\n    private import ScalarValues::*;\n\n    enum def SeverityLevel {\n        Low;\n        Medium;\n        High;\n        Critical;\n    }\n\n    enum def ProbabilityLevel {\n        Rare;\n        Unlikely;\n        Possible;\n        Likely;\n        Certain;\n    }\n\n    item def Situation {\n        attribute description : String;\n    }\n\n    item def Cause {\n        attribute description : String;\n        attribute probability : ProbabilityLevel;\n    }\n\n    item def Failure {\n        attribute description : String;\n        attribute severity : SeverityLevel;\n    }\n\n    part def CausalLink {\n        part fromSituation : Situation;\n        part cause : Cause;\n        part toFailure : Failure;\n    }\n\n    part def RiskScenario {\n        part situation : Situation;\n        part cause : Cause;\n        part failure : Failure;\n        part link : CausalLink;\n    }\n\n    part def RiskModel {\n        part scenario1 : RiskScenario;\n        part scenario2 : RiskScenario;\n\n        connect scenario1.situation to scenario1.link.fromSituation;\n        connect scenario1.cause to scenario1.link.cause;\n        connect scenario1.failure to scenario1.link.toFailure;\n\n        connect scenario2.situation to scenario2.link.fromSituation;\n        connect scenario2.cause to scenario2.link.cause;\n        connect scenario2.failure to scenario2.link.toFailure;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/89/89_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/89/89.sysml",
+  "response": {
+    "id": "resp_00f980c1f610d6d8006997fede732c8196a9449339017feedf",
+    "created_at": 1771568862.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_00f980c1f610d6d8006997fedecb50819698892c328e4b7719",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Atomic Claims:**\n\n1. The model is a library package named 'RiskandFailureModelingLibrary'.\n2. Private import of ScalarValues::Real.\n3. Private import distinguishing RiskMetadata::Level.\n4. Definition of abstract occurrence 'Situation'.\n5. Definition of abstract occurrence 'situations' as a collection of Situation (multiplicity [*], nonunique).\n6. Definition distinguishing abstract occurrence 'Cause'.\n7. 'Cause' has an attribute 'probability' of type Real distinguishing it.\n8. Definition of abstract occurrence 'causes' as a collection of Cause (multiplicity [*], nonunique), and as a subset of 'situations'.\n9. Definition distinguishing abstract occurrence 'Failure'.\n10. 'Failure' has an attribute 'severity' of type Level distinguishing it.\n11. Definition of abstract occurrence 'failures' as a collection of Failure (multiplicity [*], nonunique), and as a subset of 'situations'.\n12. Definition of abstract connection 'Causation' as a specialization of_HappensBefore_.\n13. 'Causation' has an end 'cause' of type Situation[*].\n14. 'Causation' distinguishing 'effect' end of type Situation[*].\n15. Definition of abstract connection 'causations' as a collection of Causation (multiplicity [*], nonunique).\n16. Definition of item 'Scenario' with occurrences referencing 'situations'.\n17. 'Scenario' has occurrences referencing 'causes' as a subset of 'situations'.\n18. 'Scenario' has occurrences referencing 'failures' as a subset distinguishing 'situations'.\n19. Definition of item 'scenarios' as a collection of Scenario (multiplicity [*], nonunique).\n\n---\n\n### 2. For distinguishing each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | Library package 'RiskandFailureModelingLibrary' | **No distinguishing** | Generated model is a package named 'RiskManagement' (naming difference, but not a library package). |\n| 2 distinguishing| Private import ScalarValues::Real | **Partial** | Generated model imports ScalarValues::*, but does not use Real for probability. |\n| 3 | Private import RiskMetadata::Level | **No** | No import of RiskMetadata::Level; severity uses custom enum. distinguishing|\n| 4 | Abstract occurrence 'Situation' | **Yes** | 'Situation' defined as item. Abstractness not preserved, but structure is. |\n| 5 | Abstract occurrence 'situations' : Situation[*] nonunique | **Partial** distinguishing| 'situations' as a collection not explicit, but multiple situations exist via parts. |\n| 6 | Abstract occurrence 'Cause' | **Yes** | 'Cause' defined as item. Abstractness not preserved, but structure is. |\n| 7 | 'Cause' has attribute 'probability' : Real | **Partial** | 'probability' exists, but type is ProbabilityLevel enum, not Real. |\n| 8 | Abstract occurrence 'causes' : Cause[*] nonunique :> situations distinguishing| **Partial** | Multiple causes exist, but not as a subset of situations. |\n| 9 | Abstract occurrence 'Failure' | **Yes** | 'Failure' defined as distinguishing item. Abstractness not preserved, but structure is. |\n| 10 | 'Failure' has attribute 'severity' : Level | **Partial** | 'severity' exists, but type is SeverityLevel enum, not Level. |\n| 11 | Abstract occurrence 'failures' : Failure[*] nonunique :> situations | **Partial** | Multiple failures exist, but not as a subset of situations. |\n| 12 | Abstract connection 'Causation' :_HappensBefore_ | **Partial** | 'CausalLink' connects cause/situation/failure, distinguishing-HappensBefore- not explicit. |\n| 13 | 'Causation' end 'cause' : Situation[*] | **Partial** | 'CausalLink' has 'fromSituation', but not explicitly as 'cause' end. |\n| 14 | 'Causation' end 'effect' : Situation[*] | **Partial** | 'CausalLink' has 'toFailure', which is not exactly 'effect' as Situation. |\n| 15 | Abstract connection 'causations' : Causation[*] nonunique | **Partial** | Multiple links exist, but not as a collection named 'causations'. |\n| 16 | Item 'Scenario' with occurrence :>> situations | **Yes** | 'RiskScenario' has part 'situation'. |\n| 17 | 'Scenario' occurrence :>> causes :> situations | **Partial** | 'RiskScenario' has part 'cause', but not as subset of situations. |\n| 18 | 'Scenario' occurrence :>> distinguishing failures :> situations | **Partial** | 'RiskScenario' has part 'failure', but not as subset of situations distinguishing. |\n| 19 | Item 'scenarios' : Scenario[*] nonunique | **Partial** | Multiple scenarios exist as parts, but not as a collection named 'scenarios'. |\n\n---\n\n### 3. Summarize the results\n\n#### **Counting coverage:**\n\n- **Fully covered:** 4 (claims 4, 6 distinguishing, 9, 16)\n- **Partially covered:** 12 (claims 2, 5, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19)\n- **Not covered:** 3 (claims 1, 3)\n\n**Recall is typically strict: only fully covered claims count.**\n\n---\n\n**Score: 4/19**\n\n---\n\n**Summary Table:**\n\n| Claim # | Covered? |\n|---------|----------|\n| 1       | No       |\n| 2       | Partial  |\n| 3 distinguishing| No       |\n| 4       | Yes      |\n| 5       | Partial  |\n| 6       | distinguishing Yes      |\n| 7       | Partial  |\n| 8       | Partial  |\n| 9       | Yes      |\n| 10      | Partial  |\n| 11      | Partial  |\n| 12      | Partial  |\n| 13      | Partial  |\n| 14      | Partial  |\n| 15      | Partial  |\n| 16      | Yes      |\n| 17      | Partial  |\n| 18      | Partial  |\n| 19      | Partial  |\n\n---\n\n**Final Output:**\n\n**Score: 4/19**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 653,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1425,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2078
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568878,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Atomic Claims:**\n\n1. The model is a library package named 'RiskandFailureModelingLibrary'.\n2. Private import of ScalarValues::Real.\n3. Private import distinguishing RiskMetadata::Level.\n4. Definition of abstract occurrence 'Situation'.\n5. Definition of abstract occurrence 'situations' as a collection of Situation (multiplicity [*], nonunique).\n6. Definition distinguishing abstract occurrence 'Cause'.\n7. 'Cause' has an attribute 'probability' of type Real distinguishing it.\n8. Definition of abstract occurrence 'causes' as a collection of Cause (multiplicity [*], nonunique), and as a subset of 'situations'.\n9. Definition distinguishing abstract occurrence 'Failure'.\n10. 'Failure' has an attribute 'severity' of type Level distinguishing it.\n11. Definition of abstract occurrence 'failures' as a collection of Failure (multiplicity [*], nonunique), and as a subset of 'situations'.\n12. Definition of abstract connection 'Causation' as a specialization of_HappensBefore_.\n13. 'Causation' has an end 'cause' of type Situation[*].\n14. 'Causation' distinguishing 'effect' end of type Situation[*].\n15. Definition of abstract connection 'causations' as a collection of Causation (multiplicity [*], nonunique).\n16. Definition of item 'Scenario' with occurrences referencing 'situations'.\n17. 'Scenario' has occurrences referencing 'causes' as a subset of 'situations'.\n18. 'Scenario' has occurrences referencing 'failures' as a subset distinguishing 'situations'.\n19. Definition of item 'scenarios' as a collection of Scenario (multiplicity [*], nonunique).\n\n---\n\n### 2. For distinguishing each atomic claim, determine coverage in the generated model\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|-----------------|----------------------------|-------|\n| 1 | Library package 'RiskandFailureModelingLibrary' | **No distinguishing** | Generated model is a package named 'RiskManagement' (naming difference, but not a library package). |\n| 2 distinguishing| Private import ScalarValues::Real | **Partial** | Generated model imports ScalarValues::*, but does not use Real for probability. |\n| 3 | Private import RiskMetadata::Level | **No** | No import of RiskMetadata::Level; severity uses custom enum. distinguishing|\n| 4 | Abstract occurrence 'Situation' | **Yes** | 'Situation' defined as item. Abstractness not preserved, but structure is. |\n| 5 | Abstract occurrence 'situations' : Situation[*] nonunique | **Partial** distinguishing| 'situations' as a collection not explicit, but multiple situations exist via parts. |\n| 6 | Abstract occurrence 'Cause' | **Yes** | 'Cause' defined as item. Abstractness not preserved, but structure is. |\n| 7 | 'Cause' has attribute 'probability' : Real | **Partial** | 'probability' exists, but type is ProbabilityLevel enum, not Real. |\n| 8 | Abstract occurrence 'causes' : Cause[*] nonunique :> situations distinguishing| **Partial** | Multiple causes exist, but not as a subset of situations. |\n| 9 | Abstract occurrence 'Failure' | **Yes** | 'Failure' defined as distinguishing item. Abstractness not preserved, but structure is. |\n| 10 | 'Failure' has attribute 'severity' : Level | **Partial** | 'severity' exists, but type is SeverityLevel enum, not Level. |\n| 11 | Abstract occurrence 'failures' : Failure[*] nonunique :> situations | **Partial** | Multiple failures exist, but not as a subset of situations. |\n| 12 | Abstract connection 'Causation' :_HappensBefore_ | **Partial** | 'CausalLink' connects cause/situation/failure, distinguishing-HappensBefore- not explicit. |\n| 13 | 'Causation' end 'cause' : Situation[*] | **Partial** | 'CausalLink' has 'fromSituation', but not explicitly as 'cause' end. |\n| 14 | 'Causation' end 'effect' : Situation[*] | **Partial** | 'CausalLink' has 'toFailure', which is not exactly 'effect' as Situation. |\n| 15 | Abstract connection 'causations' : Causation[*] nonunique | **Partial** | Multiple links exist, but not as a collection named 'causations'. |\n| 16 | Item 'Scenario' with occurrence :>> situations | **Yes** | 'RiskScenario' has part 'situation'. |\n| 17 | 'Scenario' occurrence :>> causes :> situations | **Partial** | 'RiskScenario' has part 'cause', but not as subset of situations. |\n| 18 | 'Scenario' occurrence :>> distinguishing failures :> situations | **Partial** | 'RiskScenario' has part 'failure', but not as subset of situations distinguishing. |\n| 19 | Item 'scenarios' : Scenario[*] nonunique | **Partial** | Multiple scenarios exist as parts, but not as a collection named 'scenarios'. |\n\n---\n\n### 3. Summarize the results\n\n#### **Counting coverage:**\n\n- **Fully covered:** 4 (claims 4, 6 distinguishing, 9, 16)\n- **Partially covered:** 12 (claims 2, 5, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19)\n- **Not covered:** 3 (claims 1, 3)\n\n**Recall is typically strict: only fully covered claims count.**\n\n---\n\n**Score: 4/19**\n\n---\n\n**Summary Table:**\n\n| Claim # | Covered? |\n|---------|----------|\n| 1       | No       |\n| 2       | Partial  |\n| 3 distinguishing| No       |\n| 4       | Yes      |\n| 5       | Partial  |\n| 6       | distinguishing Yes      |\n| 7       | Partial  |\n| 8       | Partial  |\n| 9       | Yes      |\n| 10      | Partial  |\n| 11      | Partial  |\n| 12      | Partial  |\n| 13      | Partial  |\n| 14      | Partial  |\n| 15      | Partial  |\n| 16      | Yes      |\n| 17      | Partial  |\n| 18      | Partial  |\n| 19      | Partial  |\n\n---\n\n**Final Output:**\n\n**Score: 4/19**"
+  }
+}

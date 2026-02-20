@@ -1,0 +1,85 @@
+{
+  "model_id": 28,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'LoopBasedCharging' {\n\tprivate import ScalarValues::*;\n\tattribute def BatteryCharged;\n\tpart battery;\n\tpart powerSystem;\n\taction def MonitorBattery { out charge : Real; }\n\taction def AddCharge { in charge : Real; }\n\taction def EndCharging;\n\taction def ChargeBattery {\n\t\tloop action charging {\n\t\t\taction monitor : MonitorBattery {\n\t\t\t\tout charge;\n\t\t\t}\n\t\t\tthen if monitor.charge < 100 {\n\t\t\t\taction addCharge : AddCharge {\n\t\t\t\t\tin charge = monitor.charge;\n\t\t\t\t}\n\t\t\t}\t\t\t\t\n\t\t} until charging.monitor.charge >= 100;\n\t\tthen action endCharging : EndCharging;\n\t\tthen done;\n\t}\n}\n\nGenerated Model:\npackage BatteryChargingSystem {\n    private import ScalarValues::*;\n\n    port def LevelPort {\n        attribute level : Real;\n    }\n\n    port def ControlPort {\n        attribute charging : Boolean;\n    }\n\n    part def Battery {\n        attribute level : Real;\n        attribute charging : Boolean;\n        port levelPort : LevelPort;\n        port controlPort : ControlPort;\n    }\n\n    part def ChargerController {\n        attribute targetLevel : Real = 100.0;\n        attribute autoStop : Boolean = true;\n        port levelPort : LevelPort;\n        port controlPort : ControlPort;\n    }\n\n    part def ChargingSystem {\n        part battery : Battery;\n        part controller : ChargerController;\n        connect battery.levelPort to controller.levelPort;\n        connect controller.controlPort to battery.controlPort;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/28/28_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/28/28.sysml",
+  "response": {
+    "id": "resp_0ccddc7d51be5b08006998009a4e34819fbec28c67a8dddf94",
+    "created_at": 1771569306.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0ccddc7d51be5b08006998009aa140819f8ef7cef358e8007d",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. The model defines a package.\n2. The model imports `ScalarValues::*` privately.\n\n**Port Definitions**\n3. Defines a port `LevelPort`.\n4. `LevelPort` has an attribute `level` of type `Real`.\n5. Defines a port `ControlPort`.\n6. `ControlPort` has an attribute `charging` of type `Boolean`.\n\n**Part Definitions**\n7. Defines a part `Battery`.\n8. `Battery` has an attribute `level` of type `Real`.\n9. `Battery` has an attribute `charging` of type `Boolean`.\n10. `Battery` has a port `levelPort` of type `LevelPort`.\n11. `Battery` has a port `controlPort` of type `ControlPort`.\n\n12. Defines a part `ChargerController`.\n13. `ChargerController` has an attribute `targetLevel` of type `Real` with default value `100.0`.\n14. `ChargerController` has an attribute `autoStop` of type `Boolean` with default value `true`.\n15. `ChargerController` has a port `levelPort` of type `LevelPort`.\n16. `ChargerController` has a port `controlPort` of type `ControlPort`.\n\n17. Defines a part `ChargingSystem`.\n18. `ChargingSystem` has a part `battery` of type `Battery`.\n19. `ChargingSystem` has a part `controller` of type `ChargerController`.\n20. `ChargingSystem` connects `battery.levelPort` to `controller.levelPort`.\n21. `ChargingSystem` connects `controller.controlPort` to `battery.controlPort`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**Package and Imports**\n1. **Supported** (Reference model defines a package)\n2. **Supported** (Reference model imports `ScalarValues::*` privately)\n\n**Port Definitions**\n3. **Not Supported** (No ports defined in reference)\n4. **Not Supported** (No such attribute in reference)\n5. **Not Supported** (No ports defined in reference)\n6. **Not Supported** (No such attribute in reference)\n\n**Part Definitions**\n7. **Supported** (Reference defines a part `battery`)\n8. **Not Supported** (No attribute `level` in reference's `battery`)\n9. **Not Supported** (No attribute `charging` in reference's `battery`)\n10. **Not Supported** (No ports in reference's `battery`)\n11. **Not Supported** (No ports in reference's `battery`)\n\n12. **Not Supported** (No `ChargerController` in reference)\n13. **Not Supported** (No such attribute in reference)\n14. **Not Supported** (No such attribute in reference)\n15. **Not Supported** (No such port in reference)\n16. **Not Supported** (No such port in reference)\n\n17. **Not Supported** (No `ChargingSystem` in reference)\n18. **Not Supported** (No such part in reference)\n19. **Not Supported** (No such part in reference)\n20. **Not Supported** (No such connection in reference)\n21. **Not Supported** (No such connection in reference)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:** 1, 2, 7  \n**Total claims:** 21\n\n**Score:** 3/21",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 484,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 733,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1217
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569322,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. The model defines a package.\n2. The model imports `ScalarValues::*` privately.\n\n**Port Definitions**\n3. Defines a port `LevelPort`.\n4. `LevelPort` has an attribute `level` of type `Real`.\n5. Defines a port `ControlPort`.\n6. `ControlPort` has an attribute `charging` of type `Boolean`.\n\n**Part Definitions**\n7. Defines a part `Battery`.\n8. `Battery` has an attribute `level` of type `Real`.\n9. `Battery` has an attribute `charging` of type `Boolean`.\n10. `Battery` has a port `levelPort` of type `LevelPort`.\n11. `Battery` has a port `controlPort` of type `ControlPort`.\n\n12. Defines a part `ChargerController`.\n13. `ChargerController` has an attribute `targetLevel` of type `Real` with default value `100.0`.\n14. `ChargerController` has an attribute `autoStop` of type `Boolean` with default value `true`.\n15. `ChargerController` has a port `levelPort` of type `LevelPort`.\n16. `ChargerController` has a port `controlPort` of type `ControlPort`.\n\n17. Defines a part `ChargingSystem`.\n18. `ChargingSystem` has a part `battery` of type `Battery`.\n19. `ChargingSystem` has a part `controller` of type `ChargerController`.\n20. `ChargingSystem` connects `battery.levelPort` to `controller.levelPort`.\n21. `ChargingSystem` connects `controller.controlPort` to `battery.controlPort`.\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**Package and Imports**\n1. **Supported** (Reference model defines a package)\n2. **Supported** (Reference model imports `ScalarValues::*` privately)\n\n**Port Definitions**\n3. **Not Supported** (No ports defined in reference)\n4. **Not Supported** (No such attribute in reference)\n5. **Not Supported** (No ports defined in reference)\n6. **Not Supported** (No such attribute in reference)\n\n**Part Definitions**\n7. **Supported** (Reference defines a part `battery`)\n8. **Not Supported** (No attribute `level` in reference's `battery`)\n9. **Not Supported** (No attribute `charging` in reference's `battery`)\n10. **Not Supported** (No ports in reference's `battery`)\n11. **Not Supported** (No ports in reference's `battery`)\n\n12. **Not Supported** (No `ChargerController` in reference)\n13. **Not Supported** (No such attribute in reference)\n14. **Not Supported** (No such attribute in reference)\n15. **Not Supported** (No such port in reference)\n16. **Not Supported** (No such port in reference)\n\n17. **Not Supported** (No `ChargingSystem` in reference)\n18. **Not Supported** (No such part in reference)\n19. **Not Supported** (No such part in reference)\n20. **Not Supported** (No such connection in reference)\n21. **Not Supported** (No such connection in reference)\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:** 1, 2, 7  \n**Total claims:** 21\n\n**Score:** 3/21"
+  }
+}

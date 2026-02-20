@@ -1,0 +1,85 @@
+{
+  "model_id": 110,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleFuelDeliverySystem' {\n\tprivate import ScalarValues::Real;\n\tpublic import Definitions::*;\n\tpublic import Usages::*;\n\tpackage Definitions {\n\t\titem def Fuel;\n\t\tport def FuelPort {\n\t\t\tout item fuel: Fuel;\n\t\t}\n\t\tpart def Pump {\n\t\t\tport fuelInPort : ~FuelPort;\n\t\t\tport fuelOutPort : FuelPort;\n\t\t}\n\t\tpart def StorageTank {\n\t\t\tport fuelOutPort : FuelPort;\n\t\t}\n\t\tpart def FuelTank {\n\t\t\tport fuelInPort : ~FuelPort;\n\t\t}\n\t\tpart def Vehicle {\n\t\t\tport fuelInPort : ~FuelPort;\n\t\t}\n\t\taction def PumpFuel {\n\t\t\tin fuelIn : Fuel;\n\t\t\tout fuelOut : Fuel;\n\t\t}\n\t}\n\tpackage Usages {\t\n\t\tpart context {\n\t\t\tpart storageTank : StorageTank;\n\t\t\tflow of  fuel : Fuel\n\t\t\t\tfrom storageTank.fuelOutPort.fuel to pump.fuelInPort.fuel {\t\t\t\n\t\t\t}\n\t\t\tpart pump : Pump {\n\t\t\t\tperform action pumpFuel : PumpFuel {\n\t\t\t\t\tin fuelIn = fuelInPort.fuel;\n\t\t\t\t\tout fuelOut = fuelOutPort.fuel;\n\t\t\t\t}\n\t\t\t}\n\t\t\tflow of fuel : Fuel\n\t\t\t\tfrom pump.fuelOutPort.fuel to vehicle.fuelInPort.fuel;\n\t\t\tpart vehicle : Vehicle {\n\t\t\t\tflow fuelInPort.fuel to fuelTank.fuel {\t\t\t\t\n\t\t\t\t}\n\t\t\t\tpart fuelTank : FuelTank {\n\t\t\t\t\tattribute volumeMax : Real;\n\t\t\t\t\tattribute fuelLevel : Real = fuel.volume / volumeMax;\t\n\t\t\t\t\titem fuel : Fuel {\n\t\t\t\t\t\tattribute volume : Real;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage FuelDeliverySystem {\n   private import ScalarValues::*;\n\n   item def Fuel;\n\n   port def FuelPort;\n\n   part def StorageTank {\n      attribute maxCapacity : Real;\n      attribute currentLevel : Real;\n      port outFuel : FuelPort;\n   }\n\n   part def FuelPump {\n      attribute flowRate : Real;\n      port inFuel : FuelPort;\n      port outFuel : FuelPort;\n   }\n\n   part def VehicleFuelTank {\n      attribute maxCapacity : Real;\n      attribute currentLevel : Real;\n      port inFuel : FuelPort;\n   }\n\n   part def FuelDeliverySystem {\n      part storage : StorageTank;\n      part pump : FuelPump;\n      part vehicleTank : VehicleFuelTank;\n      connect storage.outFuel to pump.inFuel;\n      connect pump.outFuel to vehicleTank.inFuel;\n   }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/110/110_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/110/110.sysml",
+  "response": {
+    "id": "resp_0db6e5113711f0be006998031492948197a0f9334af483248b",
+    "created_at": 1771569940.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0db6e5113711f0be006998031579808197a129f98f30ef3447",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. There is a package named `FuelDeliverySystem`.\n2. The package privately imports `ScalarValues::*`.\n\n**Item Definitions**\n3. There is an item definition `Fuel`.\n\n**Port Definitions**\n4. There is a port definition `FuelPort`.\n\n**Part Definitions**\n5. There is a part definition `StorageTank`.\n6. `StorageTank` has an attribute `maxCapacity` of type `Real`.\n7. `StorageTank` has an attribute `currentLevel` of type `Real`.\n8. `StorageTank` has a port `outFuel` of type `FuelPort`.\n\n9. There is a part definition `FuelPump`.\n10. `FuelPump` has an attribute `flowRate` of type `Real`.\n11. `FuelPump` has a port `inFuel` of type `FuelPort`.\n12. `FuelPump` has a port `outFuel` of type `FuelPort`.\n\n13. There is a part definition `VehicleFuelTank`.\n14. `VehicleFuelTank` has an attribute `maxCapacity` of type `Real`.\n15. `VehicleFuelTank` has an attribute `currentLevel` of type `Real`.\n16. `VehicleFuelTank` has a port `inFuel` of type `FuelPort`.\n\n17. There is a part definition `FuelDeliverySystem`.\n18. `FuelDeliverySystem` has a part `storage` of type `StorageTank`.\n19. `FuelDeliverySystem` has a part `pump` of type `FuelPump`.\n20. `FuelDeliverySystem` has a part `vehicleTank` of type `VehicleFuelTank`.\n21. `FuelDeliverySystem` connects `storage.outFuel` to `pump.inFuel`.\n22. `FuelDeliverySystem` connects `pump.outFuel` to `vehicleTank.inFuel`.\n\n**Total atomic claims: 22**\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**Package and Imports**\n1. **Supported** (Reference model has a package for the system; naming difference is ignored.)\n2. **Supported** (Reference model also imports `ScalarValues::Real`.)\n\n**Item Definitions**\n3. **Supported** (Reference model defines `Fuel`.)\n\n**Port Definitions**\n4. **Supported** (Reference model defines `FuelPort`.)\n\n**Part Definitions**\n5. **Supported** (Reference model defines `StorageTank`.)\n6. **Not Supported** (`maxCapacity` attribute is not present in `StorageTank` in the reference model.)\n7. **Not Supported** (`currentLevel` attribute is not present in `StorageTank` in the reference model.)\n8. **Supported** (`fuelOutPort` in reference model is equivalent to `outFuel`.)\n\n9. **Part: FuelPump**\n   - **Part definition:** **Supported** (Reference model has `Pump` part; naming difference is ignored.)\n10. **Not Supported** (`flowRate` attribute is not present in `Pump` in the reference model.)\n11. **Supported** (`fuelInPort` in reference model is equivalent to `inFuel`.)\n12. **Supported** (`fuelOutPort` in reference model is equivalent to `outFuel`.)\n\n13. **Part: VehicleFuelTank**\n   - **Part definition:** **Supported** (Reference model has `FuelTank` as a part of `Vehicle`; naming difference is ignored.)\n14. **Supported** (`volumeMax` in reference model is equivalent to `maxCapacity`.)\n15. **Supported** (`fuelLevel` in reference model is equivalent to `currentLevel`.)\n16. **Supported** (`fuelInPort` in reference model is equivalent to `inFuel`.)\n\n17. **Part: FuelDeliverySystem**\n   - **Part definition:** **Supported** (Reference model has a context part containing the system.)\n18. **Supported** (`storageTank` in reference model is equivalent to `storage`.)\n19. **Supported** (`pump` in reference model is present.)\n20. **Supported** (`fuelTank` in reference model is equivalent to `vehicleTank`.)\n21. **Supported** (Reference model has flow from `storageTank.fuelOutPort` to `pump.fuelInPort`.)\n22. **Supported** (Reference model has flow from `pump.fuelOutPort` to `vehicle.fuelInPort` and then to `fuelTank.fuel`.)\n\n---\n\n### 3. Summarize the results\n\n**Unsupported claims:**  \n6. `StorageTank` has attribute `maxCapacity`  \n7. `StorageTank` has attribute `currentLevel`  \n10. `FuelPump` has attribute `flowRate`  \n\n**Total claims:** 22  \n**Supported claims:** 19\n\n---\n\n**Score: 19/22**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 711,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1008,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1719
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569951,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. There is a package named `FuelDeliverySystem`.\n2. The package privately imports `ScalarValues::*`.\n\n**Item Definitions**\n3. There is an item definition `Fuel`.\n\n**Port Definitions**\n4. There is a port definition `FuelPort`.\n\n**Part Definitions**\n5. There is a part definition `StorageTank`.\n6. `StorageTank` has an attribute `maxCapacity` of type `Real`.\n7. `StorageTank` has an attribute `currentLevel` of type `Real`.\n8. `StorageTank` has a port `outFuel` of type `FuelPort`.\n\n9. There is a part definition `FuelPump`.\n10. `FuelPump` has an attribute `flowRate` of type `Real`.\n11. `FuelPump` has a port `inFuel` of type `FuelPort`.\n12. `FuelPump` has a port `outFuel` of type `FuelPort`.\n\n13. There is a part definition `VehicleFuelTank`.\n14. `VehicleFuelTank` has an attribute `maxCapacity` of type `Real`.\n15. `VehicleFuelTank` has an attribute `currentLevel` of type `Real`.\n16. `VehicleFuelTank` has a port `inFuel` of type `FuelPort`.\n\n17. There is a part definition `FuelDeliverySystem`.\n18. `FuelDeliverySystem` has a part `storage` of type `StorageTank`.\n19. `FuelDeliverySystem` has a part `pump` of type `FuelPump`.\n20. `FuelDeliverySystem` has a part `vehicleTank` of type `VehicleFuelTank`.\n21. `FuelDeliverySystem` connects `storage.outFuel` to `pump.inFuel`.\n22. `FuelDeliverySystem` connects `pump.outFuel` to `vehicleTank.inFuel`.\n\n**Total atomic claims: 22**\n\n---\n\n### 2. For each atomic claim, determine whether it is supported by the reference model\n\n**Package and Imports**\n1. **Supported** (Reference model has a package for the system; naming difference is ignored.)\n2. **Supported** (Reference model also imports `ScalarValues::Real`.)\n\n**Item Definitions**\n3. **Supported** (Reference model defines `Fuel`.)\n\n**Port Definitions**\n4. **Supported** (Reference model defines `FuelPort`.)\n\n**Part Definitions**\n5. **Supported** (Reference model defines `StorageTank`.)\n6. **Not Supported** (`maxCapacity` attribute is not present in `StorageTank` in the reference model.)\n7. **Not Supported** (`currentLevel` attribute is not present in `StorageTank` in the reference model.)\n8. **Supported** (`fuelOutPort` in reference model is equivalent to `outFuel`.)\n\n9. **Part: FuelPump**\n   - **Part definition:** **Supported** (Reference model has `Pump` part; naming difference is ignored.)\n10. **Not Supported** (`flowRate` attribute is not present in `Pump` in the reference model.)\n11. **Supported** (`fuelInPort` in reference model is equivalent to `inFuel`.)\n12. **Supported** (`fuelOutPort` in reference model is equivalent to `outFuel`.)\n\n13. **Part: VehicleFuelTank**\n   - **Part definition:** **Supported** (Reference model has `FuelTank` as a part of `Vehicle`; naming difference is ignored.)\n14. **Supported** (`volumeMax` in reference model is equivalent to `maxCapacity`.)\n15. **Supported** (`fuelLevel` in reference model is equivalent to `currentLevel`.)\n16. **Supported** (`fuelInPort` in reference model is equivalent to `inFuel`.)\n\n17. **Part: FuelDeliverySystem**\n   - **Part definition:** **Supported** (Reference model has a context part containing the system.)\n18. **Supported** (`storageTank` in reference model is equivalent to `storage`.)\n19. **Supported** (`pump` in reference model is present.)\n20. **Supported** (`fuelTank` in reference model is equivalent to `vehicleTank`.)\n21. **Supported** (Reference model has flow from `storageTank.fuelOutPort` to `pump.fuelInPort`.)\n22. **Supported** (Reference model has flow from `pump.fuelOutPort` to `vehicle.fuelInPort` and then to `fuelTank.fuel`.)\n\n---\n\n### 3. Summarize the results\n\n**Unsupported claims:**  \n6. `StorageTank` has attribute `maxCapacity`  \n7. `StorageTank` has attribute `currentLevel`  \n10. `FuelPump` has attribute `flowRate`  \n\n**Total claims:** 22  \n**Supported claims:** 19\n\n---\n\n**Score: 19/22**"
+  }
+}

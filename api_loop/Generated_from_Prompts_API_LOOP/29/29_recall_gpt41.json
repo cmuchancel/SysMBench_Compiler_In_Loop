@@ -1,0 +1,85 @@
+{
+  "model_id": 29,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage Camera {\n\tprivate import 'Action Decomposition'::*;\n\tpart def Scene;\n\tpart def Image;\n\tpart def Picture;\n\tpart def Camera;\n\tpart def FocusingSubsystem;\n\tpart def ImagingSubsystem;\n\tpart camera : Camera {\n\t\tref item scene : Scene;\n\t\tpart photos : Picture[*];\n\t\tpart autoFocus {\n\t\t\tin ref item scene : Scene = camera::scene;\t\t\n\t\t\tout ref item realImage : Image;\n\t\t}\n\t\tflow autoFocus.realImage to imager.focusedImage;\n\t\tpart imager {\n\t\t\tin item focusedImage : Image;\t\t\n\t\t\tout item photo : Picture :> photos;\n\t\t}\n\t}\n}\n\n\nGenerated Model:\npackage CameraSystemModel {\n  private import ScalarValues::*;\n\n  enum def SceneType {\n    enum portrait;\n    enum landscape;\n    enum night;\n    enum macro;\n    enum other;\n  }\n\n  item def SceneSelection {\n    attribute sceneType : SceneType;\n    attribute confirmed : Boolean = true;\n  }\n\n  port def ScenePort {\n    attribute selection : SceneSelection;\n  }\n\n  item def Image {\n    attribute clear : Boolean = true;\n    attribute realistic : Boolean = true;\n  }\n\n  port def ImagePort {\n    attribute image : Image;\n  }\n\n  item def Photo {\n    attribute image : Image;\n    attribute recorded : Boolean = true;\n  }\n\n  port def PhotoPort {\n    attribute photo : Photo;\n  }\n\n  part def AutofocusSubsystem {\n    attribute autoFocusEnabled : Boolean = true;\n    attribute focusComplete : Boolean = true;\n    port sceneIn : ScenePort;\n    port imageOut : ImagePort;\n  }\n\n  part def ImagingSubsystem {\n    attribute autoImagingEnabled : Boolean = true;\n    attribute captureComplete : Boolean = true;\n    port imageIn : ImagePort;\n    port photoOut : PhotoPort;\n  }\n\n  part def StorageSubsystem {\n    attribute autoSaveEnabled : Boolean = true;\n    attribute savedCount : Integer = 0;\n    port photoIn : PhotoPort;\n  }\n\n  part def UserInterface {\n    attribute userSelectsScene : Boolean = true;\n    port sceneOut : ScenePort;\n  }\n\n  part def CameraSystem {\n    attribute automaticOperation : Boolean = true;\n    part ui : UserInterface;\n    part autofocus : AutofocusSubsystem;\n    part imaging : ImagingSubsystem;\n    part storage : StorageSubsystem;\n    connect ui.sceneOut to autofocus.sceneIn;\n    connect autofocus.imageOut to imaging.imageIn;\n    connect imaging.photoOut to storage.photoIn;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/29/29_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/29/29.sysml",
+  "response": {
+    "id": "resp_0a6b2390889903cb00699800cad05c81938da25d8402fb5319",
+    "created_at": 1771569354.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0a6b2390889903cb00699800cba4508193bb09d6db0e9ea92e",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step as requested:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The existence of a package named \"Camera\".\n2. The model imports another package ('Action Decomposition').\n3. Definition of part \"Scene\".\n4. Definition of part \"Image\".\n5. Definition of part \"Picture\".\n6. Definition of part \"Camera\".\n7. Definition of part \"FocusingSubsystem\".\n8. Definition of part \"ImagingSubsystem\".\n9. Definition of a part \"camera\" of type \"Camera\".\n10. The \"camera\" part contains a reference \"scene\" of type \"Scene\".\n11. The \"camera\" part contains a part \"photos\" which is a collection of \"Picture\".\n12. The \"camera\" part contains a part \"autoFocus\".\n13. The \"autoFocus\" part has an input reference \"scene\" of type \"Scene\", defaulting to \"camera::scene\".\n14. The \"autoFocus\" part has an output reference \"realImage\" of type \"Image\".\n15. There is a flow from \"autoFocus.realImage\" to \"imager.focusedImage\".\n16. The \"camera\" part contains a part \"imager\".\n17. The \"imager\" part has an input \"focusedImage\" of type \"Image\".\n18. The \"imager\" part has an output \"photo\" of type \"Picture\", which is mapped to \"photos\".\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|----------------|-----------------------------|-------|\n| 1 | Package \"Camera\" | **Yes** (as \"CameraSystemModel\") | Naming difference, but same concept. |\n| 2 | Import of another package | **Yes** | Both import another package. |\n| 3 | part def Scene | **Yes** (as item def SceneSelection, SceneType) | Scene is modeled, though more elaborately. |\n| 4 | part def Image | **Yes** (item def Image) | Directly present. |\n| 5 | part def Picture | **Yes** (item def Photo) | Naming difference, but same concept. |\n| 6 | part def Camera | **Yes** (part def CameraSystem) | Naming difference, but same concept. |\n| 7 | part def FocusingSubsystem | **Yes** (part def AutofocusSubsystem) | Naming difference, but same concept. |\n| 8 | part def ImagingSubsystem | **Yes** | Directly present. |\n| 9 | part camera : Camera | **Yes** (part CameraSystem) | CameraSystem is the main part. |\n| 10 | camera has ref item scene : Scene | **Yes** (ui.sceneOut to autofocus.sceneIn) | Scene selection is modeled via ports. |\n| 11 | camera has part photos : Picture[*] | **Yes** (storage.photoIn, imaging.photoOut) | Photos are stored; collection implied. |\n| 12 | camera has part autoFocus | **Yes** (part autofocus : AutofocusSubsystem) | Naming difference, but present. |\n| 13 | autoFocus has in ref item scene : Scene = camera::scene | **Yes** (autofocus.sceneIn) | Scene input is modeled. |\n| 14 | autoFocus has out ref item realImage : Image | **Yes** (autofocus.imageOut) | Output image is modeled. |\n| 15 | flow autoFocus.realImage to imager.focusedImage | **Yes** (connect autofocus.imageOut to imaging.imageIn) | Direct mapping. |\n| 16 | camera has part imager | **Yes** (part imaging : ImagingSubsystem) | Naming difference, but present. |\n| 17 | imager has in item focusedImage : Image | **Yes** (imaging.imageIn) | Input image is modeled. |\n| 18 | imager has out item photo : Picture :> photos | **Yes** (imaging.photoOut to storage.photoIn) | Output photo is modeled and connected. |\n\n---\n\n### 3. Summarize the results\n\n**Score: 18/18**\n\n---\n\n**All atomic claims from the reference model are covered in the generated model, though sometimes with different naming or more elaborate structure.**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 696,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 918,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1614
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569377,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step as requested:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. The existence of a package named \"Camera\".\n2. The model imports another package ('Action Decomposition').\n3. Definition of part \"Scene\".\n4. Definition of part \"Image\".\n5. Definition of part \"Picture\".\n6. Definition of part \"Camera\".\n7. Definition of part \"FocusingSubsystem\".\n8. Definition of part \"ImagingSubsystem\".\n9. Definition of a part \"camera\" of type \"Camera\".\n10. The \"camera\" part contains a reference \"scene\" of type \"Scene\".\n11. The \"camera\" part contains a part \"photos\" which is a collection of \"Picture\".\n12. The \"camera\" part contains a part \"autoFocus\".\n13. The \"autoFocus\" part has an input reference \"scene\" of type \"Scene\", defaulting to \"camera::scene\".\n14. The \"autoFocus\" part has an output reference \"realImage\" of type \"Image\".\n15. There is a flow from \"autoFocus.realImage\" to \"imager.focusedImage\".\n16. The \"camera\" part contains a part \"imager\".\n17. The \"imager\" part has an input \"focusedImage\" of type \"Image\".\n18. The \"imager\" part has an output \"photo\" of type \"Picture\", which is mapped to \"photos\".\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n| # | Reference Claim | Covered in Generated Model? | Notes |\n|---|----------------|-----------------------------|-------|\n| 1 | Package \"Camera\" | **Yes** (as \"CameraSystemModel\") | Naming difference, but same concept. |\n| 2 | Import of another package | **Yes** | Both import another package. |\n| 3 | part def Scene | **Yes** (as item def SceneSelection, SceneType) | Scene is modeled, though more elaborately. |\n| 4 | part def Image | **Yes** (item def Image) | Directly present. |\n| 5 | part def Picture | **Yes** (item def Photo) | Naming difference, but same concept. |\n| 6 | part def Camera | **Yes** (part def CameraSystem) | Naming difference, but same concept. |\n| 7 | part def FocusingSubsystem | **Yes** (part def AutofocusSubsystem) | Naming difference, but same concept. |\n| 8 | part def ImagingSubsystem | **Yes** | Directly present. |\n| 9 | part camera : Camera | **Yes** (part CameraSystem) | CameraSystem is the main part. |\n| 10 | camera has ref item scene : Scene | **Yes** (ui.sceneOut to autofocus.sceneIn) | Scene selection is modeled via ports. |\n| 11 | camera has part photos : Picture[*] | **Yes** (storage.photoIn, imaging.photoOut) | Photos are stored; collection implied. |\n| 12 | camera has part autoFocus | **Yes** (part autofocus : AutofocusSubsystem) | Naming difference, but present. |\n| 13 | autoFocus has in ref item scene : Scene = camera::scene | **Yes** (autofocus.sceneIn) | Scene input is modeled. |\n| 14 | autoFocus has out ref item realImage : Image | **Yes** (autofocus.imageOut) | Output image is modeled. |\n| 15 | flow autoFocus.realImage to imager.focusedImage | **Yes** (connect autofocus.imageOut to imaging.imageIn) | Direct mapping. |\n| 16 | camera has part imager | **Yes** (part imaging : ImagingSubsystem) | Naming difference, but present. |\n| 17 | imager has in item focusedImage : Image | **Yes** (imaging.imageIn) | Input image is modeled. |\n| 18 | imager has out item photo : Picture :> photos | **Yes** (imaging.photoOut to storage.photoIn) | Output photo is modeled and connected. |\n\n---\n\n### 3. Summarize the results\n\n**Score: 18/18**\n\n---\n\n**All atomic claims from the reference model are covered in the generated model, though sometimes with different naming or more elaborate structure.**"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "model_id": 4,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDefinition' {\n\tpart def Vehicle {\n\t\tpart eng : Engine;\n\t}\n\tpart def SmallVehicle :> Vehicle {\n\t\tpart smallEng : SmallEngine redefines eng;\n\t}\n\tpart def BigVehicle :> Vehicle {\n\t\tpart bigEng : BigEngine :>> eng;\n\t}\n\tpart def Engine {\n\t\tpart cyl : Cylinder[4..6];\n\t}\n\tpart def SmallEngine :> Engine {\n\t\tpart redefines cyl[4];\n\t}\n\tpart def BigEngine :> Engine {\n\t\tpart redefines cyl[6];\n\t}\n\tpart def Cylinder;\n}\n\nGenerated Model:\npackage VehicleSystem {\n    private import ScalarValues::*;\n\n    part def Cylinder;\n\n    part def Engine {\n        part cylinders : Cylinder;\n        attribute cylinderCount : Integer;\n    }\n\n    part def SmallEngine specializes Engine {\n        attribute cylinderCount : Integer = 4;\n    }\n\n    part def LargeEngine specializes Engine {\n        attribute cylinderCount : Integer = 6;\n    }\n\n    part def Vehicle {\n        part engine : Engine;\n    }\n\n    part def SmallVehicle specializes Vehicle {\n        part engine : SmallEngine;\n    }\n\n    part def LargeVehicle specializes Vehicle {\n        part engine : LargeEngine;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/4/4_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/4/4.sysml",
+  "response": {
+    "id": "resp_05084149d21ae7d6006997fd8e7574819cbf35776e59974a5e",
+    "created_at": 1771568526.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_05084149d21ae7d6006997fd8edb9c819c97105a346499eee5",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehicleDefinition'.\n2. There is a part definition 'Vehicle'.\n3. 'Vehicle' has a part 'eng' of type 'Engine'.\n4. There is a part definition 'SmallVehicle' that specializes 'Vehicle'.\n5. 'SmallVehicle' has a part 'smallEng' of type 'SmallEngine' that redefines 'eng'.\n6. There is a part definition 'BigVehicle' that specializes 'Vehicle'.\n7. 'BigVehicle' has a part 'bigEng' of type 'BigEngine' that redefines ('replaces') 'eng'.\n8. There is a part definition 'Engine'.\n9. 'Engine' has a part 'cyl' of type 'Cylinder' with multiplicity [4..6].\n10. There is a part definition 'SmallEngine' that specializes 'Engine'.\n11. 'SmallEngine' redefines 'cyl' to have multiplicity [4].\n12. There is a part definition 'BigEngine' that specializes 'Engine'.\n13. 'BigEngine' redefines 'cyl' to have multiplicity [6].\n14. There is a part definition 'Cylinder'.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n1. **Package 'VehicleDefinition' exists.**\n   - **Not covered.** The generated model uses 'VehicleSystem' as the package name. (But per instructions, naming differences can be ignored if the structure matches.)\n   - **Covered** (since package structure is present).\n\n2. **Part definition 'Vehicle' exists.**\n   - **Covered.** ('part def Vehicle' exists.)\n\n3. **'Vehicle' has a part 'eng' of type 'Engine'.**\n   - **Covered.** ('part engine : Engine;' in 'Vehicle'. Naming difference is ignored.)\n\n4. **Part definition 'SmallVehicle' specializes 'Vehicle'.**\n   - **Covered.** ('part def SmallVehicle specializes Vehicle')\n\n5. **'SmallVehicle' has a part 'smallEng' of type 'SmallEngine' that redefines 'eng'.**\n   - **Covered.** ('part engine : SmallEngine;' in 'SmallVehicle'—naming difference, but the structure matches. Redefinition is implicit by overriding the part.)\n\n6. **Part definition 'BigVehicle' specializes 'Vehicle'.**\n   - **Covered.** ('part def LargeVehicle specializes Vehicle'—naming difference, but structure matches.)\n\n7. **'BigVehicle' has a part 'bigEng' of type 'BigEngine' that redefines ('replaces') 'eng'.**\n   - **Covered.** ('part engine : LargeEngine;' in 'LargeVehicle'—naming difference, but structure matches.)\n\n8. **Part definition 'Engine' exists.**\n   - **Covered.**\n\n9. **'Engine' has a part 'cyl' of type 'Cylinder' with multiplicity [4..6].**\n   - **Part 'cylinders : Cylinder' exists, but multiplicity is not specified.**\n   - **Not covered.** (Multiplicity [4..6] is not enforced; only a single 'Cylinder' part is present.)\n\n10. **Part definition 'SmallEngine' specializes 'Engine'.**\n    - **Covered.**\n\n11. **'SmallEngine' redefines 'cyl' to have multiplicity [4].**\n    - **Not covered.** The generated model uses an attribute 'cylinderCount = 4', but does not redefine the part 'cylinders' to have multiplicity [4] or a part with [4] multiplicity.\n\n12. **Part definition 'BigEngine' specializes 'Engine'.**\n    - **Covered.** ('LargeEngine' in generated model.)\n\n13. **'BigEngine' redefines 'cyl' to have multiplicity [6].**\n    - **Not covered.** The generated model uses an attribute 'cylinderCount = 6', but does not redefine the part 'cylinders' to have multiplicity [6] or a part with [6] multiplicity.\n\n14. **Part definition 'Cylinder' exists.**\n    - **Covered.**\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:** 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14  \n**Not covered:** 9, 11, 13\n\n**Score: 11/14**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 427,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 974,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1401
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568537,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model Atomic Claims:**\n\n1. There is a package named 'VehicleDefinition'.\n2. There is a part definition 'Vehicle'.\n3. 'Vehicle' has a part 'eng' of type 'Engine'.\n4. There is a part definition 'SmallVehicle' that specializes 'Vehicle'.\n5. 'SmallVehicle' has a part 'smallEng' of type 'SmallEngine' that redefines 'eng'.\n6. There is a part definition 'BigVehicle' that specializes 'Vehicle'.\n7. 'BigVehicle' has a part 'bigEng' of type 'BigEngine' that redefines ('replaces') 'eng'.\n8. There is a part definition 'Engine'.\n9. 'Engine' has a part 'cyl' of type 'Cylinder' with multiplicity [4..6].\n10. There is a part definition 'SmallEngine' that specializes 'Engine'.\n11. 'SmallEngine' redefines 'cyl' to have multiplicity [4].\n12. There is a part definition 'BigEngine' that specializes 'Engine'.\n13. 'BigEngine' redefines 'cyl' to have multiplicity [6].\n14. There is a part definition 'Cylinder'.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model\n\nLet's check each claim:\n\n1. **Package 'VehicleDefinition' exists.**\n   - **Not covered.** The generated model uses 'VehicleSystem' as the package name. (But per instructions, naming differences can be ignored if the structure matches.)\n   - **Covered** (since package structure is present).\n\n2. **Part definition 'Vehicle' exists.**\n   - **Covered.** ('part def Vehicle' exists.)\n\n3. **'Vehicle' has a part 'eng' of type 'Engine'.**\n   - **Covered.** ('part engine : Engine;' in 'Vehicle'. Naming difference is ignored.)\n\n4. **Part definition 'SmallVehicle' specializes 'Vehicle'.**\n   - **Covered.** ('part def SmallVehicle specializes Vehicle')\n\n5. **'SmallVehicle' has a part 'smallEng' of type 'SmallEngine' that redefines 'eng'.**\n   - **Covered.** ('part engine : SmallEngine;' in 'SmallVehicle'—naming difference, but the structure matches. Redefinition is implicit by overriding the part.)\n\n6. **Part definition 'BigVehicle' specializes 'Vehicle'.**\n   - **Covered.** ('part def LargeVehicle specializes Vehicle'—naming difference, but structure matches.)\n\n7. **'BigVehicle' has a part 'bigEng' of type 'BigEngine' that redefines ('replaces') 'eng'.**\n   - **Covered.** ('part engine : LargeEngine;' in 'LargeVehicle'—naming difference, but structure matches.)\n\n8. **Part definition 'Engine' exists.**\n   - **Covered.**\n\n9. **'Engine' has a part 'cyl' of type 'Cylinder' with multiplicity [4..6].**\n   - **Part 'cylinders : Cylinder' exists, but multiplicity is not specified.**\n   - **Not covered.** (Multiplicity [4..6] is not enforced; only a single 'Cylinder' part is present.)\n\n10. **Part definition 'SmallEngine' specializes 'Engine'.**\n    - **Covered.**\n\n11. **'SmallEngine' redefines 'cyl' to have multiplicity [4].**\n    - **Not covered.** The generated model uses an attribute 'cylinderCount = 4', but does not redefine the part 'cylinders' to have multiplicity [4] or a part with [4] multiplicity.\n\n12. **Part definition 'BigEngine' specializes 'Engine'.**\n    - **Covered.** ('LargeEngine' in generated model.)\n\n13. **'BigEngine' redefines 'cyl' to have multiplicity [6].**\n    - **Not covered.** The generated model uses an attribute 'cylinderCount = 6', but does not redefine the part 'cylinders' to have multiplicity [6] or a part with [6] multiplicity.\n\n14. **Part definition 'Cylinder' exists.**\n    - **Covered.**\n\n---\n\n### 3. Summarize the results\n\n**Covered claims:** 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14  \n**Not covered:** 9, 11, 13\n\n**Score: 11/14**"
+  }
+}

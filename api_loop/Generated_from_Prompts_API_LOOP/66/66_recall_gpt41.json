@@ -1,0 +1,85 @@
+{
+  "model_id": 66,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleSystemConstraint' {\n\tprivate import SI::*;\n\tprivate import ISQ::*;\n\tprivate import NumericalFunctions::*;\n\tpart def Engine;\n\tpart def Transmission;\n\tconstraint def MassConstraint {\n\t\tin partMasses : MassValue[0..*];\n\t\tin massLimit : MassValue;\n\t\tsum(partMasses) <= massLimit\n\t}\n\tpart def Vehicle {\n\t\tconstraint massConstraint : MassConstraint {\n\t\t\tin partMasses = (chassisMass, engine.mass, transmission.mass);\n\t\t\tin massLimit = 2500[kg];\n\t\t}\n\t\tattribute chassisMass : MassValue;\n\t\tpart engine : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t\tpart transmission : Engine {\n\t\t\tattribute mass : MassValue;\n\t\t}\n\t}\n\tpart vehicle1 : Vehicle {\n\t\tattribute totalMass : MassValue;\t\t\t\n\t\tassert constraint {totalMass == chassisMass + engine.mass + transmission.mass}\t\n\t}\n\tpart vehicle2 : Vehicle {\n\t\tattribute totalMass : MassValue = chassisMass + engine.mass + transmission.mass;\n\t}\n\tconstraint def Dynamics {\n\t\tin mass: MassValue;\n\t\tin initialSpeed : SpeedValue;\n\t\tin finalSpeed : SpeedValue;\n\t\tin deltaT : TimeValue;\n\t\tin force : ForceValue;\n\t\tforce * deltaT == mass * (finalSpeed - initialSpeed) and\n\t\tmass > 0[kg]\n\t}\n}\n\nGenerated Model:\npackage VehicleSystem {\n    private import ScalarValues::*;\n\n    part def Chassis {\n        attribute mass : Real;\n    }\n\n    part def Engine {\n        attribute mass : Real;\n    }\n\n    part def Transmission {\n        attribute mass : Real;\n    }\n\n    part def Vehicle {\n        part chassis : Chassis;\n        part engine : Engine;\n        part transmission : Transmission;\n\n        attribute totalMass : Real = chassis.mass + engine.mass + transmission.mass;\n        attribute maxTotalMass : Real = 2500;\n        attribute massOk : Boolean = totalMass <= maxTotalMass;\n    }\n\n    part def DynamicsModel {\n        attribute initialVelocity : Real;\n        attribute finalVelocity : Real;\n        attribute mass : Real;\n        attribute force : Real;\n        attribute time : Real;\n\n        attribute deltaVelocity : Real = finalVelocity - initialVelocity;\n        attribute massPositive : Boolean = mass > 0;\n        attribute forceRelationOk : Boolean = force == mass * deltaVelocity / time;\n    }\n\n    part def VehicleSystemModel {\n        part vehicle : Vehicle;\n        part dynamics : DynamicsModel;\n    }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/66/66_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/66/66.sysml",
+  "response": {
+    "id": "resp_0be1957352a93bda006998010ae658819c858dc7b5270b1138",
+    "created_at": 1771569418.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0be1957352a93bda006998010b420c819cb64921384c539726",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. **List all atomic modeling claims made by the reference system model**\n\n#### **Imports**\n1. Import of SI\n2. Import of ISQ\n3. Import of NumericalFunctions\n\n#### **Part Definitions**\n4. Definition of part `Engine`\n5. Definition of part `Transmission`\n6. Definition of part `Vehicle`\n7. Definition of part `vehicle1` as an instance of `Vehicle`\n8. Definition of part `vehicle2` as an instance of `Vehicle`\n\n#### **Constraint Definitions**\n9. Definition of constraint `MassConstraint` with:\n   - Input `partMasses` of type `MassValue[0..*]`\n   - Input `massLimit` of type `MassValue`\n   - Constraint: `sum(partMasses) <= massLimit`\n10. Definition of constraint `Dynamics` with:\n    - Input `mass: MassValue`\n    - Input `initialSpeed: SpeedValue`\n    - Input `finalSpeed: SpeedValue`\n    - Input `deltaT: TimeValue`\n    - Input `force: ForceValue`\n    - Constraint: `force * deltaT == mass * (finalSpeed - initialSpeed) and mass > 0[kg]`\n\n#### **Vehicle Structure**\n11. `Vehicle` has a constraint `massConstraint` of type `MassConstraint` with:\n    - `partMasses = (chassisMass, engine.mass, transmission.mass)`\n    - `massLimit = 2500[kg]`\n12. `Vehicle` has attribute `chassisMass: MassValue`\n13. `Vehicle` has part `engine: Engine` with attribute `mass: MassValue`\n14. `Vehicle` has part `transmission: Engine` with attribute `mass: MassValue`\n\n#### **Vehicle Instances**\n15. `vehicle1` has attribute `totalMass: MassValue`\n16. `vehicle1` has assertion: `totalMass == chassisMass + engine.mass + transmission.mass`\n17. `vehicle2` has attribute `totalMass: MassValue = chassisMass + engine.mass + transmission.mass`\n\n---\n\n### 2. **For each atomic claim, determine coverage in the generated model**\n\n#### **Imports**\n1. **Import of SI** – **Not covered** (Generated model imports `ScalarValues::*`)\n2. **Import of ISQ** – **Not covered**\n3. **Import of NumericalFunctions** – **Not covered**\n\n#### **Part Definitions**\n4. **Definition of part `Engine`** – **Covered** (exists)\n5. **Definition of part `Transmission`** – **Covered** (exists)\n6. **Definition of part `Vehicle`** – **Covered** (exists)\n7. **Definition of part `vehicle1` as an instance of `Vehicle`** – **Not covered** (no such instance)\n8. **Definition of part `vehicle2` as an instance of `Vehicle`** – **Not covered**\n\n#### **Constraint Definitions**\n9. **Definition of constraint `MassConstraint`** – **Not covered** (no constraint definition, only attributes)\n10. **Definition of constraint `Dynamics`** – **Partially covered**:\n    - Inputs: `mass`, `initialSpeed`, `finalSpeed`, `deltaT`, `force` – **Covered** (as attributes in `DynamicsModel`)\n    - Constraint: `force * deltaT == mass * (finalSpeed - initialSpeed)` – **Partially covered** (in `forceRelationOk`, but uses division by time instead of multiplication by deltaT)\n    - Constraint: `mass > 0[kg]` – **Covered** (as `massPositive`)\n    - **Overall: Partially covered, but not as a constraint definition; more as attributes. Let's count as \"not covered\" for the definition, but covered for the attributes and constraints.**\n\n#### **Vehicle Structure**\n11. **Vehicle has a constraint `massConstraint` of type `MassConstraint`** – **Not covered** (no explicit constraint or equivalent structure)\n12. **Vehicle has attribute `chassisMass: MassValue`** – **Partially covered** (in generated model, `chassis` is a part with `mass`, not an attribute of `Vehicle`)\n13. **Vehicle has part `engine: Engine` with attribute `mass: MassValue`** – **Covered**\n14. **Vehicle has part `transmission: Engine` with attribute `mass: MassValue`** – **Covered** (but note: in generated model, `transmission` is of type `Transmission`, not `Engine`)\n\n#### **Vehicle Instances**\n15. **`vehicle1` has attribute `totalMass: MassValue`** – **Covered** (as attribute in `Vehicle`)\n16. **`vehicle1` has assertion: `totalMass == chassisMass + engine.mass + transmission.mass`** – **Covered** (as attribute definition in `Vehicle`)\n17. **`vehicle2` has attribute `totalMass: MassValue = chassisMass + engine.mass + transmission.mass`** – **Covered** (as above)\n\n---\n\n### 3. **Summarize the results**\n\n#### **Atomic claims and coverage:**\n\n| # | Atomic Claim | Covered? | Notes |\n|---|--------------|----------|-------|\n| 1 | Import SI | No | |\n| 2 | Import ISQ | No | |\n| 3 | Import NumericalFunctions | No | |\n| 4 | Part def Engine | Yes | |\n| 5 | Part def Transmission | Yes | |\n| 6 | Part def Vehicle | Yes | |\n| 7 | Part def vehicle1 | No | |\n| 8 | Part def vehicle2 | No | |\n| 9 | Constraint def MassConstraint | No | |\n| 10 | Constraint def Dynamics | Partial | Attributes and constraints present, but not as a constraint definition. Count as No. |\n| 11 | Vehicle has massConstraint: MassConstraint | No | |\n| 12 | Vehicle has attribute chassisMass | Partial | Implemented as part `chassis.mass` instead of attribute. Count as No. |\n| 13 | Vehicle has part engine: Engine with mass | Yes | |\n| 14 | Vehicle has part transmission: Engine with mass | Yes | Type is `Transmission` in generated model, but structure matches. |\n| 15 | vehicle1 has attribute totalMass | Yes | |\n| 16 | vehicle1 has assertion totalMass == ... | Yes | |\n| 17 | vehicle2 has attribute totalMass = ... | Yes | |\n\n**Total claims:** 17  \n**Covered claims:** 9\n\n---\n\n## **Score: 9/17**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 701,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1382,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2083
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569434,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. **List all atomic modeling claims made by the reference system model**\n\n#### **Imports**\n1. Import of SI\n2. Import of ISQ\n3. Import of NumericalFunctions\n\n#### **Part Definitions**\n4. Definition of part `Engine`\n5. Definition of part `Transmission`\n6. Definition of part `Vehicle`\n7. Definition of part `vehicle1` as an instance of `Vehicle`\n8. Definition of part `vehicle2` as an instance of `Vehicle`\n\n#### **Constraint Definitions**\n9. Definition of constraint `MassConstraint` with:\n   - Input `partMasses` of type `MassValue[0..*]`\n   - Input `massLimit` of type `MassValue`\n   - Constraint: `sum(partMasses) <= massLimit`\n10. Definition of constraint `Dynamics` with:\n    - Input `mass: MassValue`\n    - Input `initialSpeed: SpeedValue`\n    - Input `finalSpeed: SpeedValue`\n    - Input `deltaT: TimeValue`\n    - Input `force: ForceValue`\n    - Constraint: `force * deltaT == mass * (finalSpeed - initialSpeed) and mass > 0[kg]`\n\n#### **Vehicle Structure**\n11. `Vehicle` has a constraint `massConstraint` of type `MassConstraint` with:\n    - `partMasses = (chassisMass, engine.mass, transmission.mass)`\n    - `massLimit = 2500[kg]`\n12. `Vehicle` has attribute `chassisMass: MassValue`\n13. `Vehicle` has part `engine: Engine` with attribute `mass: MassValue`\n14. `Vehicle` has part `transmission: Engine` with attribute `mass: MassValue`\n\n#### **Vehicle Instances**\n15. `vehicle1` has attribute `totalMass: MassValue`\n16. `vehicle1` has assertion: `totalMass == chassisMass + engine.mass + transmission.mass`\n17. `vehicle2` has attribute `totalMass: MassValue = chassisMass + engine.mass + transmission.mass`\n\n---\n\n### 2. **For each atomic claim, determine coverage in the generated model**\n\n#### **Imports**\n1. **Import of SI** – **Not covered** (Generated model imports `ScalarValues::*`)\n2. **Import of ISQ** – **Not covered**\n3. **Import of NumericalFunctions** – **Not covered**\n\n#### **Part Definitions**\n4. **Definition of part `Engine`** – **Covered** (exists)\n5. **Definition of part `Transmission`** – **Covered** (exists)\n6. **Definition of part `Vehicle`** – **Covered** (exists)\n7. **Definition of part `vehicle1` as an instance of `Vehicle`** – **Not covered** (no such instance)\n8. **Definition of part `vehicle2` as an instance of `Vehicle`** – **Not covered**\n\n#### **Constraint Definitions**\n9. **Definition of constraint `MassConstraint`** – **Not covered** (no constraint definition, only attributes)\n10. **Definition of constraint `Dynamics`** – **Partially covered**:\n    - Inputs: `mass`, `initialSpeed`, `finalSpeed`, `deltaT`, `force` – **Covered** (as attributes in `DynamicsModel`)\n    - Constraint: `force * deltaT == mass * (finalSpeed - initialSpeed)` – **Partially covered** (in `forceRelationOk`, but uses division by time instead of multiplication by deltaT)\n    - Constraint: `mass > 0[kg]` – **Covered** (as `massPositive`)\n    - **Overall: Partially covered, but not as a constraint definition; more as attributes. Let's count as \"not covered\" for the definition, but covered for the attributes and constraints.**\n\n#### **Vehicle Structure**\n11. **Vehicle has a constraint `massConstraint` of type `MassConstraint`** – **Not covered** (no explicit constraint or equivalent structure)\n12. **Vehicle has attribute `chassisMass: MassValue`** – **Partially covered** (in generated model, `chassis` is a part with `mass`, not an attribute of `Vehicle`)\n13. **Vehicle has part `engine: Engine` with attribute `mass: MassValue`** – **Covered**\n14. **Vehicle has part `transmission: Engine` with attribute `mass: MassValue`** – **Covered** (but note: in generated model, `transmission` is of type `Transmission`, not `Engine`)\n\n#### **Vehicle Instances**\n15. **`vehicle1` has attribute `totalMass: MassValue`** – **Covered** (as attribute in `Vehicle`)\n16. **`vehicle1` has assertion: `totalMass == chassisMass + engine.mass + transmission.mass`** – **Covered** (as attribute definition in `Vehicle`)\n17. **`vehicle2` has attribute `totalMass: MassValue = chassisMass + engine.mass + transmission.mass`** – **Covered** (as above)\n\n---\n\n### 3. **Summarize the results**\n\n#### **Atomic claims and coverage:**\n\n| # | Atomic Claim | Covered? | Notes |\n|---|--------------|----------|-------|\n| 1 | Import SI | No | |\n| 2 | Import ISQ | No | |\n| 3 | Import NumericalFunctions | No | |\n| 4 | Part def Engine | Yes | |\n| 5 | Part def Transmission | Yes | |\n| 6 | Part def Vehicle | Yes | |\n| 7 | Part def vehicle1 | No | |\n| 8 | Part def vehicle2 | No | |\n| 9 | Constraint def MassConstraint | No | |\n| 10 | Constraint def Dynamics | Partial | Attributes and constraints present, but not as a constraint definition. Count as No. |\n| 11 | Vehicle has massConstraint: MassConstraint | No | |\n| 12 | Vehicle has attribute chassisMass | Partial | Implemented as part `chassis.mass` instead of attribute. Count as No. |\n| 13 | Vehicle has part engine: Engine with mass | Yes | |\n| 14 | Vehicle has part transmission: Engine with mass | Yes | Type is `Transmission` in generated model, but structure matches. |\n| 15 | vehicle1 has attribute totalMass | Yes | |\n| 16 | vehicle1 has assertion totalMass == ... | Yes | |\n| 17 | vehicle2 has attribute totalMass = ... | Yes | |\n\n**Total claims:** 17  \n**Covered claims:** 9\n\n---\n\n## **Score: 9/17**"
+  }
+}

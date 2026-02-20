@@ -1,0 +1,85 @@
+{
+  "model_id": 151,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'TransportationUseCases' {\n\tpart def Vehicle;\n\tpart def Person;\n\tpart def Environment;\n\tpart def 'Fuel Station';\n\tuse case 'provide transportation' {\n\t\tsubject vehicle : Vehicle;\n\t\tactor driver : Person;\n\t\tactor passengers : Person[0..4];\n\t\tactor environment : Environment;\n\t\tobjective {\n\t\t}\n\t\tref :>> start {\n\t\t\tassert constraint {\n\t\t\t}\n\t\t}\n\t\tfirst start;\n\t\tthen include 'enter vehicle' {\n\t\t\tactor :>> driver = 'provide transportation'::driver;\n\t\t\tactor :>> passengers = 'provide transportation'::passengers;\n\t\t}\n\t\tthen use case 'drive vehicle' {\n\t\t\tinclude 'add fuel'[0..*] {\n\t\t\t\tactor :>> fueler = driver;\n\t\t\t\tref :>> start {\n\t\t\t\t\tdoc /* Fuel level < 10% max fuel */\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\tthen include 'exit vehicle' {\n\t\t\tactor :>> driver = 'provide transportation'::driver;\n\t\t\tactor :>> passengers = 'provide transportation'::passengers;\n\t\t}\n\t\tthen done;\n\t\tref :>> done {\n\t\t\tassert constraint {\n\t\t\t}\n\t\t}\n\t}\n\tuse case 'enter vehicle' {\n\t\tsubject vehicle : Vehicle;\n\t\tactor driver : Person;\n\t\tactor passengers : Person[0..4];\n\t}\n\tuse case 'exit vehicle' {\n\t\tsubject vehicle : Vehicle;\n\t\tactor driver : Person;\n\t\tactor passengers : Person[0..4];\n\t}\n\tuse case 'add fuel' {\n\t\tsubject vehicle : Vehicle;\n\t\tactor fueler : Person;\n\t\tactor 'fuel station' : 'Fuel Station';\n\t}\n}\n\nGenerated Model:\npackage TransportationService {\n  private import ScalarValues::*;\n\n  enum def VehicleUseStatus {\n    enum idle;\n    enum inUse;\n  }\n\n  part def Environment {\n    attribute roadCondition : String;\n    attribute weather : String;\n  }\n\n  part def Driver {\n    attribute licensed : Boolean;\n    attribute inVehicle : Boolean;\n  }\n\n  part def Passenger {\n    attribute inVehicle : Boolean;\n  }\n\n  part def GasStation {\n    attribute available : Boolean;\n  }\n\n  part def Vehicle {\n    attribute maxFuelCapacity : Real;\n    attribute fuelLevel : Real;\n    attribute fuelLowThreshold : Real = 0.1;\n    attribute seats : Integer = 5;\n  }\n\n  part def TransportationSystem {\n    part vehicle : Vehicle;\n    part driver : Driver;\n    part passengers : Passenger [0..4];\n    part environment : Environment;\n    part gasStation : GasStation;\n    attribute status : VehicleUseStatus;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/151/151_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/151/151.sysml",
+  "response": {
+    "id": "resp_0fd0e2bad891c45700699802a4750c81a281cc21705cf88620",
+    "created_at": 1771569828.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0fd0e2bad891c45700699802a4d52c81a287af6d319d603643",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n#### **Parts**\n1. Definition of part `Vehicle`.\n2. Definition of part `Person`.\n3. Definition of part `Environment`.\n4. Definition of part `'Fuel Station'`.\n\n#### **Use Cases**\n5. Definition of use case `'provide transportation'`.\n6. `'provide transportation'` has subject `vehicle : Vehicle`.\n7. `'provide transportation'` has actor `driver : Person`.\n8. `'provide transportation'` has actor `passengers : Person[0..4]`.\n9. `'provide transportation'` has actor `environment : Environment`.\n10. `'provide transportation'` includes `'enter vehicle'` use case.\n11. `'provide transportation'` includes `'drive vehicle'` use case.\n12. `'provide transportation'` includes `'exit vehicle'` use case.\n\n#### **Use Case: 'enter vehicle'**\n13. Definition of use case `'enter vehicle'`.\n14. `'enter vehicle'` has subject `vehicle : Vehicle`.\n15. `'enter vehicle'` has actor `driver : Person`.\n16. `'enter vehicle'` has actor `passengers : Person[0..4]`.\n\n#### **Use Case: 'exit vehicle'**\n17. Definition of use case `'exit vehicle'`.\n18. `'exit vehicle'` has subject `vehicle : Vehicle`.\n19. `'exit vehicle'` has actor `driver : Person`.\n20. `'exit vehicle'` has actor `passengers : Person[0..4]`.\n\n#### **Use Case: 'add fuel'**\n21. Definition of use case `'add fuel'`.\n22. `'add fuel'` has subject `vehicle : Vehicle`.\n23. `'add fuel'` has actor `fueler : Person`.\n24. `'add fuel'` has actor `'fuel station' : 'Fuel Station'`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model.\n\n#### **Parts**\n1. **Vehicle**: Yes, `part def Vehicle` exists.\n2. **Person**: **No.** Instead, there are `Driver` and `Passenger` parts, but no generic `Person` part.\n3. **Environment**: Yes, `part def Environment` exists.\n4. **'Fuel Station'**: **No.** There is `GasStation`, which could be considered equivalent, but the reference uses `'Fuel Station'` as a part and as an actor. If we accept `GasStation` as equivalent, this is covered. **Let's accept it as equivalent.**\n\n#### **Use Cases**\n5. **'provide transportation'**: **No.** No use cases are modeled in the generated model.\n6. **Subject vehicle : Vehicle**: **No.** No use cases.\n7. **Actor driver : Person**: **No.**\n8. **Actor passengers : Person[0..4]**: **No.**\n9. **Actor environment : Environment**: **No.**\n10. **Includes 'enter vehicle'**: **No.**\n11. **Includes 'drive vehicle'**: **No.**\n12. **Includes 'exit vehicle'**: **No.**\n\n#### **Use Case: 'enter vehicle'**\n13. **Definition of use case 'enter vehicle'**: **No.**\n14. **Subject vehicle : Vehicle**: **No.**\n15. **Actor driver : Person**: **No.**\n16. **Actor passengers : Person[0..4]**: **No.**\n\n#### **Use Case: 'exit vehicle'**\n17. **Definition of use case 'exit vehicle'**: **No.**\n18. **Subject vehicle : Vehicle**: **No.**\n19. **Actor driver : Person**: **No.**\n20. **Actor passengers : Person[0..4]**: **No.**\n\n#### **Use Case: 'add fuel'**\n21. **Definition of use case 'add fuel'**: **No.**\n22. **Subject vehicle : Vehicle**: **No.**\n23. **Actor fueler : Person**: **No.**\n24. **Actor 'fuel station' : 'Fuel Station'**: **No.**\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Vehicle**: Yes (1)\n- **Person**: No\n- **Environment**: Yes (2)\n- **'Fuel Station'**: Yes (3, accepting `GasStation` as equivalent)\n\nAll other claims (use cases and their structure) are **not covered**.\n\n**Score: 3/24**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 735,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 976,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1711
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569838,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n#### **Parts**\n1. Definition of part `Vehicle`.\n2. Definition of part `Person`.\n3. Definition of part `Environment`.\n4. Definition of part `'Fuel Station'`.\n\n#### **Use Cases**\n5. Definition of use case `'provide transportation'`.\n6. `'provide transportation'` has subject `vehicle : Vehicle`.\n7. `'provide transportation'` has actor `driver : Person`.\n8. `'provide transportation'` has actor `passengers : Person[0..4]`.\n9. `'provide transportation'` has actor `environment : Environment`.\n10. `'provide transportation'` includes `'enter vehicle'` use case.\n11. `'provide transportation'` includes `'drive vehicle'` use case.\n12. `'provide transportation'` includes `'exit vehicle'` use case.\n\n#### **Use Case: 'enter vehicle'**\n13. Definition of use case `'enter vehicle'`.\n14. `'enter vehicle'` has subject `vehicle : Vehicle`.\n15. `'enter vehicle'` has actor `driver : Person`.\n16. `'enter vehicle'` has actor `passengers : Person[0..4]`.\n\n#### **Use Case: 'exit vehicle'**\n17. Definition of use case `'exit vehicle'`.\n18. `'exit vehicle'` has subject `vehicle : Vehicle`.\n19. `'exit vehicle'` has actor `driver : Person`.\n20. `'exit vehicle'` has actor `passengers : Person[0..4]`.\n\n#### **Use Case: 'add fuel'**\n21. Definition of use case `'add fuel'`.\n22. `'add fuel'` has subject `vehicle : Vehicle`.\n23. `'add fuel'` has actor `fueler : Person`.\n24. `'add fuel'` has actor `'fuel station' : 'Fuel Station'`.\n\n---\n\n### 2. For each atomic claim, determine whether it is covered by the generated model.\n\n#### **Parts**\n1. **Vehicle**: Yes, `part def Vehicle` exists.\n2. **Person**: **No.** Instead, there are `Driver` and `Passenger` parts, but no generic `Person` part.\n3. **Environment**: Yes, `part def Environment` exists.\n4. **'Fuel Station'**: **No.** There is `GasStation`, which could be considered equivalent, but the reference uses `'Fuel Station'` as a part and as an actor. If we accept `GasStation` as equivalent, this is covered. **Let's accept it as equivalent.**\n\n#### **Use Cases**\n5. **'provide transportation'**: **No.** No use cases are modeled in the generated model.\n6. **Subject vehicle : Vehicle**: **No.** No use cases.\n7. **Actor driver : Person**: **No.**\n8. **Actor passengers : Person[0..4]**: **No.**\n9. **Actor environment : Environment**: **No.**\n10. **Includes 'enter vehicle'**: **No.**\n11. **Includes 'drive vehicle'**: **No.**\n12. **Includes 'exit vehicle'**: **No.**\n\n#### **Use Case: 'enter vehicle'**\n13. **Definition of use case 'enter vehicle'**: **No.**\n14. **Subject vehicle : Vehicle**: **No.**\n15. **Actor driver : Person**: **No.**\n16. **Actor passengers : Person[0..4]**: **No.**\n\n#### **Use Case: 'exit vehicle'**\n17. **Definition of use case 'exit vehicle'**: **No.**\n18. **Subject vehicle : Vehicle**: **No.**\n19. **Actor driver : Person**: **No.**\n20. **Actor passengers : Person[0..4]**: **No.**\n\n#### **Use Case: 'add fuel'**\n21. **Definition of use case 'add fuel'**: **No.**\n22. **Subject vehicle : Vehicle**: **No.**\n23. **Actor fueler : Person**: **No.**\n24. **Actor 'fuel station' : 'Fuel Station'**: **No.**\n\n---\n\n### 3. Summarize the results\n\nLet's count the covered claims:\n\n- **Vehicle**: Yes (1)\n- **Person**: No\n- **Environment**: Yes (2)\n- **'Fuel Station'**: Yes (3, accepting `GasStation` as equivalent)\n\nAll other claims (use cases and their structure) are **not covered**.\n\n**Score: 3/24**"
+  }
+}

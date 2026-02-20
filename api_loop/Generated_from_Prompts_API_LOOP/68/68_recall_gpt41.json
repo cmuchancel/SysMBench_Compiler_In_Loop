@@ -1,0 +1,85 @@
+{
+  "model_id": 68,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleSystemRequirementsSpecification' {\n\tprivate import ISQ::*;\n\tprivate import SI::*;\n\trequirement def MassLimitationRequirement {\n\t\tdoc /* The actual mass shall be less than or equal to the required mass. */\n\t\tattribute massActual: MassValue;\n\t\tattribute massReqd: MassValue;\n\t\trequire constraint { massActual <= massReqd }\n\t}\n\tpart def Vehicle {\n\t\tattribute dryMass: MassValue;\n\t\tattribute fuelMass: MassValue;\n\t\tattribute fuelFullMass: MassValue;\n\t}\n\trequirement def <'1'> VehicleMassLimitationRequirement :> MassLimitationRequirement {\n\t\tdoc /* The total mass of a vehicle shall be less than or equal to the required mass. */\n\t\tsubject vehicle : Vehicle;\n\t\tattribute redefines massActual = vehicle.dryMass + vehicle.fuelMass;\n\t\tassume constraint { vehicle.fuelMass > 0[kg] }\n\t}\n\tport def ClutchPort;\n\taction def GenerateTorque;\n\trequirement def <'2'> DrivePowerInterface {\n\t\tdoc /* The engine shall transfer its generated torque to the transmission via the clutch interface. */\n\t\tsubject clutchPort: ClutchPort;\n\t}\n\trequirement def <'3'> TorqueGeneration {\n\t\tdoc /* The engine shall generate torque as a function of RPM as shown in Table 1. */\n\t\tsubject generateTorque: GenerateTorque;\n\t}\n}\n\nGenerated Model:\npackage VehicleSystem {\n  private import ScalarValues::*;\n\n  port def TorquePort {\n    attribute torque : Real;\n    attribute speed : Real;\n  }\n\n  part def Engine {\n    port torqueOut : TorquePort;\n    attribute maxTorque : Real = 300;\n    attribute ratedSpeed : Real = 4000;\n  }\n\n  part def Clutch {\n    port engineSide : TorquePort;\n    port transSide : TorquePort;\n  }\n\n  part def Transmission {\n    port input : TorquePort;\n  }\n\n  part def Vehicle {\n    attribute curbMass : Real = 1450;\n    attribute fuelMass : Real = 50;\n    attribute totalMass : Real = 1500;\n    attribute maxMassLimit : Real = 2000;\n\n    part engine : Engine;\n    part clutch : Clutch;\n    part transmission : Transmission;\n\n    connect engine.torqueOut to clutch.engineSide;\n    connect clutch.transSide to transmission.input;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/68/68_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/68/68.sysml",
+  "response": {
+    "id": "resp_0d66fd234da9cdb2006998014d38a88195b5c92e4b3cda29d0",
+    "created_at": 1771569485.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0d66fd234da9cdb2006998014d75d081958fad37547af370ec",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. The package is defined.\n2. Private import of ISQ::*.\n3. Private import of SI::*.\n4. Definition of requirement `MassLimitationRequirement`.\n5. `MassLimitationRequirement` has attribute `massActual` of type `MassValue`.\n6. `MassLimitationRequirement` has attribute `massReqd` of type `MassValue`.\n7. `MassLimitationRequirement` has constraint: `massActual <= massReqd`.\n8. Definition of part `Vehicle`.\n9. `Vehicle` has attribute `dryMass` of type `MassValue`.\n10. `Vehicle` has attribute `fuelMass` of type `MassValue`.\n11. `Vehicle` has attribute `fuelFullMass` of type `MassValue`.\n12. Definition of requirement `<1> VehicleMassLimitationRequirement` as a specialization of `MassLimitationRequirement`.\n13. `<1> VehicleMassLimitationRequirement` has subject `vehicle` of type `Vehicle`.\n14. `<1> VehicleMassLimitationRequirement` redefines `massActual` as `vehicle.dryMass + vehicle.fuelMass`.\n15. `<1> VehicleMassLimitationRequirement` has constraint: `vehicle.fuelMass > 0[kg]`.\n16. Definition of port `ClutchPort`.\n17. Definition of action `GenerateTorque`.\n18. Definition of requirement `<2> DrivePowerInterface`.\n19. `<2> DrivePowerInterface` has subject `clutchPort` of type `ClutchPort`.\n20. Definition of requirement `<3> TorqueGeneration`.\n21. `<3> TorqueGeneration` has subject `generateTorque` of type `GenerateTorque`.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n**Assessment:**\n\n1. **Package defined**: Yes (package exists, name difference ignored).\n2. **Private import of ISQ**: No (not present).\n3. **Private import of SI**: No (not present).\n4. **Requirement `MassLimitationRequirement` defined**: No (not present).\n5. **`massActual` attribute in requirement**: No.\n6. **`massReqd` attribute in requirement**: No.\n7. **Constraint `massActual <= massReqd`**: No.\n8. **Part `Vehicle` defined**: Yes.\n9. **`Vehicle` has `dryMass` attribute**: No (`curbMass` and `fuelMass` present, but not `dryMass`).\n10. **`Vehicle` has `fuelMass` attribute**: Yes.\n11. **`Vehicle` has `fuelFullMass` attribute**: No.\n12. **Requirement `<1> VehicleMassLimitationRequirement` specialization**: No.\n13. **Subject `vehicle` in `<1> VehicleMassLimitationRequirement`**: No.\n14. **Redefinition of `massActual` as sum**: No.\n15. **Constraint `vehicle.fuelMass > 0[kg]`**: No.\n16. **Port `ClutchPort` defined**: No (`TorquePort` is defined, but not specifically as `ClutchPort`).\n17. **Action `GenerateTorque` defined**: No.\n18. **Requirement `<2> DrivePowerInterface` defined**: No.\n19. **Subject `clutchPort` in `<2> DrivePowerInterface`**: No.\n20. **Requirement `<3> TorqueGeneration` defined**: No.\n21. **Subject `generateTorque` in `<3> TorqueGeneration`**: No.\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n\n- 1. Package defined.\n- 8. Part `Vehicle` defined.\n- 10. `Vehicle` has `fuelMass` attribute.\n\n**Score: 3/21**\n\n---\n\n**Final Output:**\n\nScore: 3/21",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 671,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 843,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1514
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569496,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model.\n\n**Reference Model Atomic Claims:**\n\n1. The package is defined.\n2. Private import of ISQ::*.\n3. Private import of SI::*.\n4. Definition of requirement `MassLimitationRequirement`.\n5. `MassLimitationRequirement` has attribute `massActual` of type `MassValue`.\n6. `MassLimitationRequirement` has attribute `massReqd` of type `MassValue`.\n7. `MassLimitationRequirement` has constraint: `massActual <= massReqd`.\n8. Definition of part `Vehicle`.\n9. `Vehicle` has attribute `dryMass` of type `MassValue`.\n10. `Vehicle` has attribute `fuelMass` of type `MassValue`.\n11. `Vehicle` has attribute `fuelFullMass` of type `MassValue`.\n12. Definition of requirement `<1> VehicleMassLimitationRequirement` as a specialization of `MassLimitationRequirement`.\n13. `<1> VehicleMassLimitationRequirement` has subject `vehicle` of type `Vehicle`.\n14. `<1> VehicleMassLimitationRequirement` redefines `massActual` as `vehicle.dryMass + vehicle.fuelMass`.\n15. `<1> VehicleMassLimitationRequirement` has constraint: `vehicle.fuelMass > 0[kg]`.\n16. Definition of port `ClutchPort`.\n17. Definition of action `GenerateTorque`.\n18. Definition of requirement `<2> DrivePowerInterface`.\n19. `<2> DrivePowerInterface` has subject `clutchPort` of type `ClutchPort`.\n20. Definition of requirement `<3> TorqueGeneration`.\n21. `<3> TorqueGeneration` has subject `generateTorque` of type `GenerateTorque`.\n\n---\n\n### 2. For each atomic claim in the reference model, determine whether it is covered by the generated model.\n\n**Assessment:**\n\n1. **Package defined**: Yes (package exists, name difference ignored).\n2. **Private import of ISQ**: No (not present).\n3. **Private import of SI**: No (not present).\n4. **Requirement `MassLimitationRequirement` defined**: No (not present).\n5. **`massActual` attribute in requirement**: No.\n6. **`massReqd` attribute in requirement**: No.\n7. **Constraint `massActual <= massReqd`**: No.\n8. **Part `Vehicle` defined**: Yes.\n9. **`Vehicle` has `dryMass` attribute**: No (`curbMass` and `fuelMass` present, but not `dryMass`).\n10. **`Vehicle` has `fuelMass` attribute**: Yes.\n11. **`Vehicle` has `fuelFullMass` attribute**: No.\n12. **Requirement `<1> VehicleMassLimitationRequirement` specialization**: No.\n13. **Subject `vehicle` in `<1> VehicleMassLimitationRequirement`**: No.\n14. **Redefinition of `massActual` as sum**: No.\n15. **Constraint `vehicle.fuelMass > 0[kg]`**: No.\n16. **Port `ClutchPort` defined**: No (`TorquePort` is defined, but not specifically as `ClutchPort`).\n17. **Action `GenerateTorque` defined**: No.\n18. **Requirement `<2> DrivePowerInterface` defined**: No.\n19. **Subject `clutchPort` in `<2> DrivePowerInterface`**: No.\n20. **Requirement `<3> TorqueGeneration` defined**: No.\n21. **Subject `generateTorque` in `<3> TorqueGeneration`**: No.\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n\n- 1. Package defined.\n- 8. Part `Vehicle` defined.\n- 10. `Vehicle` has `fuelMass` attribute.\n\n**Score: 3/21**\n\n---\n\n**Final Output:**\n\nScore: 3/21"
+  }
+}

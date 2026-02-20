@@ -1,0 +1,85 @@
+{
+  "model_id": 8,
+  "evaluation": "recall",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-r.txt",
+  "prompt": "Your task is to evaluate the **recall** of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the reference system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the reference model, determine whether it is covered by the generated model (i.e., the generated model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of covered claims>/<total number of claims in the reference model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'VehicleDefinition' {\n\tprivate import ScalarValues::*;\n\titem def Fuel;\n\titem def Person;\n\tpart def Vehicle {\n\t\tattribute mass : Real;\n\t\tref item driver : Person;\n\t\tpart fuelTank {\n\t\t\titem fuel: Fuel;\n\t\t}\t\t\n\t}\t\n}\n\nGenerated Model:\npackage VehicleModeling {\n  private import ScalarValues::*;\n\n  enum def FuelType {\n    enum Gasoline;\n    enum Diesel;\n    enum Electric;\n    enum Hydrogen;\n  }\n\n  part def Fuel {\n    attribute fuelType : FuelType;\n    attribute description : String;\n  }\n\n  part def Personnel {\n    attribute name : String;\n    attribute personnelId : String;\n  }\n\n  part def Driver {\n    part info : Personnel;\n    attribute licenseId : String;\n  }\n\n  part def QualityAttributes {\n    attribute safetyLevel : String;\n    attribute reliabilityLevel : String;\n  }\n\n  part def FuelTank {\n    part storedFuel : Fuel;\n    attribute capacity : Real;\n  }\n\n  part def Vehicle {\n    attribute model : String;\n    part quality : QualityAttributes;\n    part driver : Driver;\n    part fuelTank : FuelTank;\n  }\n\n  part def DataRepository {\n    part fuelInfo : Fuel;\n    part personnelInfo : Personnel;\n  }\n\n  part def VehicleModelingSystem {\n    part vehicle : Vehicle;\n    part data : DataRepository;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/8/8_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/8/8.sysml",
+  "response": {
+    "id": "resp_01b5efc147113ff1006997fdfb148c819fb4ae635b104beb54",
+    "created_at": 1771568635.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_01b5efc147113ff1006997fdfb6354819fb2b981c01d82e076",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage 'VehicleDefinition' {\n\tprivate import ScalarValues::*;\n\titem def Fuel;\n\titem def Person;\n\tpart def Vehicle {\n\t\tattribute mass : Real;\n\t\tref item driver : Person;\n\t\tpart fuelTank {\n\t\t\titem fuel: Fuel;\n\t\t}\t\t\n\t}\t\n}\n```\n\n**Atomic Claims:**\n1. The model imports `ScalarValues`.\n2. There is an item/type named `Fuel`.\n3. There is an item/type named `Person`.\n4. There is a part/type named `Vehicle`.\n5. `Vehicle` has an attribute `mass` of type `Real`.\n6. `Vehicle` has a reference item `driver` of type `Person`.\n7. `Vehicle` has a part named `fuelTank`.\n8. `fuelTank` contains an item `fuel` of type `Fuel`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n#### 1. The model imports `ScalarValues`.\n- **Generated model:** `private import ScalarValues::*;` is present.\n- **Covered:** Yes\n\n#### 2. There is an item/type named `Fuel`.\n- **Generated model:** There is a `part def Fuel` (not an item, but a part), and `Fuel` is used as a type.\n- **Covered:** Yes (accepting part/item equivalence for minimal modeling element)\n\n#### 3. There is an item/type named `Person`.\n- **Generated model:** There is a `part def Personnel` and a `part def Driver` (with `info : Personnel`), but no direct `Person` type.\n- **Covered:** No (no direct equivalent to `Person` as a type; `Personnel` is not clearly the same as `Person`)\n\n#### 4. There is a part/type named `Vehicle`.\n- **Generated model:** `part def Vehicle` exists.\n- **Covered:** Yes\n\n#### 5. `Vehicle` has an attribute `mass` of type `Real`.\n- **Generated model:** `Vehicle` has an attribute `model : String`, but no `mass` attribute.\n- **Covered:** No\n\n#### 6. `Vehicle` has a reference item `driver` of type `Person`.\n- **Generated model:** `Vehicle` has a part `driver : Driver`, and `Driver` contains `info : Personnel`. There is no direct reference to a `Person` type.\n- **Covered:** No (structure is different; not a reference to a `Person` type)\n\n#### 7. `Vehicle` has a part named `fuelTank`.\n- **Generated model:** `Vehicle` has a part `fuelTank : FuelTank`.\n- **Covered:** Yes\n\n#### 8. `fuelTank` contains an item `fuel` of type `Fuel`.\n- **Generated model:** `FuelTank` contains a part `storedFuel : Fuel`.\n- **Covered:** Yes (accepting naming difference)\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n1. Import of ScalarValues\n2. Definition of Fuel\n3. Definition of Vehicle\n4. Vehicle has a part fuelTank\n5. fuelTank contains fuel of type Fuel\n\n**Not Covered Claims:**\n1. Definition of Person\n2. Vehicle has attribute mass: Real\n3. Vehicle has reference item driver: Person\n\n**Score:** 5/8\n\n---\n\n**Final Output:**\n\nScore: 5/8",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 463,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 738,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 1201
+    },
+    "user": null,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1771568643,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the reference system model\n\n**Reference Model:**\n```plaintext\npackage 'VehicleDefinition' {\n\tprivate import ScalarValues::*;\n\titem def Fuel;\n\titem def Person;\n\tpart def Vehicle {\n\t\tattribute mass : Real;\n\t\tref item driver : Person;\n\t\tpart fuelTank {\n\t\t\titem fuel: Fuel;\n\t\t}\t\t\n\t}\t\n}\n```\n\n**Atomic Claims:**\n1. The model imports `ScalarValues`.\n2. There is an item/type named `Fuel`.\n3. There is an item/type named `Person`.\n4. There is a part/type named `Vehicle`.\n5. `Vehicle` has an attribute `mass` of type `Real`.\n6. `Vehicle` has a reference item `driver` of type `Person`.\n7. `Vehicle` has a part named `fuelTank`.\n8. `fuelTank` contains an item `fuel` of type `Fuel`.\n\n---\n\n### 2. For each atomic claim, determine coverage in the generated model\n\n#### 1. The model imports `ScalarValues`.\n- **Generated model:** `private import ScalarValues::*;` is present.\n- **Covered:** Yes\n\n#### 2. There is an item/type named `Fuel`.\n- **Generated model:** There is a `part def Fuel` (not an item, but a part), and `Fuel` is used as a type.\n- **Covered:** Yes (accepting part/item equivalence for minimal modeling element)\n\n#### 3. There is an item/type named `Person`.\n- **Generated model:** There is a `part def Personnel` and a `part def Driver` (with `info : Personnel`), but no direct `Person` type.\n- **Covered:** No (no direct equivalent to `Person` as a type; `Personnel` is not clearly the same as `Person`)\n\n#### 4. There is a part/type named `Vehicle`.\n- **Generated model:** `part def Vehicle` exists.\n- **Covered:** Yes\n\n#### 5. `Vehicle` has an attribute `mass` of type `Real`.\n- **Generated model:** `Vehicle` has an attribute `model : String`, but no `mass` attribute.\n- **Covered:** No\n\n#### 6. `Vehicle` has a reference item `driver` of type `Person`.\n- **Generated model:** `Vehicle` has a part `driver : Driver`, and `Driver` contains `info : Personnel`. There is no direct reference to a `Person` type.\n- **Covered:** No (structure is different; not a reference to a `Person` type)\n\n#### 7. `Vehicle` has a part named `fuelTank`.\n- **Generated model:** `Vehicle` has a part `fuelTank : FuelTank`.\n- **Covered:** Yes\n\n#### 8. `fuelTank` contains an item `fuel` of type `Fuel`.\n- **Generated model:** `FuelTank` contains a part `storedFuel : Fuel`.\n- **Covered:** Yes (accepting naming difference)\n\n---\n\n### 3. Summarize the results\n\n**Covered Claims:**\n1. Import of ScalarValues\n2. Definition of Fuel\n3. Definition of Vehicle\n4. Vehicle has a part fuelTank\n5. fuelTank contains fuel of type Fuel\n\n**Not Covered Claims:**\n1. Definition of Person\n2. Vehicle has attribute mass: Real\n3. Vehicle has reference item driver: Person\n\n**Score:** 5/8\n\n---\n\n**Final Output:**\n\nScore: 5/8"
+  }
+}

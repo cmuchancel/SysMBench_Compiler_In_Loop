@@ -1,0 +1,85 @@
+{
+  "model_id": 33,
+  "evaluation": "precision",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "prompt_file": "/Users/chancelavoie/Desktop/AI_AGENT_Benchmarking_Compiler_in_Loop/evaluation_scripts/Evaluation_Prompts/sysm-eval-p.txt",
+  "prompt": "Your task is to evaluate the precision of a generated system model. You will be given a reference system model and a generated system model. Please perform the following steps:\n\n1. List all atomic modeling claims made by the generated system model. Each atomic claim should correspond to a minimal, meaningful modeling element (e.g., the definition of a part, the declaration of an attribute, the use of types, or structural relations like containment or reference).\n2. For each atomic claim in the generated model, determine whether it is supported by the reference model (i.e., the reference model contains the same or equivalent element).\n3. Summarize the results using the format: Score: <number of supported claims>/<total number of claims in the generated model>\n\nYou should IGNORE formatting or identifier NAMING differences if the structure and semantics match.\n\nInput:\nReference Model:\npackage 'CameraMessagingSystem' {\n\titem def Scene;\n\titem def Image;\n\titem def Picture;\n\tattribute def Show {\n\t\titem picture : Picture;\n\t}\n\taction def Focus { in item scene : Scene; out item image : Image; }\n\taction def Shoot { in item image : Image; out item picture : Picture; }\n\taction def TakePicture;\n\tpart screen {\n\t\tport displayPort;\n\t}\n\tpart camera {\n\t\tport viewPort;\n\t\tport displayPort;\n\t\taction takePicture : TakePicture {\n\t\t\taction trigger accept scene : Scene via viewPort;\n\t\t\tthen action focus : Focus {\n\t\t\t\tin item scene = trigger.scene;\n\t\t\t\tout item image;\n\t\t\t}\n\t\t\tflow from focus.image to shoot.image;\n\t\t\tthen action shoot : Shoot {\n\t\t\t\tin item image; \n\t\t\t\tout item picture;\n\t\t\t}\n\t\t\tthen send Show(shoot.picture) via displayPort;\n\t\t}\n\t}\n}\n\nGenerated Model:\npackage CameraWorkflow {\n  private import ScalarValues::*;\n\n  item def Scene;\n  item def Image;\n  item def Picture;\n\n  port def ScenePort {\n    ref item scene : Scene;\n  }\n\n  port def ImagePort {\n    ref item image : Image;\n  }\n\n  port def PicturePort {\n    ref item picture : Picture;\n  }\n\n  port def DisplayPort {\n    ref item picture : Picture;\n  }\n\n  part def User {\n    port viewPort : ScenePort;\n  }\n\n  part def Focusing {\n    port sceneIn : ScenePort;\n    port imageOut : ImagePort;\n  }\n\n  part def Capturing {\n    port imageIn : ImagePort;\n    port pictureOut : PicturePort;\n  }\n\n  part def Displaying {\n    port pictureIn : PicturePort;\n    port displayPort : DisplayPort;\n  }\n\n  part def CameraSystem {\n    port viewPort : ScenePort;\n    port displayPort : DisplayPort;\n\n    part focusing : Focusing;\n    part capturing : Capturing;\n    part displaying : Displaying;\n\n    connect viewPort to focusing.sceneIn;\n    connect focusing.imageOut to capturing.imageIn;\n    connect capturing.pictureOut to displaying.pictureIn;\n    connect displaying.displayPort to displayPort;\n  }\n\n  part def SystemContext {\n    part user : User;\n    part camera : CameraSystem;\n    connect user.viewPort to camera.viewPort;\n  }\n}\n\nOutput:",
+  "reference_path": "api_loop/Generated_from_Prompts_API_LOOP/33/33_groundtruth.sysml",
+  "generated_path": "api_loop/Generated_from_Prompts_API_LOOP/33/33.sysml",
+  "response": {
+    "id": "resp_0e4d0f37f6b372a80069980137fac481958f573d361886f27c",
+    "created_at": 1771569464.0,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": {},
+    "model": "gpt-4.1-2025-04-14",
+    "object": "response",
+    "output": [
+      {
+        "id": "msg_0e4d0f37f6b372a8006998013890fc8195b8c65079054231b6",
+        "content": [
+          {
+            "annotations": [],
+            "text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. Definition of package `CameraWorkflow`.\n2. Import of `ScalarValues::*`. *(Ignoring as not present in reference and not relevant to core system structure.)*\n\n**Items**\n3. Definition of item `Scene`.\n4. Definition of item `Image`.\n5. Definition of item `Picture`.\n\n**Ports**\n6. Definition of port `ScenePort` with reference to item `scene : Scene`.\n7. Definition of port `ImagePort` with reference to item `image : Image`.\n8. Definition of port `PicturePort` with reference to item `picture : Picture`.\n9. Definition of port `DisplayPort` with reference to item `picture : Picture`.\n\n**Parts and Port Assignments**\n10. Definition of part `User` with port `viewPort : ScenePort`.\n11. Definition of part `Focusing` with ports `sceneIn : ScenePort` and `imageOut : ImagePort`.\n12. Definition of part `Capturing` with ports `imageIn : ImagePort` and `pictureOut : PicturePort`.\n13. Definition of part `Displaying` with ports `pictureIn : PicturePort` and `displayPort : DisplayPort`.\n14. Definition of part `CameraSystem` with ports `viewPort : ScenePort` and `displayPort : DisplayPort`.\n15. Part `CameraSystem` contains part `focusing : Focusing`.\n16. Part `CameraSystem` contains part `capturing : Capturing`.\n17. Part `CameraSystem` contains part `displaying : Displaying`.\n\n**Connections**\n18. Connection from `viewPort` to `focusing.sceneIn`.\n19. Connection from `focusing.imageOut` to `capturing.imageIn`.\n20. Connection from `capturing.pictureOut` to `displaying.pictureIn`.\n21. Connection from `displaying.displayPort` to `displayPort` (of `CameraSystem`).\n\n**System Context**\n22. Definition of part `SystemContext`.\n23. `SystemContext` contains part `user : User`.\n24. `SystemContext` contains part `camera : CameraSystem`.\n25. Connection from `user.viewPort` to `camera.viewPort`.\n\n---\n\n### 2. For each atomic claim, determine if it is supported by the reference model\n\n**1. Definition of package `CameraWorkflow`.**\n- **Not supported.** Reference model uses `CameraMessagingSystem`.\n\n**2. Import of `ScalarValues::*`.**\n- **Not supported.** Not present in reference.\n\n**3. Definition of item `Scene`.**\n- **Supported.**\n\n**4. Definition of item `Image`.**\n- **Supported.**\n\n**5. Definition of item `Picture`.**\n- **Supported.**\n\n**6. Definition of port `ScenePort` with reference to item `scene : Scene`.**\n- **Partially supported.** Reference model has `viewPort` (on `screen` and `camera`) which is used for `Scene`, but does not define a separate port type. **Not directly supported.**\n\n**7. Definition of port `ImagePort` with reference to item `image : Image`.**\n- **Not supported.** No such port in reference.\n\n**8. Definition of port `PicturePort` with reference to item `picture : Picture`.**\n- **Not supported.** No such port in reference.\n\n**9. Definition of port `DisplayPort` with reference to item `picture : Picture`.**\n- **Partially supported.** Reference model has `displayPort` (on `screen` and `camera`), but not as a separate port type. **Not directly supported.**\n\n**10. Definition of part `User` with port `viewPort : ScenePort`.**\n- **Not supported.** No `User` part in reference.\n\n**11. Definition of part `Focusing` with ports `sceneIn : ScenePort` and `imageOut : ImagePort`.**\n- **Not supported.** No such part in reference; focusing is an action, not a part.\n\n**12. Definition of part `Capturing` with ports `imageIn : ImagePort` and `pictureOut : PicturePort`.**\n- **Not supported.** No such part in reference; capturing is an action, not a part.\n\n**13. Definition of part `Displaying` with ports `pictureIn : PicturePort` and `displayPort : DisplayPort`.**\n- **Not supported.** No such part in reference; displaying is an attribute/action, not a part.\n\n**14. Definition of part `CameraSystem` with ports `viewPort : ScenePort` and `displayPort : DisplayPort`.**\n- **Supported in spirit.** Reference model has a `camera` part with `viewPort` and `displayPort`. **Supported.**\n\n**15. Part `CameraSystem` contains part `focusing : Focusing`.**\n- **Not supported.** No such containment in reference.\n\n**16. Part `CameraSystem` contains part `capturing : Capturing`.**\n- **Not supported.**\n\n**17. Part `CameraSystem` contains part `displaying : Displaying`.**\n- **Not supported.**\n\n**18. Connection from `viewPort` to `focusing.sceneIn`.**\n- **Not supported.** No such connection in reference.\n\n**19. Connection from `focusing.imageOut` to `capturing.imageIn`.**\n- **Not supported.**\n\n**20. Connection from `capturing.pictureOut` to `displaying.pictureIn`.**\n- **Not supported.**\n\n**21. Connection from `displaying.displayPort` to `displayPort` (of `CameraSystem`).**\n- **Not supported.**\n\n**22. Definition of part `SystemContext`.**\n- **Not supported.** No such part in reference.\n\n**23. `SystemContext` contains part `user : User`.**\n- **Not supported.**\n\n**24. `SystemContext` contains part `camera : CameraSystem`.**\n- **Supported in spirit.** Reference model has a `camera` part, but not as a system context. **Not directly supported.**\n\n**25. Connection from `user.viewPort` to `camera.viewPort`.**\n- **Not supported.**\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 3. Definition of item `Scene`\n- 4. Definition of item `Image`\n- 5. Definition of item `Picture`\n- 14. Definition of part `CameraSystem` with ports `viewPort` and `displayPort` (matches `camera` part in reference)\n\n**Total supported claims: 4**\n\n**Total claims in generated model: 25**\n\n---\n\n**Score: 4/25**",
+            "type": "output_text",
+            "logprobs": []
+          }
+        ],
+        "role": "assistant",
+        "status": "completed",
+        "type": "message"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "temperature": 0.2,
+    "tool_choice": "auto",
+    "tools": [],
+    "top_p": 1.0,
+    "background": false,
+    "conversation": null,
+    "max_output_tokens": null,
+    "max_tool_calls": null,
+    "previous_response_id": null,
+    "prompt": null,
+    "prompt_cache_key": null,
+    "reasoning": {
+      "effort": null,
+      "generate_summary": null,
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "status": "completed",
+    "text": {
+      "format": {
+        "type": "text"
+      },
+      "verbosity": "medium"
+    },
+    "top_logprobs": 0,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 656,
+      "input_tokens_details": {
+        "cached_tokens": 0
+      },
+      "output_tokens": 1407,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 2063
+    },
+    "user": null,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1771569495,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "prompt_cache_retention": null,
+    "store": true,
+    "response_text": "Let's proceed step by step:\n\n---\n\n### 1. List all atomic modeling claims made by the generated system model\n\n**Package and Imports**\n1. Definition of package `CameraWorkflow`.\n2. Import of `ScalarValues::*`. *(Ignoring as not present in reference and not relevant to core system structure.)*\n\n**Items**\n3. Definition of item `Scene`.\n4. Definition of item `Image`.\n5. Definition of item `Picture`.\n\n**Ports**\n6. Definition of port `ScenePort` with reference to item `scene : Scene`.\n7. Definition of port `ImagePort` with reference to item `image : Image`.\n8. Definition of port `PicturePort` with reference to item `picture : Picture`.\n9. Definition of port `DisplayPort` with reference to item `picture : Picture`.\n\n**Parts and Port Assignments**\n10. Definition of part `User` with port `viewPort : ScenePort`.\n11. Definition of part `Focusing` with ports `sceneIn : ScenePort` and `imageOut : ImagePort`.\n12. Definition of part `Capturing` with ports `imageIn : ImagePort` and `pictureOut : PicturePort`.\n13. Definition of part `Displaying` with ports `pictureIn : PicturePort` and `displayPort : DisplayPort`.\n14. Definition of part `CameraSystem` with ports `viewPort : ScenePort` and `displayPort : DisplayPort`.\n15. Part `CameraSystem` contains part `focusing : Focusing`.\n16. Part `CameraSystem` contains part `capturing : Capturing`.\n17. Part `CameraSystem` contains part `displaying : Displaying`.\n\n**Connections**\n18. Connection from `viewPort` to `focusing.sceneIn`.\n19. Connection from `focusing.imageOut` to `capturing.imageIn`.\n20. Connection from `capturing.pictureOut` to `displaying.pictureIn`.\n21. Connection from `displaying.displayPort` to `displayPort` (of `CameraSystem`).\n\n**System Context**\n22. Definition of part `SystemContext`.\n23. `SystemContext` contains part `user : User`.\n24. `SystemContext` contains part `camera : CameraSystem`.\n25. Connection from `user.viewPort` to `camera.viewPort`.\n\n---\n\n### 2. For each atomic claim, determine if it is supported by the reference model\n\n**1. Definition of package `CameraWorkflow`.**\n- **Not supported.** Reference model uses `CameraMessagingSystem`.\n\n**2. Import of `ScalarValues::*`.**\n- **Not supported.** Not present in reference.\n\n**3. Definition of item `Scene`.**\n- **Supported.**\n\n**4. Definition of item `Image`.**\n- **Supported.**\n\n**5. Definition of item `Picture`.**\n- **Supported.**\n\n**6. Definition of port `ScenePort` with reference to item `scene : Scene`.**\n- **Partially supported.** Reference model has `viewPort` (on `screen` and `camera`) which is used for `Scene`, but does not define a separate port type. **Not directly supported.**\n\n**7. Definition of port `ImagePort` with reference to item `image : Image`.**\n- **Not supported.** No such port in reference.\n\n**8. Definition of port `PicturePort` with reference to item `picture : Picture`.**\n- **Not supported.** No such port in reference.\n\n**9. Definition of port `DisplayPort` with reference to item `picture : Picture`.**\n- **Partially supported.** Reference model has `displayPort` (on `screen` and `camera`), but not as a separate port type. **Not directly supported.**\n\n**10. Definition of part `User` with port `viewPort : ScenePort`.**\n- **Not supported.** No `User` part in reference.\n\n**11. Definition of part `Focusing` with ports `sceneIn : ScenePort` and `imageOut : ImagePort`.**\n- **Not supported.** No such part in reference; focusing is an action, not a part.\n\n**12. Definition of part `Capturing` with ports `imageIn : ImagePort` and `pictureOut : PicturePort`.**\n- **Not supported.** No such part in reference; capturing is an action, not a part.\n\n**13. Definition of part `Displaying` with ports `pictureIn : PicturePort` and `displayPort : DisplayPort`.**\n- **Not supported.** No such part in reference; displaying is an attribute/action, not a part.\n\n**14. Definition of part `CameraSystem` with ports `viewPort : ScenePort` and `displayPort : DisplayPort`.**\n- **Supported in spirit.** Reference model has a `camera` part with `viewPort` and `displayPort`. **Supported.**\n\n**15. Part `CameraSystem` contains part `focusing : Focusing`.**\n- **Not supported.** No such containment in reference.\n\n**16. Part `CameraSystem` contains part `capturing : Capturing`.**\n- **Not supported.**\n\n**17. Part `CameraSystem` contains part `displaying : Displaying`.**\n- **Not supported.**\n\n**18. Connection from `viewPort` to `focusing.sceneIn`.**\n- **Not supported.** No such connection in reference.\n\n**19. Connection from `focusing.imageOut` to `capturing.imageIn`.**\n- **Not supported.**\n\n**20. Connection from `capturing.pictureOut` to `displaying.pictureIn`.**\n- **Not supported.**\n\n**21. Connection from `displaying.displayPort` to `displayPort` (of `CameraSystem`).**\n- **Not supported.**\n\n**22. Definition of part `SystemContext`.**\n- **Not supported.** No such part in reference.\n\n**23. `SystemContext` contains part `user : User`.**\n- **Not supported.**\n\n**24. `SystemContext` contains part `camera : CameraSystem`.**\n- **Supported in spirit.** Reference model has a `camera` part, but not as a system context. **Not directly supported.**\n\n**25. Connection from `user.viewPort` to `camera.viewPort`.**\n- **Not supported.**\n\n---\n\n### 3. Summarize the results\n\n**Supported claims:**\n- 3. Definition of item `Scene`\n- 4. Definition of item `Image`\n- 5. Definition of item `Picture`\n- 14. Definition of part `CameraSystem` with ports `viewPort` and `displayPort` (matches `camera` part in reference)\n\n**Total supported claims: 4**\n\n**Total claims in generated model: 25**\n\n---\n\n**Score: 4/25**"
+  }
+}
