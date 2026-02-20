@@ -1,8 +1,8 @@
 {
     "Vehicle Traffic": {
-        "precision": 0.6106823566360431,
-        "recall": 0.723310124149755,
-        "count": 73
+        "precision": 0.617312204181914,
+        "recall": 0.7274037171438985,
+        "count": 72
     },
     "Confidentiality and security": {
         "precision": 0.32608695652173914,
@@ -25,8 +25,8 @@
         "count": 1
     },
     "Information Management": {
-        "precision": 0.7241654566965126,
-        "recall": 0.49898163947853386,
+        "precision": 0.7233537683848242,
+        "recall": 0.49220004485310603,
         "count": 7
     },
     "Medical Health": {

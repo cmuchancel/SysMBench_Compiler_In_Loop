@@ -55,8 +55,8 @@
         "count": 1
     },
     "Dependency": {
-        "precision": 0.5241666666666667,
-        "recall": 0.5354148905939188,
+        "precision": 0.5222727272727273,
+        "recall": 0.5195911698012539,
         "count": 3
     },
     "Model Constrainment": {
@@ -120,9 +120,9 @@
         "count": 1
     },
     "State": {
-        "precision": 0.28031189083820657,
-        "recall": 0.5175010175010175,
-        "count": 3
+        "precision": 0.3538011695906432,
+        "recall": 0.561965811965812,
+        "count": 2
     },
     "Transition": {
         "precision": 0.45645491803278687,
