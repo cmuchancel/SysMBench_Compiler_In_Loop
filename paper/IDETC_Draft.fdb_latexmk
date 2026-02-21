@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex IDETC_Draft"] 1771615968.22178 "IDETC_Draft.aux" "IDETC_Draft.bbl" "IDETC_Draft" 1771615970.07948 0
+["bibtex IDETC_Draft"] 1771615968.22178 "IDETC_Draft.aux" "IDETC_Draft.bbl" "IDETC_Draft" 1771642617.77795 0
   "./asmeconf.bst" 1771609332.86464 38475 77f4bf816e05f26fa6b3df2d9387ff56 ""
   "./references.bib" 1771612664.19666 3979 7a8727e268033c736e6c8614ae8241da ""
-  "IDETC_Draft.aux" 1771615969.70935 15023 9761b464a12ddaa1bff162e8c54888c6 "pdflatex"
+  "IDETC_Draft.aux" 1771642617.31306 15023 9761b464a12ddaa1bff162e8c54888c6 "pdflatex"
   (generated)
   "IDETC_Draft.bbl"
   "IDETC_Draft.blg"
   (rewritten before read)
-["pdflatex"] 1771615968.33908 "IDETC_Draft.tex" "IDETC_Draft.pdf" "IDETC_Draft" 1771615970.07966 0
+["pdflatex"] 1771642615.66975 "IDETC_Draft.tex" "IDETC_Draft.pdf" "IDETC_Draft" 1771642617.77818 0
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-5.enc" 1558214095 7709 74634db4a06477f35279f32281f87689 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc" 1698694482 2914 fdbc4a54b9bc76f4551b5303f2737d33 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc" 1422827479 2083 60e36f8eac802fcaf19eabe2633b406e ""
@@ -264,9 +264,9 @@
   "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1771566304 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
   "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1741450574 3345740 46b66fdb0378f7bf5921b5eabf1762b8 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "IDETC_Draft.aux" 1771615969.70935 15023 9761b464a12ddaa1bff162e8c54888c6 "pdflatex"
+  "IDETC_Draft.aux" 1771642617.31306 15023 9761b464a12ddaa1bff162e8c54888c6 "pdflatex"
   "IDETC_Draft.bbl" 1771615968.33769 3323 a57420f4f36c989e3ca8373f5759a60a "bibtex IDETC_Draft"
-  "IDETC_Draft.tex" 1771612175.95612 60160 ddff41d2acacfe57461cbaf7f757ecf4 ""
+  "IDETC_Draft.tex" 1771642608.69918 21889 024aea533f1a790eed1041d8522cea71 ""
   "asmeconf.cls" 1771609332.86615 121081 fb43962d6e24499ce1f61bff04a75dab ""
   "methods/methods_syntactic_only.tex" 1771615939.1357 4234 bc0ff70d73b45d067133d07481f87840 ""
   "results/results_syntactic_only.tex" 1771615952.41999 3121 256aa49d9c9905c6cf08ba12f9bcda5e ""
