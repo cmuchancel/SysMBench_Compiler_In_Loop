@@ -1,59 +1,53 @@
 \section{Methodology}
 
-\subsection{Evaluation Scope and Dataset}
-This campaign evaluates only \emph{syntactic correctness} under deterministic compiler checking. We use SysMBench~\cite{jin2025sysmbench} prompt IDs 1--151 and analyze four provider/model runs available in this repository: OpenAI Codex 5.2 (\texttt{gpt-5.2-codex})~\cite{openaiGPT52Codex2026}, Anthropic Sonnet 4.6 (\texttt{claude-sonnet-4-6})~\cite{anthropicSonnet46API2026}, DeepSeek Reasoner (\texttt{deepseek-reasoner})~\cite{deepseekReasonerAPI2026}, and Mistral Large (\texttt{mistral-large-latest})~\cite{mistralLargeLatestDocs2026}. This yields 604 prompt-level trials (151 prompts $\times$ 4 models).
+\subsection{Study Objective and Paired Design}
+This study evaluates one question: for the same prompt and the same model, does validator-in-the-loop refinement increase production validation acceptance relative to single-shot generation? The scope is strictly syntactic.
 
-All claims in this section and the Results section are limited to compiler-level compilability. We do not report or claim semantic adequacy, behavioral fidelity, or design quality.
-
-\subsection{Baseline and Pipeline Definitions}
-For each prompt/model trial we define two outcomes from the same generate--compile--repair trajectory:
+The experimental unit is one prompt--model pair. For each unit, we evaluate two paired conditions taken from the same run trajectory:
 \begin{enumerate}
-    \item \textbf{Baseline (single-shot):} compilation status at iteration 1 only.
-    \item \textbf{Pipeline (compiler-in-the-loop):} compilation status of the final iteration after iterative repair.
+    \item \textbf{Baseline (single-shot):} production validation outcome at iteration 1 only.
+    \item \textbf{Pipeline (iterative):} production validation outcome at the final available iteration after iterative repair.
 \end{enumerate}
 
-The iterative loop is compiler-gated: the model proposes SysMLv2 text, the SysIDE checker (\texttt{syside check}) returns diagnostics, and the next iteration is conditioned on those diagnostics until success or stopping cap.
+Because both outcomes are taken from the same prompt--model run, this design isolates the effect of iterative validator feedback while holding prompt content and model identity fixed.
 
-\subsection{Compiler Oracle and Stopping Rule}
-The verifier is the SysIDE SysMLv2 compiler/checker~\cite{sensmetry2024syside}. A prompt is marked successful only when a run reaches zero compiler errors (successful compile signal in run logs/manifests). For each prompt we use the persisted run selected by its \texttt{<id>\_refine\_manifest.json}; associated per-iteration logs are read from the referenced \texttt{run\_log.json}.
+\subsection{Validator-in-the-Loop Generation Procedure}
+Our controller follows a generate--validate--repair workflow for natural-language--to--SysMLv2 generation. At each iteration, the model proposes a complete SysMLv2 candidate, the production validator returns deterministic diagnostics, and the next model call is conditioned on those diagnostics.
 
-\subsection{Extracted Metrics}
-We extract deterministic prompt-level and iteration-level metrics from raw artifacts.
+Let $P$ denote the natural-language prompt, $M_t$ the generated candidate at iteration $t$, and $V(\cdot)$ the production validator. The update is
+\[
+M_{t+1} = f\!\left(P, M_t, V(M_t)\right),
+\]
+where $f(\cdot)$ is the model revision operator conditioned on validator feedback.
 
-Prompt-level metrics include:
-\texttt{first\_shot\_pass}, \texttt{eventual\_pass}, \texttt{iterations\_run}, \texttt{iterations\_to\_success}, \texttt{unresolved\_within\_cap}, first/final error counts, cumulative error volume, recovery indicator (failed first shot then passed), runtime, and token totals when available.
+\begin{figure}[H]
+\centering
+\resizebox{\columnwidth}{!}{\input{gcr_loop}}
+\caption{Validator-in-the-loop generate--validate--repair workflow. The prompt is fixed per case, and each revision is driven by deterministic validator diagnostics.}
+\label{fig:gcr_loop_methods}
+\end{figure}
 
-Iteration-level metrics include:
-\texttt{pass\_at\_iteration}, \texttt{error\_count}, \texttt{error\_families\_json}, iteration runtime, and iteration token usage when available.
+The production validator oracle is SysIDE validation (\texttt{syside check})~\cite{sensmetry2024syside}. A run is successful and terminates only when zero validation errors are reported.
+This oracle choice is additionally supported by an auxiliary ten-case demonstration in the repository showing ANTLR parser pass with production-validation failure, i.e., grammar conformity without operational acceptability~\cite{antlrVsSysideDemo2026}.
 
-Compiler error families are parsed directly from diagnostics using the pattern \texttt{error (<family>):}. Warning families are tracked separately and do not affect success/failure labels.
+\subsection{Dataset, Model Coverage, and Outcome Extraction}
+SysMBench provides paired natural-language prompts and ground-truth SysMLv2 models for benchmark evaluation~\cite{jin2025sysmbench}. In this study, we use the curated natural-language prompt set (IDs 1--151) as generation inputs because it was designed to stress SysMLv2 LLM generation across diverse modeling patterns.
 
-\subsection{Statistical Analysis}
-Let $n$ be prompt count in a group (model-specific or pooled). We report:
-\begin{enumerate}
-    \item First-shot pass rate, first-shot fail rate, eventual pass rate, unresolved rate.
-    \item Absolute gain (percentage-point improvement): eventual pass minus first-shot pass.
-    \item Relative gain: $(p_{\mathrm{final}} - p_{\mathrm{first}}) / p_{\mathrm{first}}$.
-    \item Iterations-to-success distribution (mean, median, standard deviation, quantiles, maximum).
-    \item Wilson 95\% confidence intervals for key proportions.
-    \item Bootstrap 95\% confidence interval for mean iterations-to-success (fixed seed 20260220; 10{,}000 resamples).
-    \item Paired baseline-vs-pipeline significance via McNemar test.
-\end{enumerate}
+To assess model-agnostic behavior of the same controller, we run four model configurations: OpenAI Codex 5.2 (\texttt{gpt-5.2-codex})~\cite{openaiGPT52Codex2026}, Anthropic Sonnet 4.6 (\texttt{claude-sonnet-4-6})~\cite{anthropicSonnet46API2026}, DeepSeek Reasoner (\texttt{deepseek-reasoner})~\cite{deepseekReasonerAPI2026}, and Mistral Large (\texttt{mistral-large-latest})~\cite{mistralLargeLatestDocs2026}. This yields 604 prompt-level cases (151 prompts $\times$ 4 models).
 
-All statistics are deterministic given the same artifacts and random seed.
+From saved run records, we extract first-shot and eventual pass/fail outcomes, iterations run, iterations to success, unresolved-within-cap status, first/final error counts, cumulative error counts, per-iteration runtime, and token usage. Error families are grouped from validator diagnostics (for example, parsing and reference errors), while warnings are tracked separately and do not change pass/fail labels.
 
-\subsection{Reproducibility Pipeline}
-Reproducible analytics are implemented in:
-\begin{itemize}
-    \item \texttt{paper/results/scripts/extract\_syntax\_metrics.py}
-    \item \texttt{paper/results/scripts/compute\_syntax\_stats.py}
-    \item \texttt{paper/results/scripts/make\_syntax\_tables.py}
-    \item \texttt{paper/results/scripts/make\_syntax\_figures.py}
-    \item \texttt{paper/results/scripts/run\_syntax\_campaign.sh}
-\end{itemize}
+\subsection{Endpoints and Statistical Analysis}
+The primary endpoint is production validation acceptance. We report first-shot pass rate, eventual pass rate, unresolved rate, absolute gain (percentage-point difference between eventual and first-shot pass rates), and relative gain:
+\[
+\frac{p_{\mathrm{final}} - p_{\mathrm{first}}}{p_{\mathrm{first}}}.
+\]
 
-A single command,
-\begin{quote}
-\texttt{bash paper/results/scripts/run\_syntax\_campaign.sh}
-\end{quote}
-regenerates all CSV outputs, tables, and figures, then performs a hash-stability determinism check on key statistics files.
+Because baseline and pipeline outcomes are paired binary observations on the same prompt--model unit, we test differences with McNemar's test using discordant counts $(b,c)$~\cite{mcnemar1947samplingError}. We use the exact two-sided variant when $b+c\leq 25$ and the continuity-corrected asymptotic variant otherwise, following matched-pairs guidance~\cite{fagerland2013mcnemar}.
+
+We summarize iterations-to-success with mean, median, standard deviation, quantiles, and maximum. Proportion confidence intervals are Wilson 95\% score intervals~\cite{wilson1927probableInference}. Uncertainty in mean iterations-to-success is estimated with a bootstrap 95\% confidence interval (10{,}000 resamples; fixed seed 20260220). These choices align with significance-focused reporting in recent LLM evaluation studies~\cite{cheng2026systemPrompts,lee2025clinicalTrialLlm,wind2025radiologyQa,roberts2024grab}.
+
+All claims are limited to syntactic production-validation acceptance. We do not infer semantic adequacy, behavioral correctness, or design quality from these outcomes.
+
+\subsection{Reproducibility}
+All code, run artifacts, and analysis outputs used in this study are stored in the project repository~\cite{sysmbenchCompilerLoopRepo2026}. The repository includes the scripts required to regenerate campaign statistics, tables, and figures.

@@ -8,6 +8,49 @@
   \urlstyle{rm}\Url}\fi
 \providecommand{\eprint}[2][]{\urlprefix\url{#1#2}}
 
+\bibitem{estefan2007mbseSurvey}
+Estefan, Jeff.
+\newblock \enquote{Survey of Model-Based Systems Engineering (MBSE)
+  Methodologies.}
+\newblock Technical Report No. INCOSE-TD-2007-003-02.
+\newblock INCOSE MBSE Initiative.
+\newblock 2007.
+\newblock
+  \urlprefix\url{https://www.incose.org/docs/default-source/ProductsPublications/SE-Resources/mbse/mbse-methodology-survey-rev-b.pdf}.
+
+\bibitem{madni2018mbse}
+Madni, Azad~M. and Sievers, Michael.
+\newblock \enquote{Model-Based Systems Engineering: Motivation, Current Status,
+  and Research Opportunities.}
+\newblock \emph{Systems Engineering} Vol.~21 No.~3 (2018): pp. 172--190.
+\newblock \doi{10.1002/sys.21438}.
+\newblock \urlprefix\url{https://doi.org/10.1002/sys.21438}.
+
+\bibitem{incoseMbseInitiative2025}
+{INCOSE}.
+\newblock \enquote{Model-Based Systems Engineering (MBSE) Initiative.}
+\newblock
+  \url{https://www.incose.org/products-and-publications/se-resources/mbse}
+  (2025).
+\newblock Accessed February 2026.
+
+\bibitem{sebokMBSE2025}
+{SEBoK Editorial Board}.
+\newblock \enquote{Model-Based Systems Engineering (MBSE).}
+\newblock
+  \url{https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_(MBSE)}
+  (2025).
+\newblock Systems Engineering Body of Knowledge, accessed February 2026.
+
+\bibitem{incoseSEVision2035}
+{INCOSE}.
+\newblock \enquote{Systems Engineering Vision 2035.}
+\newblock Technical report no.
+\newblock International Council on Systems Engineering.
+\newblock 2022.
+\newblock
+  \urlprefix\url{https://www.incose.org/docs/default-source/aboutse/se-vision-2035.pdf}.
+
 \bibitem{omgSysMLv2Spec2024}
 Group, Object~Management.
 \newblock \enquote{OMG Systems Modeling Language (SysML)~v2 Specification,
@@ -17,6 +60,41 @@ Group, Object~Management.
 \newblock 2024.
 \newblock \urlprefix\url{https://www.omg.org/spec/SysML/2.0/}.
 \newblock Official release draft, September 2024.
+
+\bibitem{omgSysMLv2About2025}
+{Object Management Group}.
+\newblock \enquote{About SysML 2.0 (Normative and Machine-Readable Artifacts).}
+\newblock \url{https://www.omg.org/spec/SysML/2.0/About-SysML} (2025).
+\newblock Accessed February 2026.
+
+\bibitem{omgSysMLv2FinalAdoption2025}
+{Object Management Group}.
+\newblock \enquote{OMG Announces Formal Adoption of SysML v2.}
+\newblock \url{https://www.omg.org/news/releases/pr2025/07-21-25.htm} (2025).
+\newblock Highlights textual and graphical notation and standard API/services
+  layer; accessed February 2026.
+
+\bibitem{peng2023copilot}
+Peng, Sida, Kalliamvakou, Eirini, Cihon, Peter and Demirer, Mert.
+\newblock \enquote{The Impact of AI on Developer Productivity: Evidence from
+  GitHub Copilot.}
+\newblock \emph{arXiv preprint arXiv:2302.06590}
+  (2023)\doi{10.48550/arXiv.2302.06590}.
+\newblock \urlprefix\url{https://arxiv.org/abs/2302.06590}.
+
+\bibitem{cui2025highSkilled}
+Cui, Kevin~Zheyuan, Peng, Sida, Quintana, Alexi and et~al.
+\newblock \enquote{The Effects of Generative AI on High-Skilled Work: Evidence
+  from Three Field Experiments with Software Developers.}
+\newblock \emph{Working Paper}
+  (2025)\urlprefix\url{https://economics.mit.edu/sites/default/files/inline-files/draft_copilot_experiments.pdf}.
+
+\bibitem{demirer2024fieldCopilot}
+Demirer, Mert, Peng, Sida, Quintana, Alexi and et~al.
+\newblock \enquote{The Productivity Effects of Generative AI: Evidence from a
+  Field Experiment with GitHub Copilot.}
+\newblock \emph{Working Paper}
+  (2024)\urlprefix\url{https://mit-genai.pubpub.org/pub/v5iixksv}.
 
 \bibitem{bouamra2025systemp}
 Bouamra, A. et~al.
@@ -32,6 +110,51 @@ Cibri{\'a}n, F. et~al.
   (2025)\doi{10.1016/j.compind.2025.104350}.
 \newblock \urlprefix\url{https://doi.org/10.1016/j.compind.2025.104350}.
 
+\bibitem{jin2025sysmbench}
+Jin, Dongming, Jin, Zhi, Li, Linyu, Fang, Zheng, Li, Jia, Chen, Xiaohong and
+  Luo, Yixing.
+\newblock \enquote{A System Model Generation Benchmark from Natural Language
+  Requirements.}
+\newblock \emph{arXiv preprint arXiv:2508.03215}  (2025).
+
+\bibitem{antlrVsSysideDemo2026}
+LaVoie, Chance, Andujar~Lugo, Eladio and Kara, Levent~Burak.
+\newblock \enquote{ANTLR-versus-Production-Validation Demonstration for
+  SysMLv2.}
+\newblock
+  \url{https://github.com/cmuchancel/SysMBench_Compiler_In_Loop/tree/main/experiments/antlr_vs_syside}
+  (2026).
+\newblock Ten-case demonstration showing grammar-parser acceptance without
+  production-validation acceptance. Accessed February 21, 2026.
+
+\bibitem{clarke2000cegar}
+Clarke, Edmund~M., Grumberg, Orna, Jha, Somesh, Lu, Yuan and Veith, Helmut.
+\newblock \enquote{Counterexample-Guided Abstraction Refinement.}
+\newblock \emph{Computer Aided Verification (CAV)}: pp. 154--169. 2000.
+\newblock \doi{10.1007/10722167_15}.
+
+\bibitem{solarlezama2008thesis}
+Solar-Lezama, Armando.
+\newblock \enquote{Program Synthesis by Sketching.}
+\newblock Ph.D. Thesis, University of California, Berkeley.
+\newblock 2008.
+
+\bibitem{jha2010ogis}
+Jha, Susmit, Gulwani, Sumit, Seshia, Sanjit~A. and Tiwari, Ashish.
+\newblock \enquote{Oracle-Guided Component-Based Program Synthesis.}
+\newblock \emph{International Conference on Software Engineering (ICSE)}: pp.
+  215--224. 2010.
+\newblock \doi{10.1145/1806799.1806833}.
+
+\bibitem{alur2013sygus}
+Alur, Rajeev, Bodik, Rastislav, Juniwal, Garvit, Martin, Milo M.~K.,
+  Raghothaman, Mukund, Seshia, Sanjit~A., Singh, Rishabh, Solar-Lezama,
+  Armando, Torlak, Emina and Udupa, Abhishek.
+\newblock \enquote{Syntax-Guided Synthesis.}
+\newblock \emph{Formal Methods in Computer-Aided Design (FMCAD)}: pp. 1--8.
+  2013.
+\newblock \doi{10.1109/FMCAD.2013.6679385}.
+
 \bibitem{wang2022compilable}
 Wang, Xin, Chen, Wenhu, Chen, Xinyun and Wang, William~Yang.
 \newblock \enquote{Compilable Neural Code Generation with Compiler Feedback.}
@@ -45,12 +168,11 @@ Grubi{\v{s}}i{\'c}, A. et~al.
 \newblock arXiv:2403.14714 (2024).
 \newblock \urlprefix\url{https://arxiv.org/abs/2403.14714}.
 
-\bibitem{jin2025sysmbench}
-Jin, Dongming, Jin, Zhi, Li, Linyu, Fang, Zheng, Li, Jia, Chen, Xiaohong and
-  Luo, Yixing.
-\newblock \enquote{A System Model Generation Benchmark from Natural Language
-  Requirements.}
-\newblock \emph{arXiv preprint arXiv:2508.03215}  (2025).
+\bibitem{sensmetry2024syside}
+Sensmetry.
+\newblock \enquote{SysIDE: The Open-Source IDE and Compiler for SysML~v2.}
+\newblock \url{https://sensmetry.com/syside/} (2024).
+\newblock Accessed November 2025.
 
 \bibitem{openaiGPT52Codex2026}
 {OpenAI}.
@@ -80,10 +202,73 @@ Jin, Dongming, Jin, Zhi, Li, Linyu, Fang, Zheng, Li, Jia, Chen, Xiaohong and
 \newblock \url{https://docs.mistral.ai/capabilities/function_calling/} (2026).
 \newblock Accessed February 20, 2026.
 
-\bibitem{sensmetry2024syside}
-Sensmetry.
-\newblock \enquote{SysIDE: The Open-Source IDE and Compiler for SysML~v2.}
-\newblock \url{https://sensmetry.com/syside/} (2024).
-\newblock Accessed November 2025.
+\bibitem{mcnemar1947samplingError}
+McNemar, Quinn.
+\newblock \enquote{Note on the Sampling Error of the Difference Between
+  Correlated Proportions or Percentages.}
+\newblock \emph{Psychometrika} Vol.~12 No.~2 (1947): pp. 153--157.
+\newblock \doi{10.1007/BF02295996}.
+\newblock \urlprefix\url{https://doi.org/10.1007/BF02295996}.
+
+\bibitem{fagerland2013mcnemar}
+Fagerland, Morten~W., Lydersen, Stian and Laake, Petter.
+\newblock \enquote{The McNemar Test for Binary Matched-Pairs Data: Mid-p and
+  Asymptotic Are Better Than Exact Conditional.}
+\newblock \emph{BMC Medical Research Methodology} Vol.~13 (2013): p.~91.
+\newblock \doi{10.1186/1471-2288-13-91}.
+\newblock \urlprefix\url{https://doi.org/10.1186/1471-2288-13-91}.
+
+\bibitem{wilson1927probableInference}
+Wilson, Edwin~B.
+\newblock \enquote{Probable Inference, the Law of Succession, and Statistical
+  Inference.}
+\newblock \emph{Journal of the American Statistical Association} Vol.~22 No.
+  158 (1927): pp. 209--212.
+\newblock \doi{10.1080/01621459.1927.10502953}.
+\newblock \urlprefix\url{https://doi.org/10.1080/01621459.1927.10502953}.
+
+\bibitem{cheng2026systemPrompts}
+Cheng, Zaiyu and Mastropaolo, Antonio.
+\newblock \enquote{An Empirical Study on the Effects of System Prompts in
+  Instruction-Tuned Models for Code Generation.}
+\newblock \emph{arXiv preprint arXiv:2602.15228}
+  (2026)\doi{10.48550/arXiv.2602.15228}.
+\newblock \urlprefix\url{https://arxiv.org/abs/2602.15228}.
+
+\bibitem{lee2025clinicalTrialLlm}
+Lee, Kye~Hwa, Jang, Sujung, Kim, Grace~Juyun, Park, Sukyoung, Kim, Doeun, Kwon,
+  Oh~Jin, Lee, Jae-Ho and Kim, Young-Hak.
+\newblock \enquote{Large Language Models for Automating Clinical Trial Criteria
+  Conversion to Observational Medical Outcomes Partnership Common Data Model
+  Queries: Validation and Evaluation Study.}
+\newblock \emph{JMIR Medical Informatics} Vol.~13 No.~1 (2025): p. e71252.
+\newblock \doi{10.2196/71252}.
+\newblock \urlprefix\url{https://medinform.jmir.org/2025/1/e71252}.
+
+\bibitem{wind2025radiologyQa}
+Wind, Sebastian, Sopa, Jeta, Truhn, Daniel, Lotfinia, Mahshad, Nguyen,
+  Tri-Thien, Bressem, Keno, Adams, Lisa, Rusu, Mirabela, K{\"o}stler, Harald,
+  Wellein, Gerhard, Maier, Andreas and Arasteh, Soroosh~Tayebi.
+\newblock \enquote{Multi-step Retrieval and Reasoning Improves Radiology
+  Question Answering With Large Language Models.}
+\newblock \emph{npj Digital Medicine} Vol.~8 No.~1 (2025): p. 790.
+\newblock \doi{10.1038/s41746-025-02250-5}.
+\newblock \urlprefix\url{https://doi.org/10.1038/s41746-025-02250-5}.
+
+\bibitem{roberts2024grab}
+Roberts, Jonathan, Han, Kai and Albanie, Samuel.
+\newblock \enquote{GRAB: A Challenging GRaph Analysis Benchmark for Large
+  Multimodal Models.}
+\newblock \emph{arXiv preprint arXiv:2408.11817}
+  (2024)\doi{10.48550/arXiv.2408.11817}.
+\newblock \urlprefix\url{https://arxiv.org/abs/2408.11817}.
+
+\bibitem{sysmbenchCompilerLoopRepo2026}
+LaVoie, Chance, Andujar~Lugo, Eladio and Kara, Levent~Burak.
+\newblock \enquote{SysMBench Compiler-in-the-Loop Campaign Repository.}
+\newblock \url{https://github.com/cmuchancel/SysMBench_Compiler_In_Loop}
+  (2026).
+\newblock Code, artifacts, and analysis scripts for this study. Accessed
+  February 21, 2026.
 
 \end{thebibliography}

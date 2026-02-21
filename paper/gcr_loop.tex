@@ -11,9 +11,9 @@
 
 \node[box, below=of nl] (llm) {Proposal Model (LLM / API Call)\\Generate SysMLv2 Candidate\\$M_t$};
 
-\node[oracle, below=of llm] (comp) {Verifier (SysIDE SysMLv2 Compiler)\\\texttt{syside check}};
+\node[oracle, below=of llm] (comp) {Validator (SysIDE)\\\texttt{syside check}};
 
-\node[box, below=of comp] (diag) {Compiler Diagnostics $C(M_t)$\\(Error Types, Locations, Messages)};
+\node[box, below=of comp] (diag) {Validator Diagnostics $V(M_t)$\\(Error Types, Locations, Messages)};
 
 \node[decision, below=1.0cm of diag] (dec) {Errors $=0$?};
 
@@ -23,7 +23,7 @@
 \draw[arr] (diag) -- (dec);
 
 \node[box, right=2.4cm of dec, minimum width=3.4cm, minimum height=1.0cm] (done)
-  {Return Compilable Model\\$M^\star$};
+  {Return Valid Model\\$M^\star$};
 \draw[arr] (dec) -- node[above, xshift=2pt]{Yes} (done);
 
 \draw[looparr]
@@ -32,6 +32,6 @@
 
 \node[align=center]
   at ($(llm.west)!0.5!(dec.west)+(-4,0)$)
-  {No\\Repair \& Regenerate\\$M_{t+1}=f(P,\,M_t,\,C(M_t))$};
+  {No\\Repair \& Regenerate\\$M_{t+1}=f(P,\,M_t,\,V(M_t))$};
 
 \end{tikzpicture}

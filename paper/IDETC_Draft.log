@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  20 FEB 2026 21:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  21 FEB 2026 01:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1185,7 +1185,7 @@ File: bkm-pdftex.def 2023-12-10 v1.31 bookmark driver for pdfTeX and luaTeX (HO
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/locale/en/babel-english.t
 ex)
 Package babel Info: Importing data for english
-(babel)             from babel-en.ini. Reported on input line 12.
+(babel)             from babel-en.ini. Reported on input line 21.
 )
 \openout1 = `IDETC_Draft.aux'.
 
@@ -1508,17 +1508,10 @@ File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 8.23999pt on input line 188.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
-(Font)              scaled to size 10.0pt on input line 206.
+(Font)              scaled to size 10.0pt on input line 204.
 
-
-LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
-(Font)              using `T1/zi4/m/n' instead on input line 206.
-
-LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 10.29999pt on input line 206.
-
-Underfull \hbox (badness 1496) in paragraph at lines 206--206
-[]\T1/ntxtlf/m/it/10 This pa-per stud-ies a syntax-only compiler-in-the-loop
+Underfull \hbox (badness 3701) in paragraph at lines 209--210
+[]\T1/ntxtlf/m/n/10 Model-Based Sys-tems En-gi-neer-ing (MBSE) re-places
  []
 
 
@@ -1529,165 +1522,287 @@ Underfull \vbox (badness 4353) has occurred while \output is active []
 
 
 LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
-(Font)              scaled to size 10.0pt on input line 221.
+(Font)              scaled to size 10.0pt on input line 224.
 [1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
 ocal/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc}
 
 
 {/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{/usr/
-local/texlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-5.enc}{/usr/loc
-al/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
+local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}{/usr/local/te
+xlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-5.enc}]
 
-(./methods/methods_syntactic_only.tex
+LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
+(Font)              scaled to size 10.29999pt on input line 245.
 
-[2]
-
-
-Overfull \hbox (9.76259pt too wide) in paragraph at lines 48--49
-[]\T1/zi4/m/n/10 paper/results/scripts/extract_syntax_metrics.py 
- []
-
-
-Overfull \hbox (43.3363pt too wide) in paragraph at lines 57--58
-[]\T1/zi4/m/n/10 bash pa-per/results/scripts/run_syntax_campaign.sh 
- []
-
-) (./results/results_syntactic_only.tex
-(./results/tables/table_overall_compile_outcomes.tex
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 9.0pt on input line 3.
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 9.0pt on input line 3.
-LaTeX Font Info:    Font shape `T1/qhv/b/n' will be
-(Font)              scaled to size 8.19003pt on input line 3.
-)
-
-[3{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc}]
-(./results/tables/table_model_comparison.tex
-Overfull \hbox (355.31912pt too wide) in paragraph at lines 5--15
- [][] 
- []
-
-) (./results/tables/table_iteration_distribution.tex
-Overfull \hbox (31.37907pt too wide) in paragraph at lines 5--38
- [][] 
- []
-
-)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
+[2] (./methods/methods_syntactic_only.tex
 
-Underfull \hbox (badness 2080) in paragraph at lines 23--24
+(./gcr_loop.tex)
+LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
+(Font)              scaled to size 9.0pt on input line 26.
+LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
+(Font)              scaled to size 9.0pt on input line 26.
+LaTeX Font Info:    Font shape `T1/qhv/b/n' will be
+(Font)              scaled to size 8.19003pt on input line 26.
+
+Underfull \hbox (badness 1314) in paragraph at lines 30--32
+[]\T1/ntxtlf/m/n/10 The pro-duc-tion val-ida-tor or-a-cle is Sy-sIDE val-i-da-t
+ion
+ []
+
+
+
+[3{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc}])
+(./results/results_syntactic_only.tex
+
+
+Underfull \hbox (badness 2080) in paragraph at lines 20--21
 []\T1/ntxtlf/m/n/10 At first it-er-a-tion, the dom-i-nant er-ror fam-i-lies wer
 e
  []
 
-(./results/tables/table_error_taxonomy_top.tex
-Overfull \hbox (58.68906pt too wide) in paragraph at lines 5--28
- [][] 
+) (./appendix/antlr_vs_syside_appendix.tex
+
+[4]
+Underfull \hbox (badness 2401) in paragraph at lines 20--21
+[]|\T1/ntxtlf/b/n/10 Production Val-i-da-
  []
 
-)
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-
-[4] (./results/tables/table_hardest_prompts.tex
-Overfull \hbox (235.34904pt too wide) in paragraph at lines 5--36
- [][] 
+Underfull \hbox (badness 10000) in paragraph at lines 22--23
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
  []
 
-)
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-
-(./results/tables/table_runtime_token_cost_summary.tex
-Overfull \hbox (666.64915pt too wide) in paragraph at lines 5--15
- [][] 
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
  []
 
-))
 
-[5] (./IDETC_Draft.bbl
-Underfull \hbox (badness 1424) in paragraph at lines 28--34
+Underfull \hbox (badness 10000) in paragraph at lines 24--25
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--28
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 invocation-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--28
+\T1/zi4/m/n/10 expression-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--28
+\T1/zi4/m/n/10 instantiated-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--29
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--30
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--31
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 31--32
+[]|\T1/ntxtlf/m/n/10 Fail (\T1/zi4/m/n/10 reference-
+ []
+
+) (./IDETC_Draft.bbl
+Underfull \hbox (badness 3108) in paragraph at lines 12--20
+\T1/ntxtlf/m/n/10 tia-tive.  2007.  URL [][]$https : / / www . incose . org / d
+ocs /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--20
+\T1/ntxtlf/m/n/10 default-[]source / ProductsPublications / SE-[]Resources / mb
+se /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--36
+[]\T1/ntxtlf/m/n/10 INCOSE.  ``Model-Based Sys-tems En-gi-neer-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--36
+\T1/ntxtlf/m/n/10 ing (MBSE) Ini-tia-tive.''  [][]$https : / / www . incose . o
+rg /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--36
+\T1/ntxtlf/m/n/10 products-[]and-[]publications / se-[]resources / mbse$[][] (2
+025).
+ []
+
+
+
+
+Underfull \hbox (badness 1931) in paragraph at lines 86--91
+[]\T1/ntxtlf/m/n/10 Cui, Kevin Zheyuan, Peng, Sida, Quin-tana, Alexi
+ []
+
+
+Underfull \hbox (badness 3460) in paragraph at lines 86--91
+\T1/ntxtlf/m/n/10 and et al.  ``The Ef-fects of Gen-er-a-tive AI on
+ []
+
+
+Underfull \hbox (badness 1082) in paragraph at lines 86--91
+\T1/ntxtlf/m/n/10 per-i-ments with Soft-ware De-vel-op-ers.''  \T1/ntxtlf/m/it/
+10 Work-ing Pa-
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 86--91
+\T1/ntxtlf/m/it/10 per \T1/ntxtlf/m/n/10 (2025)URL [][]$https : / / economics .
+ mit . edu / sites / default /
+ []
+
+
+Underfull \hbox (badness 1424) in paragraph at lines 106--112
 \T1/ntxtlf/m/n/10 sis with Retrieval-Augmented Gen-er-a-tion and Gram-
  []
 
 
-Underfull \hbox (badness 1019) in paragraph at lines 28--34
+Underfull \hbox (badness 1019) in paragraph at lines 106--112
 \T1/ntxtlf/m/n/10 mar Val-i-da-tion.''  \T1/ntxtlf/m/it/10 Com-put-ers in In-du
 s-try \T1/ntxtlf/m/n/10 (2025)DOI
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 56--62
+Underfull \hbox (badness 10000) in paragraph at lines 121--129
+[]\T1/ntxtlf/m/n/10 LaVoie, Chance, An-du-jar Lugo, Ela-dio and
+ []
+
+
+Underfull \hbox (badness 4739) in paragraph at lines 121--129
+\T1/ntxtlf/m/n/10 Kara, Lev-ent Bu-rak.  ``ANTLR-versus-Production-
+ []
+
+
+Underfull \hbox (badness 6332) in paragraph at lines 121--129
+\T1/ntxtlf/m/n/10 Validation Demon-stra-tion for SysMLv2.''  [][]$https :
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 121--129
+\T1/ntxtlf/m/n/10 / / github . com / cmuchancel / SysMBench _ Compiler _ In _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 121--129
+\T1/ntxtlf/m/n/10 with-out production-validation ac-cep-tance. Ac-cessed
+ []
+
+
+Underfull \hbox (badness 1005) in paragraph at lines 143--148
+\T1/ntxtlf/m/n/10 gram Syn-the-sis.''  \T1/ntxtlf/m/it/10 In-ter-na-tional Con-
+fer-ence on Soft-
+ []
+
+
+
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 178--184
 \T1/ntxtlf/m/n/10 / / developers . openai . com / api / docs / models / gpt-[]5
  . 2-[]codex$[][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 71--75
+Underfull \hbox (badness 10000) in paragraph at lines 193--197
 [][]$\T1/ntxtlf/m/n/10 https : / / api-[]docs . deepseek . com / guides / reaso
 ning _ model$[][]
  []
 
 
-Underfull \hbox (badness 7012) in paragraph at lines 77--82
+Underfull \hbox (badness 7012) in paragraph at lines 199--204
 []\T1/ntxtlf/m/n/10 Mistral AI.  ``Func-tion Call-ing (Model Ex-am-
  []
 
-)
 
 
 
+
+[6])
+
+
+
+[leftcolumn badness]: 1000000 on 12.0pt
+[rightcolumn badness]: 1000000 on 12.0pt
+[leftcolumn badness]: 1000000 on 12.0pt
+[rightcolumn badness]: 1000000 on 12.0pt
+[leftcolumn badness]: 1000000 on 12.0pt
+[rightcolumn badness]: 1000000 on 12.0pt
+[leftcolumn badness]: 1000000 on 12.0pt
+[rightcolumn badness]: 1000000 on 12.0pt
 - LAST -
-Extra skip:0.0pt
-Left:280.0pt/2.165pt
-Right:292.0pt/0.12498pt
-Split: 287.0pt
-Output:287.0pt
+Extra skip:11.9pt
+Left:95.0pt/2.06499pt
+Right:83.0pt/2.165pt
+Split: 94.0pt
+Output:94.0pt
 Pageshrink: 0.0pt
 Pagestretch: 0.0pt
 @colht:686.565pt
-FLUSHEND [output]: 287.0pt
-FLUSHEND [leftcolumn badness]: 12
-FUSHEND [rightcolumn badness]: 57
-[6] (./IDETC_Draft.aux)
+FLUSHEND [output]: 94.0pt
+FLUSHEND [leftcolumn badness]: 100
+FUSHEND [rightcolumn badness]: 10000
+[7] (./IDETC_Draft.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2020/03/25>
  ***********
-
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
  ) 
 Here is how much of TeX's memory you used:
- 34995 strings out of 473190
- 664278 string characters out of 5715801
- 1259571 words of memory out of 5000000
- 57576 multiletter control sequences out of 15000+600000
- 639952 words of font info for 133 fonts, out of 8000000 for 9000
+ 35182 strings out of 473190
+ 667684 string characters out of 5715801
+ 1255835 words of memory out of 5000000
+ 57758 multiletter control sequences out of 15000+600000
+ 640756 words of font info for 135 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 90i,11n,94p,937b,2172s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,11n,94p,1143b,2395s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolat
 a-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/newtx/NewTXMI
-.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qhvb.pfb><
-/usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qhvr.pfb></usr/l
-ocal/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb></usr/local/t
-exlive/2025/texmf-dist/fonts/type1/public/newtx/txbsys.pfb></usr/local/texlive/
-2025/texmf-dist/fonts/type1/public/newtx/txmiaX.pfb></usr/local/texlive/2025/te
-xmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/local/texlive/2025/texmf-dist
-/fonts/type1/public/newtx/ztmb.pfb></usr/local/texlive/2025/texmf-dist/fonts/ty
-pe1/public/newtx/ztmr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/publi
-c/newtx/ztmri.pfb>
-Output written on IDETC_Draft.pdf (6 pages, 268024 bytes).
+.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/newtx/NewTXMI7.pfb>
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qhvb.pfb></usr/
+local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qhvr.pfb></usr/local/
+texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb></usr/local/texliv
+e/2025/texmf-dist/fonts/type1/public/newtx/txbsys.pfb></usr/local/texlive/2025/
+texmf-dist/fonts/type1/public/newtx/txmiaX.pfb></usr/local/texlive/2025/texmf-d
+ist/fonts/type1/public/newtx/txsys.pfb></usr/local/texlive/2025/texmf-dist/font
+s/type1/public/newtx/ztmb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/p
+ublic/newtx/ztmr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/new
+tx/ztmri.pfb>
+Output written on IDETC_Draft.pdf (7 pages, 289931 bytes).
 PDF statistics:
- 260 PDF objects out of 1000 (max. 8388607)
- 222 compressed objects within 3 object streams
- 57 named destinations out of 1000 (max. 500000)
+ 362 PDF objects out of 1000 (max. 8388607)
+ 320 compressed objects within 4 object streams
+ 72 named destinations out of 1000 (max. 500000)
  197 words of extra memory for PDF output out of 10000 (max. 10000000)
 
